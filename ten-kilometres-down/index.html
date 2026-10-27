@@ -1,0 +1,585 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Ten Kilometres Down</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single vertical dive. A fixed 3D ocean behind everything; zone dossiers float on the left, a live submersible HUD and depth gauge on the right. Deliberately one dark look: the deep sea. */
+:root{
+  color-scheme:dark;
+  --abyss:#02060D;
+  --ink:#E6F2F6;
+  --muted:#8FA9B6;
+  --glass:rgba(6,20,32,.55);
+  --rim:rgba(160,220,240,.16);
+  --biolum:#6FE3F2;    /* bioluminescent cyan */
+  --lure:#FFB65C;      /* anglerfish amber */
+  --serif:"Instrument Serif","Iowan Old Style",Georgia,serif;
+  --sans:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{background:var(--abyss)}
+body{background:var(--abyss);color:var(--ink);font-family:var(--sans);font-size:1rem;line-height:1.65;margin:0;overflow-x:hidden}
+#gl{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+.vignette{position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse at 50% 45%,transparent 45%,rgba(0,0,0,.55) 100%)}
+main{position:relative;z-index:2}
+:focus-visible{outline:2px solid var(--biolum);outline-offset:3px}
+h1,h2,h3{margin:0;font-weight:400;text-wrap:balance}
+.mono{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+/* hero */
+.hero{min-height:100vh;display:grid;align-content:center;padding-inline:clamp(16px,6vw,96px);padding-block:120px 80px;max-width:1100px}
+.hero h1{font-family:var(--serif);font-size:clamp(3.6rem,11vw,9.5rem);line-height:.86;letter-spacing:-.02em}
+.hero h1 em{color:var(--biolum);font-style:italic}
+.hero p{max-width:52ch;font-size:1.12rem;color:#CFE3EA;margin:26px 0 0}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
+.btn{font:600 .95rem var(--sans);border-radius:999px;padding:13px 22px;cursor:pointer;border:1px solid var(--rim);background:var(--glass);color:var(--ink);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:inline-flex;align-items:center;gap:10px;transition:background .2s,border-color .2s}
+.btn:hover{border-color:var(--biolum)}
+.btn.primary{background:var(--biolum);color:#02131A;border-color:var(--biolum)}
+.btn.primary:hover{background:#9AF0FA}
+.btn .dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+.hint{margin-top:44px;display:flex;align-items:center;gap:12px}
+.hint .line{width:1px;height:44px;background:linear-gradient(var(--biolum),transparent);animation:drip 2.4s ease-in-out infinite}
+@keyframes drip{0%,100%{transform:scaleY(.4);transform-origin:top}50%{transform:scaleY(1)}}
+
+/* zones */
+.zone{min-height:170vh;padding-inline:clamp(16px,6vw,96px);padding-block:30vh;position:relative}
+.dossier{max-width:540px;background:var(--glass);border:1px solid var(--rim);border-radius:22px;padding:clamp(22px,3vw,34px);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);box-shadow:0 30px 80px rgba(0,0,0,.35);position:sticky;top:calc(env(safe-area-inset-top,0px) + 16vh)}
+.zone:nth-of-type(even) .dossier{margin-left:auto;margin-right:clamp(0px,9vw,140px)}
+.roman{font-family:var(--serif);font-style:italic;color:var(--biolum);font-size:1.4rem;margin-right:8px}
+.dossier h2{font-family:var(--serif);font-size:clamp(2.6rem,5.5vw,4rem);line-height:.95;margin:10px 0 14px;letter-spacing:-.01em}
+.dossier h2 em{font-style:italic}
+.dossier p{margin:0;color:#CFE3EA;max-width:58ch}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:22px 0;padding:16px 0;border-top:1px solid var(--rim);border-bottom:1px solid var(--rim)}
+.stats div{display:grid;gap:2px;min-width:0}
+.stats b{font-family:var(--mono);font-weight:500;font-size:1.02rem;font-variant-numeric:tabular-nums;color:var(--ink)}
+.life{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.life li{display:grid;grid-template-columns:10px minmax(0,1fr);gap:12px;align-items:start}
+.life li::before{content:"";width:8px;height:8px;border-radius:50%;margin-top:9px;background:var(--biolum);box-shadow:0 0 10px var(--biolum)}
+.life b{font-weight:600}
+.life span{color:var(--muted);font-size:.94rem;display:block}
+.ghost{position:absolute;right:clamp(16px,4vw,60px);top:24vh;font-family:var(--serif);font-style:italic;font-size:clamp(4rem,14vw,12rem);line-height:1;color:transparent;-webkit-text-stroke:1px rgba(160,220,240,.18);pointer-events:none;user-select:none;font-variant-numeric:tabular-nums}
+.zone:nth-of-type(even) .ghost{right:auto;left:clamp(16px,4vw,60px)}
+.zone.deep .life li::before{background:var(--lure);box-shadow:0 0 12px var(--lure)}
+.zone.deep .roman{color:var(--lure)}
+
+/* finale */
+.finale{min-height:120vh;padding-inline:clamp(16px,6vw,96px);padding-block:30vh 18vh;display:grid;align-content:end}
+.finale h2{font-family:var(--serif);font-size:clamp(3.4rem,10vw,8rem);line-height:.88;letter-spacing:-.02em}
+.finale h2 em{color:var(--lure);font-style:italic}
+.finale .lede{max-width:56ch;color:#CFE3EA;font-size:1.1rem;margin:20px 0 28px}
+.records{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;max-width:900px;margin-bottom:30px}
+.rec{background:var(--glass);border:1px solid var(--rim);border-radius:16px;padding:16px 18px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:grid;gap:4px}
+.rec .yr{font-family:var(--serif);font-size:2.2rem;line-height:1;color:var(--lure)}
+.rec b{font-weight:600}
+.rec span{color:var(--muted);font-size:.9rem}
+.foot{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-top:40px;letter-spacing:.06em}
+
+/* HUD */
+.hud{position:fixed;z-index:3;top:calc(env(safe-area-inset-top,0px) + 18px);left:clamp(16px,2.4vw,32px);display:flex;gap:22px;align-items:flex-start;pointer-events:none;font-family:var(--mono)}
+.read{display:grid;gap:0}
+.read small{font-size:.62rem;letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+.read b{font-weight:500;font-size:.95rem;font-variant-numeric:tabular-nums;color:var(--ink)}
+.read.big b{font-size:1.9rem;line-height:1.05;letter-spacing:-.02em}
+.lamp{display:inline-flex;align-items:center;gap:6px}
+.lamp i{width:8px;height:8px;border-radius:50%;background:#3A4A52}
+.lamp.on i{background:var(--lure);box-shadow:0 0 10px var(--lure)}
+.gauge{position:fixed;z-index:3;right:clamp(14px,2vw,28px);top:50%;transform:translateY(-50%);height:min(64vh,560px);width:120px;pointer-events:none}
+.gauge .track{position:absolute;right:0;top:0;bottom:0;width:2px;background:rgba(160,220,240,.18)}
+.gauge .fill{position:absolute;right:0;top:0;width:2px;background:linear-gradient(var(--biolum),var(--lure));height:0}
+.gauge .tick{position:absolute;right:0;display:flex;align-items:center;gap:8px;transform:translateY(-50%);font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;white-space:nowrap}
+.gauge .tick::after{content:"";width:10px;height:1px;background:rgba(160,220,240,.4)}
+.gauge .tick.on{color:var(--ink)}
+.gauge .sub{position:absolute;right:-6px;width:14px;height:14px;transform:translateY(-50%) rotate(45deg);border:2px solid var(--biolum);background:var(--abyss);box-shadow:0 0 14px var(--biolum)}
+.topbar{position:fixed;z-index:4;top:calc(env(safe-area-inset-top,0px) + 14px);right:clamp(16px,2.4vw,32px);display:flex;gap:8px}
+.topbar .btn{padding:9px 14px;font-size:.82rem}
+.tip{position:fixed;z-index:3;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--glass);border:1px solid var(--rim);border-radius:999px;padding:7px 14px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:opacity .6s;white-space:nowrap}
+.fallback{position:fixed;inset:0;z-index:0;background:linear-gradient(#0f5778,#04182e 30%,#020814 60%,#000 100%)}
+
+@media (max-width:860px){
+  .gauge{display:none}
+  .hud{gap:14px;top:calc(env(safe-area-inset-top,0px) + 12px)}
+  .read.hide-sm{display:none}
+  .read.big b{font-size:1.35rem}
+  .topbar{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);right:16px}
+  .tip{display:none}
+  .stats{grid-template-columns:1fr 1fr}
+  .records{grid-template-columns:1fr}
+  .zone:nth-of-type(even) .dossier{margin-right:0}
+  .hero{padding-block:110px 80px}
+}
+@media (prefers-reduced-motion:reduce){.hint .line{animation:none}}
+</style>
+
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+
+<!-- live submersible readouts -->
+<div class="hud" aria-live="off">
+  <div class="read big"><small>Depth</small><b id="hDepth">0 m</b></div>
+  <div class="read"><small>Pressure</small><b id="hPress">1 atm</b></div>
+  <div class="read hide-sm"><small>Water</small><b id="hTemp">22.0 °C</b></div>
+  <div class="read hide-sm"><small>Sunlight</small><b id="hLight">100%</b></div>
+  <div class="read hide-sm"><small>Lamps</small><b class="lamp" id="hLamp"><i></i><span>Off</span></b></div>
+</div>
+<div class="gauge" aria-hidden="true">
+  <div class="track"></div><div class="fill" id="gFill"></div><div id="gTicks"></div><div class="sub" id="gSub"></div>
+</div>
+<div class="topbar">
+  <button class="btn" id="soundBtn" type="button"><span class="dot"></span><span>Sound off</span></button>
+  <button class="btn primary" id="autoBtnTop" type="button">Auto-dive</button>
+</div>
+<div class="tip" id="tip">Move to stir the plankton · click to make them flash</div>
+
+<main>
+  <section class="hero" id="surface">
+    <span class="mono">Mariana Trench · 11°21′N 142°12′E</span>
+    <h1>Ten kilometres <em>down.</em></h1>
+    <p>A descent through all five layers of the ocean, from the sunlit surface to the bottom of the Challenger Deep. Scroll to dive, or let the autopilot take you down while the submersible reports what it finds.</p>
+    <div class="actions">
+      <button class="btn primary" id="autoBtn" type="button"><span class="dot"></span>Start auto-dive</button>
+      <button class="btn" type="button" id="skipBtn">Jump to the bottom</button>
+    </div>
+    <div class="hint"><span class="line"></span><span class="mono">Scroll to descend</span></div>
+  </section>
+
+  <section class="zone" data-zone="0">
+    <div class="ghost">200 m</div>
+    <article class="dossier">
+      <span class="mono"><span class="roman">I</span>Epipelagic · 0–200 m</span>
+      <h2>The <em>Sunlight</em> Zone</h2>
+      <p>Almost all the ocean life you've ever seen lives here. Sunlight reaches deep enough for photosynthesis, and microscopic phytoplankton make roughly half the oxygen on Earth.</p>
+      <div class="stats"><div><span class="mono">Light</span><b>100 → 1%</b></div><div><span class="mono">Water</span><b>22 → 14 °C</b></div><div><span class="mono">At 200 m</span><b>21 atm</b></div></div>
+      <ul class="life">
+        <li><div><b>Sardine schools</b><span>Thousands of fish turn as one shape to confuse predators.</span></div></li>
+        <li><div><b>Leatherback turtles</b><span>Breathe at the surface but can dive past 1,000 m.</span></div></li>
+        <li><div><b>Phytoplankton</b><span>Drifting single cells that feed the entire ocean food web.</span></div></li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="zone" data-zone="1">
+    <div class="ghost">1,000 m</div>
+    <article class="dossier">
+      <span class="mono"><span class="roman">II</span>Mesopelagic · 200–1,000 m</span>
+      <h2>The <em>Twilight</em> Zone</h2>
+      <p>Light fades to a dim blue, too weak for plants. Every night, billions of animals swim up from here to feed near the surface and sink back before dawn. It is the largest migration on the planet.</p>
+      <div class="stats"><div><span class="mono">Light</span><b>1% → 0</b></div><div><span class="mono">Water</span><b>14 → 4 °C</b></div><div><span class="mono">At 1,000 m</span><b>101 atm</b></div></div>
+      <ul class="life">
+        <li><div><b>Lanternfish</b><span>Rows of light organs on their bellies erase their silhouette from below.</span></div></li>
+        <li><div><b>Siphonophores</b><span>Colonies of cloned bodies strung into glowing chains, some longer than a blue whale.</span></div></li>
+        <li><div><b>Swordfish</b><span>Warm their eyes and brain with a special heater organ to hunt in the cold.</span></div></li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="zone deep" data-zone="2">
+    <div class="ghost">4,000 m</div>
+    <article class="dossier">
+      <span class="mono"><span class="roman">III</span>Bathypelagic · 1,000–4,000 m</span>
+      <h2>The <em>Midnight</em> Zone</h2>
+      <p>No sunlight reaches this far. The only light is made by animals: about three quarters of the creatures in the open water here can glow. The submersible's lamps switch on automatically.</p>
+      <div class="stats"><div><span class="mono">Light</span><b>None</b></div><div><span class="mono">Water</span><b>≈ 4 °C</b></div><div><span class="mono">At 4,000 m</span><b>401 atm</b></div></div>
+      <ul class="life">
+        <li><div><b>Anglerfish</b><span>A glowing lure, lit by bacteria, draws prey toward the jaws.</span></div></li>
+        <li><div><b>Giant squid</b><span>Eyes the size of dinner plates, among the largest in the animal kingdom.</span></div></li>
+        <li><div><b>Sperm whales</b><span>Dive past 2,000 m on a single breath to hunt squid.</span></div></li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="zone deep" data-zone="3">
+    <div class="ghost">6,000 m</div>
+    <article class="dossier">
+      <span class="mono"><span class="roman">IV</span>Abyssopelagic · 4,000–6,000 m</span>
+      <h2>The <em>Abyss</em></h2>
+      <p>Near-freezing, pitch black and crushing. Abyssal plains, flat stretches of soft sediment, cover about half of Earth's surface. Almost all of it has never been seen.</p>
+      <div class="stats"><div><span class="mono">Food</span><b>Marine snow</b></div><div><span class="mono">Water</span><b>≈ 2 °C</b></div><div><span class="mono">At 6,000 m</span><b>601 atm</b></div></div>
+      <ul class="life">
+        <li><div><b>Tripod fish</b><span>Stands on three stiff fins facing the current, waiting for food to drift in.</span></div></li>
+        <li><div><b>Dumbo octopus</b><span>Flaps ear-like fins and lives deeper than any other known octopus.</span></div></li>
+        <li><div><b>Sea cucumbers</b><span>Rule the abyssal floor, slowly eating their way through the sediment.</span></div></li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="zone deep" data-zone="4">
+    <div class="ghost">10,935 m</div>
+    <article class="dossier">
+      <span class="mono"><span class="roman">V</span>Hadopelagic · 6,000–10,935 m</span>
+      <h2>The <em>Hadal</em> Zone</h2>
+      <p>Named after Hades. These are the ocean trenches, deep scars where one tectonic plate dives beneath another. The walls close in, and the floor is the deepest place on Earth.</p>
+      <div class="stats"><div><span class="mono">Light</span><b>None</b></div><div><span class="mono">Water</span><b>1–2.5 °C</b></div><div><span class="mono">At bottom</span><b>≈ 1,100 atm</b></div></div>
+      <ul class="life">
+        <li><div><b>Snailfish</b><span>The deepest fish ever filmed, at 8,336 m in the Izu–Ogasawara Trench.</span></div></li>
+        <li><div><b>Giant amphipods</b><span>Shrimp-like scavengers that swarm anything that sinks; some species reach 30 cm.</span></div></li>
+        <li><div><b>Xenophyophores</b><span>Single cells that grow as large as your hand.</span></div></li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="finale" id="bottom">
+    <span class="mono">Challenger Deep · Mariana Trench</span>
+    <h2>10,935 metres.<br><em>The bottom.</em></h2>
+    <p class="lede">Put Mount Everest here and its summit would still sit more than two kilometres under water. The water above you presses down with over a thousand times the pressure at the surface. Only a handful of people have ever been here.</p>
+    <div class="records">
+      <div class="rec"><span class="yr">1960</span><b>Trieste</b><span>Jacques Piccard and Don Walsh make the first descent.</span></div>
+      <div class="rec"><span class="yr">2012</span><b>Deepsea Challenger</b><span>James Cameron makes the first solo dive.</span></div>
+      <div class="rec"><span class="yr">2019</span><b>Limiting Factor</b><span>Victor Vescovo's sub, built to dive to full depth again and again.</span></div>
+    </div>
+    <div class="actions"><button class="btn primary" id="upBtn" type="button">Return to the surface</button></div>
+    <p class="foot">Depths and temperatures are typical values; the Challenger Deep is measured between about 10,902 and 10,935 m. Pressure shown as 1 atm per 10 m of seawater.</p>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+const ZONES=[
+  {name:"Sunlight",from:0,to:200},{name:"Twilight",from:200,to:1000},
+  {name:"Midnight",from:1000,to:4000},{name:"Abyss",from:4000,to:6000},{name:"Hadal",from:6000,to:10935}];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)), sstep=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t)};
+// world: each zone is 100 units tall
+function worldToDepth(w){w=clamp(w,0,500);const i=Math.min(4,Math.floor(w/100)),z=ZONES[i];return z.from+(w-i*100)/100*(z.to-z.from)}
+
+/* ---------- HUD gauge ---------- */
+const gT=document.getElementById("gTicks");
+ZONES.forEach((z,i)=>{const d=document.createElement("div");d.className="tick";d.style.top=(i*20)+"%";d.textContent=z.name+" "+z.from.toLocaleString("en-US")+" m";gT.appendChild(d)});
+{const d=document.createElement("div");d.className="tick";d.style.top="100%";d.textContent="Floor 10,935 m";gT.appendChild(d)}
+const ticks=[...gT.children];
+
+/* ---------- Scroll → world mapping ---------- */
+let anchors=[];
+function measure(){
+  const max=document.documentElement.scrollHeight-innerHeight;anchors=[[0,0]];
+  document.querySelectorAll(".zone").forEach((s,i)=>{anchors.push([s.offsetTop+s.offsetHeight*.5-innerHeight*.5,i*100+50])});
+  anchors.push([Math.max(max,anchors[anchors.length-1][0]+1),500]);
+}
+function scrollToWorld(y){
+  for(let i=1;i<anchors.length;i++){const [y0,w0]=anchors[i-1],[y1,w1]=anchors[i];if(y<=y1)return w0+(w1-w0)*clamp((y-y0)/(y1-y0),0,1)}
+  return 500;
+}
+measure();addEventListener("resize",measure);
+
+/* ---------- HUD values ---------- */
+const $=id=>document.getElementById(id);
+const tempAt=d=>{const k=[[0,22],[200,14],[1000,4],[4000,1.8],[6000,1.6],[10935,2.4]];for(let i=1;i<k.length;i++)if(d<=k[i][0]){const [a,ta]=k[i-1],[b,tb]=k[i];return ta+(tb-ta)*(d-a)/(b-a)}return 2.4};
+let lastShown="";
+function hud(w){
+  const d=worldToDepth(w),key=Math.round(d);if(key+""===lastShown)return;lastShown=key+"";
+  $("hDepth").textContent=key.toLocaleString("en-US")+" m";
+  $("hPress").textContent=Math.round(1+d/10).toLocaleString("en-US")+" atm";
+  $("hTemp").textContent=tempAt(d).toFixed(1)+" °C";
+  const L=100*Math.exp(-d*Math.LN10*2/200);
+  $("hLight").textContent=L>=1?L.toFixed(0)+"%":L>=.001?L.toFixed(3)+"%":"none";
+  const on=d>1000;$("hLamp").classList.toggle("on",on);$("hLamp").lastChild.textContent=on?"On":"Off";
+  const f=w/500*100;$("gFill").style.height=f+"%";$("gSub").style.top=f+"%";
+  const zi=Math.min(4,Math.floor(w/100));ticks.forEach((t,i)=>t.classList.toggle("on",i===zi));
+  $("tip").style.opacity=w>110&&w<495?1:0;
+}
+
+/* ---------- Auto-dive ---------- */
+let auto=false,autoPause=0,autoNext=0;
+const stops=()=>[...document.querySelectorAll(".zone")].map(s=>s.offsetTop+s.offsetHeight*.5-innerHeight*.5).concat([document.documentElement.scrollHeight-innerHeight]);
+function setAuto(v){auto=v;autoPause=0;
+  [$("autoBtn"),$("autoBtnTop")].forEach(b=>{b.lastChild.textContent=v?(b.id==="autoBtn"?"Stop auto-dive":"Stop"):(b.id==="autoBtn"?"Start auto-dive":"Auto-dive")});
+  if(v){const y=scrollY,s=stops();autoNext=s.findIndex(p=>p>y+5);if(autoNext<0){scrollTo(0,0);autoNext=0}}}
+$("autoBtn").addEventListener("click",()=>setAuto(!auto));
+$("autoBtnTop").addEventListener("click",()=>setAuto(!auto));
+["wheel","touchstart","keydown"].forEach(ev=>addEventListener(ev,e=>{if(auto&&!(e.target.closest&&e.target.closest("button")))setAuto(false)},{passive:true}));
+function autoStep(dt){
+  if(!auto)return;
+  if(autoPause>0){autoPause-=dt;return}
+  const s=stops(),target=s[autoNext];if(target===undefined){setAuto(false);return}
+  const y=scrollY,dist=target-y,v=clamp(Math.abs(dist)*1.6,40,innerHeight*.55);
+  if(Math.abs(dist)<2){scrollTo(0,target);autoPause=autoNext===s.length-1?0:3.2;autoNext++;if(autoNext>=s.length)setAuto(false);return}
+  scrollTo(0,y+Math.sign(dist)*Math.min(Math.abs(dist),v*dt));
+}
+$("skipBtn").addEventListener("click",()=>{setAuto(false);$("bottom").scrollIntoView({behavior:"smooth"})});
+$("upBtn").addEventListener("click",()=>{setAuto(false);scrollTo({top:0,behavior:"smooth"})});
+
+/* ---------- Sound (generated, starts on click) ---------- */
+let ac=null,master,lp,pingTimer=0,soundOn=false;
+function initAudio(){
+  ac=new (window.AudioContext||window.webkitAudioContext)();
+  master=ac.createGain();master.gain.value=0;master.connect(ac.destination);
+  const len=ac.sampleRate*4,buf=ac.createBuffer(1,len,ac.sampleRate),d=buf.getChannelData(0);let last=0;
+  for(let i=0;i<len;i++){const w=Math.random()*2-1;last=(last+.02*w)/1.02;d[i]=last*3.2}
+  const src=ac.createBufferSource();src.buffer=buf;src.loop=true;
+  lp=ac.createBiquadFilter();lp.type="lowpass";lp.frequency.value=500;
+  const g=ac.createGain();g.gain.value=.5;src.connect(lp).connect(g).connect(master);src.start();
+  const dl=ac.createDelay(1);dl.delayTime.value=.42;const fb=ac.createGain();fb.gain.value=.38;dl.connect(fb).connect(dl);dl.connect(master);
+  ac._delay=dl;
+}
+function ping(depth){
+  if(!ac||!soundOn)return;const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime;
+  o.type="sine";o.frequency.value=1250-Math.min(500,depth/25);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.14,t+.01);g.gain.exponentialRampToValueAtTime(.0005,t+1.4);
+  o.connect(g);g.connect(master);g.connect(ac._delay);o.start(t);o.stop(t+1.5);
+}
+$("soundBtn").addEventListener("click",()=>{
+  if(!ac)initAudio();soundOn=!soundOn;ac.resume&&ac.resume();
+  master.gain.setTargetAtTime(soundOn?.55:0,ac.currentTime,.4);
+  $("soundBtn").lastChild.textContent=soundOn?"Sound on":"Sound off";
+});
+
+/* ---------- 3D ---------- */
+if(!window.THREE){document.body.insertAdjacentHTML("afterbegin",'<div class="fallback"></div>');loopNo3D();return}
+const canvas=$("gl");
+let renderer;
+try{renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:"high-performance"})}catch(e){document.body.insertAdjacentHTML("afterbegin",'<div class="fallback"></div>');loopNo3D();return}
+const DPR=Math.min(devicePixelRatio||1,1.75);renderer.setPixelRatio(DPR);
+renderer.outputEncoding=THREE.sRGBEncoding;
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(55,1,.1,600);camera.position.set(0,0,30);scene.add(camera);
+const fog=new THREE.FogExp2(0x1b7fa6,.012);scene.fog=fog;
+const PAL=[0x1E86AE,0x0A3F62,0x041A31,0x020A18,0x01040B,0x000103].map(c=>new THREE.Color(c));
+const bgCol=new THREE.Color();
+function palAt(w){const i=clamp(Math.floor(w/100),0,4),f=(w-i*100)/100;return bgCol.copy(PAL[i]).lerp(PAL[i+1],clamp(f,0,1))}
+
+// lights
+const hemi=new THREE.HemisphereLight(0xaeeaff,0x03121f,1.3);scene.add(hemi);
+const sun=new THREE.DirectionalLight(0xd8f6ff,1.6);sun.position.set(12,60,10);scene.add(sun);
+const lamp=new THREE.SpotLight(0xe6f3ff,0,140,Math.PI/6,.55,1);lamp.position.set(0,1.5,0);camera.add(lamp);
+const lampTarget=new THREE.Object3D();lampTarget.position.set(0,-6,-40);camera.add(lampTarget);lamp.target=lampTarget;
+const fill=new THREE.PointLight(0x7fd8ff,0,60,1.5);camera.add(fill);
+
+function glowTex(inner,outer){
+  const c=document.createElement("canvas");c.width=c.height=128;const g=c.getContext("2d");
+  const gr=g.createRadialGradient(64,64,0,64,64,64);gr.addColorStop(0,inner);gr.addColorStop(.25,outer);gr.addColorStop(1,"rgba(0,0,0,0)");
+  g.fillStyle=gr;g.fillRect(0,0,128,128);const t=new THREE.CanvasTexture(c);return t;
+}
+const texWhite=glowTex("rgba(255,255,255,1)","rgba(180,240,255,.35)");
+const texAmber=glowTex("rgba(255,240,200,1)","rgba(255,170,80,.45)");
+const texCyan=glowTex("rgba(220,255,255,1)","rgba(90,220,240,.35)");
+
+// surface seen from below
+const surfMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,side:THREE.DoubleSide,
+  uniforms:{uTime:{value:0}},
+  vertexShader:`varying vec2 vP;void main(){vec4 w=modelMatrix*vec4(position,1.);vP=w.xz;gl_Position=projectionMatrix*viewMatrix*w;}`,
+  fragmentShader:`uniform float uTime;varying vec2 vP;
+  float c(vec2 p){float v=0.;for(int i=0;i<3;i++){float fi=float(i);p+=vec2(sin(p.y*.35+uTime*(.6+fi*.2)),cos(p.x*.3+uTime*(.5+fi*.15)))*1.4;v+=abs(sin(p.x*.5)*sin(p.y*.5));}return v/3.;}
+  void main(){float k=c(vP*.9);float caust=pow(1.-k,6.)*1.6;float d=length(vP)/260.;
+    vec3 col=mix(vec3(.10,.55,.75),vec3(.85,.98,1.),caust);float a=(.85-d)*(.75+caust*.25);gl_FragColor=vec4(col,clamp(a,0.,1.));}`});
+const surface=new THREE.Mesh(new THREE.PlaneGeometry(600,600),surfMat);surface.rotation.x=Math.PI/2;surface.position.y=9;scene.add(surface);
+const sunGlow=new THREE.Sprite(new THREE.SpriteMaterial({map:texWhite,color:0xe9fbff,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,fog:false}));
+sunGlow.scale.set(90,90,1);sunGlow.position.set(-8,8,-60);scene.add(sunGlow);
+
+// god rays
+const rays=[];
+const rayMat=()=>new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide,
+  uniforms:{uTime:{value:0},uO:{value:1},uSeed:{value:Math.random()*10}},
+  vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+  fragmentShader:`uniform float uTime,uO,uSeed;varying vec2 vUv;void main(){float edge=sin(vUv.x*3.14159);edge*=edge;
+    float fall=pow(vUv.y,1.6);float fl=.6+.4*sin(uTime*.7+uSeed*3.);gl_FragColor=vec4(vec3(.75,.95,1.),edge*fall*.10*uO*fl);}`});
+for(let i=0;i<9;i++){const m=new THREE.Mesh(new THREE.PlaneGeometry(5+Math.random()*7,150),rayMat());
+  m.position.set(-50+Math.random()*100,-62,-45+Math.random()*40);m.rotation.z=(Math.random()-.5)*.35;m.userData.b=m.rotation.z;scene.add(m);rays.push(m)}
+
+// marine snow
+function snow(){
+  const N=innerWidth<700?5000:9000,pos=new Float32Array(N*3),seed=new Float32Array(N);
+  for(let i=0;i<N;i++){pos[i*3]=(Math.random()-.5)*170;pos[i*3+1]=10-Math.random()*520;pos[i*3+2]=-90+Math.random()*115;seed[i]=Math.random()}
+  const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.BufferAttribute(pos,3));g.setAttribute("aSeed",new THREE.BufferAttribute(seed,1));
+  const m=new THREE.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{uTime:{value:0},uSize:{value:2.2*DPR}},
+    vertexShader:`attribute float aSeed;uniform float uTime,uSize;varying float vA;void main(){vec3 p=position;float sp=.35+aSeed*.7;
+      p.y=-510.+mod(p.y+510.-uTime*sp,520.);p.x+=sin(uTime*.2+aSeed*30.)*.8;vec4 mv=modelViewMatrix*vec4(p,1.);
+      gl_PointSize=uSize*(.5+aSeed)*(120./-mv.z);vA=smoothstep(130.,8.,-mv.z);gl_Position=projectionMatrix*mv;}`,
+    fragmentShader:`varying float vA;void main(){float d=length(gl_PointCoord-.5);float a=smoothstep(.5,0.,d)*vA*.55;gl_FragColor=vec4(.86,.94,1.,a);}`});
+  const p=new THREE.Points(g,m);p.frustumCulled=false;scene.add(p);return m;
+}
+const snowMat=snow();
+
+// bioluminescent plankton (mouse + click reactive)
+function plankton(){
+  const N=innerWidth<700?3500:7000,pos=new Float32Array(N*3),seed=new Float32Array(N);
+  for(let i=0;i<N;i++){pos[i*3]=(Math.random()-.5)*150;pos[i*3+1]=-115-Math.random()*380;pos[i*3+2]=-60+Math.random()*82;seed[i]=Math.random()}
+  const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.BufferAttribute(pos,3));g.setAttribute("aSeed",new THREE.BufferAttribute(seed,1));
+  const m=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,
+    uniforms:{uTime:{value:0},uSize:{value:2.6*DPR},uMouse:{value:new THREE.Vector3(0,9999,0)},uBurst:{value:new THREE.Vector3(0,9999,0)},uBurstT:{value:-99},uFade:{value:0}},
+    vertexShader:`attribute float aSeed;uniform float uTime,uSize,uBurstT,uFade;uniform vec3 uMouse,uBurst;varying float vA;varying vec3 vC;
+      void main(){vec3 p=position;p.x+=sin(uTime*.3+aSeed*50.)*.7;p.y+=cos(uTime*.25+aSeed*40.)*.7;
+      float tw=pow(.5+.5*sin(uTime*(.5+aSeed*1.6)+aSeed*60.),10.);
+      float m=smoothstep(10.,0.,distance(p,uMouse));
+      float bt=uTime-uBurstT;float br=step(0.,bt)*exp(-bt*1.1)*smoothstep(22.,0.,abs(distance(p,uBurst)-bt*14.));
+      float glow=.10+tw*.9+m*1.8+br*3.;vA=glow*uFade;
+      vC=mix(vec3(.12,.55,1.),vec3(.35,1.,.88),fract(aSeed*7.));
+      vec4 mv=modelViewMatrix*vec4(p,1.);gl_PointSize=uSize*(1.+glow*.8)*(100./-mv.z);gl_Position=projectionMatrix*mv;}`,
+    fragmentShader:`varying float vA;varying vec3 vC;void main(){float d=length(gl_PointCoord-.5);float a=pow(smoothstep(.5,0.,d),1.6)*vA;gl_FragColor=vec4(vC,a);}`});
+  const p=new THREE.Points(g,m);p.frustumCulled=false;scene.add(p);return m;
+}
+const plMat=plankton();
+
+// fish school
+const FISH=innerWidth<700?220:420;
+const fishGeo=new THREE.ConeGeometry(.22,1.1,5);fishGeo.rotateX(Math.PI/2);
+const fishMat=new THREE.MeshStandardMaterial({color:0xcfe4ee,metalness:.7,roughness:.3});
+const fish=new THREE.InstancedMesh(fishGeo,fishMat,FISH);scene.add(fish);
+const fp=[...Array(FISH)].map(()=>({r:4+Math.random()*9,ph:Math.random()*6.283,sp:.45+Math.random()*.25,y:(Math.random()-.5)*6,tilt:(Math.random()-.5)*.8}));
+const dummy=new THREE.Object3D(),tmpV=new THREE.Vector3();
+function fishPos(f,t,c,out){const a=t*f.sp+f.ph;return out.set(c.x+Math.cos(a)*f.r,c.y+f.y+Math.sin(a*2+f.ph)*1.5+Math.sin(a)*f.r*f.tilt*.3,c.z+Math.sin(a)*f.r*.7)}
+const center=new THREE.Vector3();
+
+// jellyfish
+const jellies=[];
+const jellyVS=`uniform float uTime,uPhase;varying vec3 vN,vV;varying float vH;void main(){vec3 p=position;float h=clamp(normalize(p).y,0.,1.);
+  float pulse=sin(uTime*1.7+uPhase);p.xz*=1.+.17*pulse*(1.-h);p.y*=1.-.1*pulse;vec4 mv=modelViewMatrix*vec4(p,1.);
+  vN=normalize(normalMatrix*normal);vV=normalize(-mv.xyz);vH=h;gl_Position=projectionMatrix*mv;}`;
+const jellyFS=`uniform vec3 uColor;uniform float uFade;varying vec3 vN,vV;varying float vH;void main(){float f=pow(1.-abs(dot(vN,vV)),2.2);
+  vec3 c=uColor*(.12+1.5*f)+uColor*.35*smoothstep(.3,1.,vH);c*=.85+.15*sin(vH*46.);float a=(.18+.8*f)*uFade;gl_FragColor=vec4(c*uFade,a);}`;
+function makeJelly(color,r,x,y,z){
+  const grp=new THREE.Group();
+  const mat=new THREE.ShaderMaterial({uniforms:{uTime:{value:0},uPhase:{value:Math.random()*6.28},uColor:{value:new THREE.Color(color)},uFade:{value:1}},
+    vertexShader:jellyVS,fragmentShader:jellyFS,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide});
+  grp.add(new THREE.Mesh(new THREE.SphereGeometry(r,40,20,0,Math.PI*2,0,Math.PI*.56),mat));
+  const core=new THREE.Sprite(new THREE.SpriteMaterial({map:texWhite,color,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.6}));
+  core.scale.set(r*2.4,r*2.4,1);core.position.y=r*.25;grp.add(core);
+  const N=12,M=34,lines=[];
+  const lm=new THREE.LineBasicMaterial({color,transparent:true,opacity:.55,blending:THREE.AdditiveBlending,depthWrite:false});
+  for(let k=0;k<N;k++){const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.BufferAttribute(new Float32Array(M*3),3));const l=new THREE.Line(g,lm);l.frustumCulled=false;grp.add(l);lines.push(l)}
+  // oral arms: thicker glowing ribbons
+  const arms=[];for(let k=0;k<4;k++){const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.BufferAttribute(new Float32Array(M*3),3));const l=new THREE.Line(g,new THREE.LineBasicMaterial({color:0xffffff,transparent:true,opacity:.35,blending:THREE.AdditiveBlending,depthWrite:false}));l.frustumCulled=false;grp.add(l);arms.push(l)}
+  grp.position.set(x,y,z);grp.rotation.z=(Math.random()-.5)*.4;scene.add(grp);
+  const len=r*(3.5+Math.random()*3),j={grp,mat,lines,arms,r,len,base:y,phase:mat.uniforms.uPhase.value,core,lm};
+  jellies.push(j);return j;
+}
+const JCOL=[0x7FE9FF,0xB49BFF,0xFF86D8,0x7FFFD4,0x9CC9FF];
+for(let i=0;i<(innerWidth<700?11:18);i++){
+  makeJelly(JCOL[i%JCOL.length],1.2+Math.random()*2.2,(Math.random()-.5)*70,-108-Math.random()*240,-34+Math.random()*30);
+}
+function updateJelly(j,t,dt){
+  const pulse=Math.sin(t*1.7+j.phase),rim=j.r*.96*(1+.17*pulse);
+  j.mat.uniforms.uTime.value=t;
+  j.grp.position.y+=(.15+Math.max(0,Math.cos(t*1.7+j.phase))*.55)*dt;
+  j.grp.position.x+=Math.sin(t*.1+j.phase)*.02;
+  if(j.grp.position.y>j.base+18)j.grp.position.y=j.base-18;
+  const N=j.lines.length;
+  j.lines.forEach((l,k)=>{const a=k/N*6.283,arr=l.geometry.attributes.position.array,M=arr.length/3;
+    for(let s=0;s<M;s++){const u=s/(M-1);
+      arr[s*3]=Math.cos(a)*rim*(1-u*.35)+Math.sin(t*1.3+u*5+a*2+j.phase)*u*j.r*.55;
+      arr[s*3+1]=-j.r*.15-u*j.len*(1-.06*pulse);
+      arr[s*3+2]=Math.sin(a)*rim*(1-u*.35)+Math.cos(t*1.1+u*4+j.phase)*u*j.r*.45}
+    l.geometry.attributes.position.needsUpdate=true});
+  j.arms.forEach((l,k)=>{const a=k/4*6.283+.4,arr=l.geometry.attributes.position.array,M=arr.length/3;
+    for(let s=0;s<M;s++){const u=s/(M-1);
+      arr[s*3]=Math.cos(a)*j.r*.18+Math.sin(t*.9+u*7+k)*u*j.r*.35;
+      arr[s*3+1]=-u*j.len*.6;
+      arr[s*3+2]=Math.sin(a)*j.r*.18+Math.cos(t*.8+u*6+k)*u*j.r*.3}
+    l.geometry.attributes.position.needsUpdate=true});
+}
+
+// siphonophore chains
+const chains=[];
+for(let c=0;c<3;c++){
+  const n=70,m=new THREE.InstancedMesh(new THREE.SphereGeometry(.28,10,8),new THREE.MeshBasicMaterial({color:c%2?0xFF9BE0:0x8CF2FF,transparent:true,opacity:.85,blending:THREE.AdditiveBlending,depthWrite:false}),n);
+  scene.add(m);chains.push({m,n,x:-40+c*38,y:-120-c*22,z:-30+c*6,ph:Math.random()*6})}
+
+// anglerfish
+const anglers=[];
+for(let i=0;i<4;i++){
+  const g=new THREE.Group();
+  const body=new THREE.Mesh(new THREE.SphereGeometry(2.4,24,16),new THREE.MeshStandardMaterial({color:0x1b1d22,roughness:.6,metalness:.1}));body.scale.set(1.4,1,1);g.add(body);
+  const jaw=new THREE.Mesh(new THREE.ConeGeometry(.9,1.6,3),new THREE.MeshStandardMaterial({color:0xd8d2c0,roughness:.4}));jaw.rotation.z=-Math.PI/2;jaw.position.set(3.2,-.6,0);jaw.scale.set(.6,.6,1.6);g.add(jaw);
+  const stalk=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(1.2,2,0),new THREE.Vector3(3,4.5,0),new THREE.Vector3(5,4.2,0)]),new THREE.LineBasicMaterial({color:0x333840}));g.add(stalk);
+  const lure=new THREE.Sprite(new THREE.SpriteMaterial({map:texAmber,color:0xffd08a,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));lure.scale.set(5,5,1);lure.position.set(5,4.2,0);g.add(lure);
+  const pl=new THREE.PointLight(0xffaa55,2.2,22,1.6);pl.position.copy(lure.position);g.add(pl);
+  g.position.set((i%2?1:-1)*(10+Math.random()*24),-225-i*45,-26+Math.random()*16);if(i%2)g.scale.x=-1;
+  scene.add(g);anglers.push({g,lure,pl,ph:Math.random()*6,bx:g.position.x,by:g.position.y});
+}
+
+// trench floor and walls
+function noise2(x,y){return Math.sin(x*.11)*Math.cos(y*.13)*2.6+Math.sin(x*.31+y*.17)*1.1+Math.sin(x*.7-y*.5)*.45}
+const floorGeo=new THREE.PlaneGeometry(260,200,140,110);floorGeo.rotateX(-Math.PI/2);
+{const p=floorGeo.attributes.position;for(let i=0;i<p.count;i++){const x=p.getX(i),z=p.getZ(i);p.setY(i,noise2(x,z)+Math.random()*.35+Math.max(0,Math.abs(x)-55)*.5)}floorGeo.computeVertexNormals()}
+const rockMat=new THREE.MeshStandardMaterial({color:0x5b5a55,roughness:1,metalness:0,flatShading:true});
+const floor=new THREE.Mesh(floorGeo,rockMat);floor.position.set(0,-497,-30);scene.add(floor);
+[-1,1].forEach(s=>{const g=new THREE.PlaneGeometry(220,150,90,70);const p=g.attributes.position;
+  for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i);p.setZ(i,noise2(x*1.3,y*1.6)*2.2+Math.sin(y*.05)*4+Math.random()*.5)}g.computeVertexNormals();
+  const w=new THREE.Mesh(g,rockMat);w.rotation.y=-s*Math.PI/2;w.position.set(s*62,-430,-30);scene.add(w)});
+// xenophyophores and sea cucumbers on the floor
+{const n=60,m=new THREE.InstancedMesh(new THREE.DodecahedronGeometry(.7,1),new THREE.MeshStandardMaterial({color:0xcdbfa8,roughness:.9,flatShading:true}),n);
+ for(let i=0;i<n;i++){const x=(Math.random()-.5)*100,z=-70+Math.random()*70;dummy.position.set(x,-497+noise2(x,z+30)+.3,z-0);dummy.scale.setScalar(.5+Math.random()*1.4);dummy.rotation.set(Math.random()*3,Math.random()*3,0);dummy.updateMatrix();m.setMatrixAt(i,dummy.matrix)}scene.add(m)}
+// snailfish
+const snail=[];
+for(let i=0;i<7;i++){
+  const g=new THREE.Group();
+  const b=new THREE.Mesh(new THREE.SphereGeometry(1,20,14),new THREE.MeshStandardMaterial({color:0xf6d9df,roughness:.35,transparent:true,opacity:.85,emissive:0x2a1418}));
+  b.scale.set(2.6,.8,.7);g.add(b);
+  const tail=new THREE.Mesh(new THREE.ConeGeometry(.55,3.2,10),b.material);tail.rotation.z=Math.PI/2;tail.position.x=-3.2;g.add(tail);
+  g.position.set((Math.random()-.5)*60,-488+Math.random()*6,-40+Math.random()*30);g.rotation.y=Math.random()*6;
+  scene.add(g);snail.push({g,tail,ph:Math.random()*6,sp:.25+Math.random()*.2});
+}
+// amphipod swarm
+const amph=new THREE.Points(new THREE.BufferGeometry().setAttribute("position",new THREE.BufferAttribute(Float32Array.from({length:900},(_,i)=>i%3===0?(Math.random()-.5)*14:i%3===1?-492+Math.random()*4:-26+Math.random()*10),3)),
+  new THREE.PointsMaterial({color:0xffe9d0,size:.25,transparent:true,opacity:.8}));scene.add(amph);
+
+/* ---------- Interaction ---------- */
+const mouse=new THREE.Vector2(0,0),mouseN=new THREE.Vector2(0,0),ray=new THREE.Raycaster(),plane=new THREE.Plane(new THREE.Vector3(0,0,1),0),hit=new THREE.Vector3();
+let hasPointer=false;
+addEventListener("pointermove",e=>{hasPointer=true;mouseN.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1)});
+addEventListener("pointerdown",e=>{if(e.target.closest("button,a,.dossier,.rec"))return;ray.setFromCamera(new THREE.Vector2(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1),camera);
+  if(ray.ray.intersectPlane(plane,hit)){plMat.uniforms.uBurst.value.copy(hit);plMat.uniforms.uBurstT.value=time}});
+
+function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.fov=w<700?68:55;camera.updateProjectionMatrix()}
+resize();addEventListener("resize",resize);
+
+/* ---------- Loop ---------- */
+const clock=new THREE.Clock();let time=0,camW=0;
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function frame(){
+  const dt=Math.min(clock.getDelta(),.05);time+=dt*(reduce?.4:1);
+  autoStep(dt);
+  const targetW=scrollToWorld(scrollY);camW+=(targetW-camW)*Math.min(1,dt*3.2);
+  const depth=worldToDepth(camW);hud(camW);
+  mouse.lerp(mouseN,Math.min(1,dt*4));
+
+  // camera: looks up at the surface at first, levels out as it dives, gentle sway
+  const look=sstep(0,30,camW);
+  camera.position.set(mouse.x*3.5+Math.sin(time*.13)*1.2,-camW+Math.sin(time*.2)*.4,30);
+  camera.lookAt(mouse.x*1.2,-camW+(1-look)*14+mouse.y*2.5,0);
+
+  // water colour, fog, light
+  const c=palAt(camW);scene.background=c;fog.color.copy(c);fog.density=.010+sstep(0,500,camW)*.022;
+  const sunK=1-sstep(0,170,camW);hemi.intensity=.25+1.1*sunK;sun.intensity=1.6*sunK;
+  const lampK=sstep(195,215,camW);lamp.intensity=3.2*lampK;fill.intensity=.5*lampK;
+  surface.visible=camW<120;surfMat.uniforms.uTime.value=time;sunGlow.material.opacity=1-sstep(0,60,camW);
+  rays.forEach((r,i)=>{r.material.uniforms.uTime.value=time;r.material.uniforms.uO.value=sunK;r.rotation.z=r.userData.b+Math.sin(time*.3+i)*.04;r.visible=sunK>.01});
+  snowMat.uniforms.uTime.value=time;
+  plMat.uniforms.uTime.value=time;plMat.uniforms.uFade.value=sstep(95,170,camW);
+
+  if(hasPointer){ray.setFromCamera(mouse,camera);if(ray.ray.intersectPlane(plane,hit))plMat.uniforms.uMouse.value.copy(hit)}
+
+  // fish (only bother near the sunlit zone)
+  if(camW<140){
+    center.set(Math.sin(time*.11)*14,-42+Math.sin(time*.07)*14,-12+Math.cos(time*.09)*6);
+    for(let i=0;i<FISH;i++){const f=fp[i];fishPos(f,time,center,dummy.position);fishPos(f,time+.05,center,tmpV);dummy.lookAt(tmpV);dummy.updateMatrix();fish.setMatrixAt(i,dummy.matrix)}
+    fish.instanceMatrix.needsUpdate=true;fish.visible=true;
+  }else fish.visible=false;
+
+  jellies.forEach(j=>{const near=Math.abs(j.grp.position.y+camW)<70;j.grp.visible=near;if(near)updateJelly(j,time,dt)});
+
+  chains.forEach(ch=>{if(Math.abs(ch.y+camW)>80){ch.m.visible=false;return}ch.m.visible=true;
+    for(let i=0;i<ch.n;i++){const s=i/ch.n;dummy.position.set(ch.x+Math.sin(s*6+time*.6+ch.ph)*3,ch.y-s*34+Math.sin(time*.3+ch.ph)*2,ch.z+Math.cos(s*4+time*.5)*2.5);
+      dummy.scale.setScalar(.6+.6*Math.pow(.5+.5*Math.sin(time*3-s*18),3));dummy.rotation.set(0,0,0);dummy.updateMatrix();ch.m.setMatrixAt(i,dummy.matrix)}
+    ch.m.instanceMatrix.needsUpdate=true});
+
+  anglers.forEach(a=>{const flick=.75+.25*Math.sin(time*5+a.ph)*Math.sin(time*1.3);a.lure.material.opacity=flick;a.pl.intensity=2.2*flick;
+    a.g.position.y=a.by+Math.sin(time*.4+a.ph)*2;a.g.position.x=a.bx+Math.sin(time*.15+a.ph)*4});
+
+  snail.forEach(s=>{if(camW<420)return;s.g.rotation.y+=s.sp*dt*.4;const d=new THREE.Vector3(Math.cos(s.g.rotation.y),0,-Math.sin(s.g.rotation.y));
+    s.g.position.addScaledVector(d,s.sp*dt*3);s.tail.rotation.y=Math.sin(time*2+s.ph)*.4});
+
+  // sonar ping cadence
+  pingTimer-=dt;if(pingTimer<=0){ping(depth);pingTimer=6.5}
+  if(lp)lp.frequency.setTargetAtTime(520-sstep(0,500,camW)*400,ac.currentTime,.3);
+
+  renderer.render(scene,camera);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+function loopNo3D(){function f(){autoStep(1/60);hud(scrollToWorld(scrollY));requestAnimationFrame(f)}requestAnimationFrame(f)}
+})();
+</script>
+
+</body></html>

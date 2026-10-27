@@ -1,0 +1,463 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Road to the 10K</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a race-bib header with the countdown, then a training log: next session + pace card, phase strip, weekly-volume bars, week-by-week checklists, and race-day playbook. */
+:root{
+  --bg:#F2F3F5;          /* cool track-side grey */
+  --surface:#FFFFFF;
+  --ink:#14171F;
+  --muted:#5D6472;
+  --line:#DDE0E6;
+  --accent:#2350E6;      /* race-number blue */
+  --on-accent:#FFFFFF;
+  /* session types */
+  --easy:#2E9B63; --int:#E0453A; --tempo:#E08A1E; --long:#2350E6; --str:#7B4FD6; --rest:#9AA1AD; --race:#14171F;
+  --display:"Barlow Condensed","Arial Narrow",Impact,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Roboto Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1117;--surface:#171B23;--ink:#E9ECF2;--muted:#9AA2B1;--line:#283040;--accent:#5C82FF;--on-accent:#0E1117;
+  --easy:#44C285;--int:#F06459;--tempo:#F0A03A;--long:#5C82FF;--str:#9B76F0;--rest:#6E7686;--race:#E9ECF2;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0E1117;--surface:#171B23;--ink:#E9ECF2;--muted:#9AA2B1;--line:#283040;--accent:#5C82FF;--on-accent:#0E1117;
+  --easy:#44C285;--int:#F06459;--tempo:#F0A03A;--long:#5C82FF;--str:#9B76F0;--rest:#6E7686;--race:#E9ECF2;color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:var(--body);font-size:1rem;line-height:1.55;margin:0}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:clamp(16px,3vw,32px);padding-block:24px 64px;display:grid;gap:28px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3{margin:0;text-wrap:balance}
+.lbl{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.h2{font-family:var(--display);font-weight:800;font-size:clamp(1.9rem,4.5vw,2.6rem);text-transform:uppercase;line-height:.95;letter-spacing:.01em}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+.num{font-variant-numeric:tabular-nums}
+
+/* bib */
+.bib{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(20px,4vw,36px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px 32px;align-items:end;overflow:hidden}
+.bib::before,.bib::after{content:"";position:absolute;top:14px;width:12px;height:12px;border-radius:50%;background:var(--bg);box-shadow:inset 0 1px 2px rgba(0,0,0,.2)}
+.bib::before{left:14px}.bib::after{right:14px}
+.bib .pins::before,.bib .pins::after{content:"";position:absolute;bottom:14px;width:12px;height:12px;border-radius:50%;background:var(--bg);box-shadow:inset 0 1px 2px rgba(0,0,0,.2)}
+.bib .pins::before{left:14px}.bib .pins::after{right:14px}
+.bib .stripe{position:absolute;left:0;right:0;top:0;height:8px;background:repeating-linear-gradient(90deg,var(--accent) 0 40px,var(--int) 40px 80px)}
+.bib h1{font-family:var(--display);font-weight:800;font-size:clamp(2.6rem,8vw,5.2rem);line-height:.86;text-transform:uppercase}
+.bib h1 span{color:var(--accent)}
+.bib p{margin:12px 0 0;max-width:52ch;color:var(--muted)}
+.count{text-align:right}
+.count b{display:block;font-family:var(--display);font-weight:800;font-size:clamp(5rem,15vw,9rem);line-height:.8;font-variant-numeric:tabular-nums;color:var(--ink)}
+.facts{display:flex;gap:24px;flex-wrap:wrap;grid-column:1/-1;padding-top:16px;border-top:2px dashed var(--line)}
+.facts div{display:grid}
+.facts b{font-family:var(--display);font-size:1.5rem;font-weight:700;line-height:1.1}
+
+/* top row */
+.top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:20px}
+.next{display:grid;gap:10px;align-content:start;border-top:6px solid var(--accent)}
+.next h3{font-family:var(--display);font-weight:800;font-size:2rem;text-transform:uppercase;line-height:1}
+.next p{margin:0}
+.next .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.progress{display:grid;gap:6px;margin-top:6px}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+
+.pace{display:grid;gap:14px}
+.pace-in{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pace-in label{display:grid;gap:4px;font-size:.85rem;color:var(--muted)}
+.pace-in input{font:500 1.15rem var(--mono);padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);width:100%;min-width:0}
+.pace-note{font-size:.82rem;color:var(--muted);margin:0}
+.paces{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.pc{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:2px;min-width:0}
+.pc b{font-family:var(--mono);font-weight:500;font-size:1rem;font-variant-numeric:tabular-nums}
+.pc span{font-size:.76rem;color:var(--muted)}
+.pc .lbl{display:flex;align-items:center;gap:6px}
+.sw{width:9px;height:9px;border-radius:2px;display:inline-block;flex:0 0 auto}
+
+/* phases */
+.phases{display:grid;grid-template-columns:1fr 2fr 2fr 2fr 1.2fr;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.ph{padding:12px 14px;background:var(--surface);border-right:1px solid var(--line);display:grid;gap:2px;min-width:0}
+.ph:last-child{border-right:0}
+.ph b{font-family:var(--display);font-weight:700;font-size:1.25rem;text-transform:uppercase;line-height:1}
+.ph span{font-size:.8rem;color:var(--muted)}
+.ph.now{background:var(--accent);color:var(--on-accent)}
+.ph.now span,.ph.now .lbl{color:var(--on-accent);opacity:.85}
+
+/* volume */
+.vol{display:grid;gap:8px}
+.vrow{display:grid;grid-template-columns:5.5rem minmax(0,1fr) 3.6rem;gap:12px;align-items:center;font-size:.85rem}
+.vrow .track{height:18px;background:var(--bg);border-radius:4px;position:relative;overflow:hidden}
+.vrow .track i{position:absolute;left:0;top:0;bottom:0;background:var(--accent);opacity:.25;border-radius:4px}
+.vrow .track em{position:absolute;left:0;top:0;bottom:0;background:var(--accent);border-radius:4px;transition:width .3s}
+.vrow b{font-family:var(--mono);font-weight:500;text-align:right;font-variant-numeric:tabular-nums}
+.vrow.cut .lbl::after{content:" · easier";color:var(--easy)}
+
+/* weeks */
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.82rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.week{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.whead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid var(--line)}
+.whead h3{font-family:var(--display);font-weight:800;font-size:1.5rem;text-transform:uppercase;line-height:1}
+.whead p{margin:2px 0 0;font-size:.88rem;color:var(--muted)}
+.week.current{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.week.current .whead h3::after{content:"This week";font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;background:var(--accent);color:var(--on-accent);padding:2px 7px;border-radius:4px;margin-left:10px;vertical-align:middle}
+.day{display:grid;grid-template-columns:4.4rem 7.2rem minmax(0,1fr) 3.4rem 2rem;gap:14px;align-items:center;padding:11px 18px;border-bottom:1px solid var(--line)}
+.day:last-child{border-bottom:0}
+.day .d{display:grid;line-height:1.15}
+.day .d b{font-family:var(--display);font-weight:700;font-size:1.15rem}
+.day .d span{font-size:.75rem;color:var(--muted)}
+.tag{justify-self:start;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:5px;color:#fff;white-space:nowrap}
+.t-easy{background:var(--easy)}.t-int{background:var(--int)}.t-tempo{background:var(--tempo)}.t-long{background:var(--long)}.t-str{background:var(--str)}.t-rest{background:var(--rest)}.t-race{background:var(--race);color:var(--bg)}
+.day .w b{font-weight:600}
+.day .w p{margin:2px 0 0;font-size:.88rem;color:var(--muted)}
+.pz{font-family:var(--mono);font-size:.82rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:0 5px;white-space:nowrap}
+.day .km{font-family:var(--mono);font-size:.88rem;text-align:right;font-variant-numeric:tabular-nums}
+.day input{width:20px;height:20px;accent-color:var(--accent);justify-self:end;cursor:pointer}
+.day.done .w b{text-decoration:line-through;color:var(--muted)}
+.day.today{background:color-mix(in srgb,var(--accent) 8%,transparent)}
+.day.today .d b::after{content:" · today";font-family:var(--mono);font-size:.62rem;color:var(--accent);letter-spacing:.06em;text-transform:uppercase}
+.day.past:not(.done) .w b{color:var(--muted)}
+.day.racer{background:color-mix(in srgb,var(--int) 10%,transparent)}
+
+/* guides */
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.types{display:grid;gap:14px}
+.type{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start}
+.type p{margin:2px 0 0;font-size:.92rem;color:var(--muted)}
+.ex{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.ex li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding-bottom:8px;border-bottom:1px dashed var(--line);font-size:.94rem}
+.ex li:last-child{border-bottom:0}
+.ex span{font-family:var(--mono);font-size:.82rem;color:var(--muted);white-space:nowrap}
+
+.timeline{display:grid;gap:0}
+.tl{display:grid;grid-template-columns:8.5rem minmax(0,1fr);gap:16px;padding-block:14px;border-top:1px solid var(--line)}
+.tl:first-child{border-top:0}
+.tl b{font-family:var(--display);font-weight:700;font-size:1.2rem;text-transform:uppercase;line-height:1.1}
+.tl ul{margin:0;padding-left:1.1em;display:grid;gap:4px;font-size:.94rem}
+.splits{overflow-x:auto}
+.splits table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:520px}
+.splits th,.splits td{padding:6px 8px;text-align:center;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.splits th{font-family:var(--mono);font-weight:500;font-size:.72rem;color:var(--muted)}
+.splits td{font-family:var(--mono)}
+.splits tr.seg td{font-family:var(--body);font-size:.78rem;color:var(--muted)}
+.rules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.rule{display:grid;gap:4px}
+.rule b{font-family:var(--display);font-weight:700;font-size:1.25rem;text-transform:uppercase;line-height:1.05}
+.rule p{margin:0;font-size:.92rem;color:var(--muted)}
+.warn{border-left:4px solid var(--int);padding-left:14px;font-size:.94rem}
+.foot{font-size:.8rem;color:var(--muted)}
+
+@media (max-width:860px){
+  .top,.grid2{grid-template-columns:1fr}
+  .phases{grid-template-columns:1fr 1fr}
+  .ph{border-bottom:1px solid var(--line)}
+  .rules{grid-template-columns:1fr}
+  .paces{grid-template-columns:1fr 1fr}
+}
+@media (max-width:600px){
+  .bib{grid-template-columns:1fr}.count{text-align:left}
+  .day{grid-template-columns:3.6rem minmax(0,1fr) 2rem;gap:4px 12px;align-items:start}
+  .day .d{grid-row:span 3}
+  .day .tag{grid-column:2}
+  .day .w{grid-column:2}
+  .day .km{grid-column:2;text-align:left}
+  .day input{grid-column:3;grid-row:1}
+  .tl{grid-template-columns:1fr;gap:6px}
+  .vrow{grid-template-columns:4.6rem minmax(0,1fr) 3.2rem}
+}
+</style>
+
+<div class="wrap">
+  <header class="bib">
+    <div class="stripe"></div><div class="pins"></div>
+    <div>
+      <span class="lbl">Race day · Saturday 21 November 2026</span>
+      <h1>Road to the <span>10K</span></h1>
+      <p>A 7-week plan built from where you are now: 5K and 7K runs, and a first 10K done on 2 October. Four runs and one strength session a week, building to race day.</p>
+    </div>
+    <div class="count"><b id="daysLeft">49</b><span class="lbl">days to go</span></div>
+    <div class="facts">
+      <div><span class="lbl">Weeks</span><b>7</b></div>
+      <div><span class="lbl">Runs / week</span><b>4</b></div>
+      <div><span class="lbl">Peak week</span><b id="peakKm">31 km</b></div>
+      <div><span class="lbl">Longest run</span><b>12 km</b></div>
+      <div><span class="lbl">Total planned</span><b id="totalKm">— km</b></div>
+    </div>
+  </header>
+
+  <section class="top">
+    <div class="card next" id="nextCard">
+      <span class="lbl">Next session</span>
+      <h3 id="nxTitle">—</h3>
+      <div class="meta" id="nxMeta"></div>
+      <p id="nxText"></p>
+      <div class="progress"><div class="bar"><i id="pBar"></i></div><span class="lbl" id="pText">0 of 0 sessions done</span></div>
+    </div>
+    <div class="card pace">
+      <div><span class="lbl">Your paces</span><h2 class="h2" style="font-size:1.7rem;margin-top:4px">Set your goal, get your paces</h2></div>
+      <div class="pace-in">
+        <label for="lastTime">Your 10K on 2 Oct (h:mm:ss or mm:ss)<input id="lastTime" inputmode="numeric" value="58:00" autocomplete="off"></label>
+        <label for="goalTime">Goal for 21 Nov<input id="goalTime" inputmode="numeric" value="56:15" autocomplete="off"></label>
+      </div>
+      <p class="pace-note" id="paceNote">Example times shown. Type your real 10K time; the goal fills in about 3% faster, which is realistic for 7 weeks. You can change it.</p>
+      <div class="paces" id="paces"></div>
+    </div>
+  </section>
+
+  <section style="display:grid;gap:12px">
+    <h2 class="h2">The four phases</h2>
+    <div class="phases" id="phases"></div>
+  </section>
+
+  <section class="card" style="display:grid;gap:14px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap"><h2 class="h2" style="font-size:1.7rem">Weekly distance</h2><span class="lbl">Light bar = planned · solid = done</span></div>
+    <div class="vol" id="vol"></div>
+    <p class="foot" style="margin:0">Volume grows by about 10% a week at most, with an easier week in week 4 so your body can absorb the work.</p>
+  </section>
+
+  <section style="display:grid;gap:14px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap">
+      <h2 class="h2">Week by week</h2>
+      <div class="legend" id="legend"></div>
+    </div>
+    <div id="weeks" style="display:grid;gap:16px"></div>
+    <p class="foot">Tick sessions off as you go; your progress is saved in this browser. Days can shift: just keep the hard days apart and never put two hard sessions back to back.</p>
+  </section>
+
+  <section class="grid2">
+    <div class="card types">
+      <h2 class="h2" style="font-size:1.7rem">What each session means</h2>
+      <div class="type"><span class="tag t-easy">Easy</span><div><b>Conversational pace</b><p>You can talk in full sentences. Most of your running is here. It builds the engine without wearing you out.</p></div></div>
+      <div class="type"><span class="tag t-int">Intervals</span><div><b>Short, fast repeats</b><p>Warm up 1.5 km easy, run the repeats, jog the recoveries, cool down 1.5 km. Makes race pace feel easier.</p></div></div>
+      <div class="type"><span class="tag t-tempo">Tempo</span><div><b>Comfortably hard</b><p>You could say a few words but not chat. Teaches you to hold a strong pace for a long time.</p></div></div>
+      <div class="type"><span class="tag t-long">Long run</span><div><b>Slow and steady</b><p>The most important run of the week. Builds endurance so the last 3 km of the race feel strong.</p></div></div>
+      <div class="type"><span class="tag t-str">Strength</span><div><b>25–30 minutes</b><p>Strong legs and core keep your form together when you're tired and lower injury risk.</p></div></div>
+      <div class="type"><span class="tag t-rest">Rest</span><div><b>Part of the plan</b><p>Fitness is built while you recover. A walk or gentle stretching is fine.</p></div></div>
+      <div class="type"><span class="tag t-easy">Strides</span><div><b>4–6 × 20 seconds</b><p>After an easy run: smooth, quick, relaxed accelerations with a full walk back. Good for form and leg speed.</p></div></div>
+    </div>
+    <div class="card" style="display:grid;gap:14px;align-content:start">
+      <h2 class="h2" style="font-size:1.7rem">Strength routine</h2>
+      <p class="foot" style="margin:0;font-size:.92rem">Every Wednesday. No gym needed. Do 2–3 rounds, resting 60 seconds between rounds.</p>
+      <ul class="ex">
+        <li>Bodyweight squats<span>15 reps</span></li>
+        <li>Reverse lunges<span>10 / leg</span></li>
+        <li>Glute bridges<span>15 reps</span></li>
+        <li>Single-leg calf raises<span>15 / leg</span></li>
+        <li>Plank<span>30–45 s</span></li>
+        <li>Side plank<span>20–30 s / side</span></li>
+        <li>Single-leg balance<span>30 s / leg</span></li>
+      </ul>
+      <h3 style="font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:1.25rem;margin-top:6px">Before every run</h3>
+      <ul class="ex">
+        <li>Brisk walk or very easy jog<span>5 min</span></li>
+        <li>Leg swings, front and side<span>10 / leg</span></li>
+        <li>High knees and butt kicks<span>2 × 20 m</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="card" style="display:grid;gap:14px">
+    <h2 class="h2">Race-day pacing</h2>
+    <p style="margin:0;color:var(--muted)">Most runners start a 10K too fast and pay for it later. Run the first 2 km a little slower than goal pace, settle in, and save your push for the last 3 km.</p>
+    <div class="splits"><table id="splits"></table></div>
+  </section>
+
+  <section class="card">
+    <h2 class="h2" style="margin-bottom:6px">Race week playbook</h2>
+    <div class="timeline">
+      <div class="tl"><b>Mon–Thu</b><ul><li>Cut distance, keep a little speed (see week 7).</li><li>Sleep 8 hours if you can; it matters more than any workout now.</li><li>Drink water steadily through the day.</li></ul></div>
+      <div class="tl"><b>Fri · day before</b><ul><li>Rest, or a 15-minute walk.</li><li>Lay out kit: shoes you've already run in, socks, bib, 4 safety pins, watch charged.</li><li>Normal dinner you know works for you. Nothing new.</li><li>Check start time, route to the start and where to park or drop bags.</li></ul></div>
+      <div class="tl"><b>Race morning</b><ul><li>Eat 2–3 hours before: toast or oats with banana, a coffee if you usually have one.</li><li>Arrive 45–60 minutes early. Toilet queue first.</li><li>Warm up 10 minutes easy jog plus 3–4 strides, finishing 10 minutes before the start.</li></ul></div>
+      <div class="tl"><b>The race</b><ul><li>Km 1–2: hold back, about 5 seconds per km slower than goal.</li><li>Km 3–7: settle on goal pace. Relax shoulders, short quick steps on hills.</li><li>Km 8–10: if you feel good, push. Last 400 m, go.</li></ul></div>
+      <div class="tl"><b>After</b><ul><li>Keep walking 10 minutes; drink and eat something within an hour.</li><li>Sunday: walk or 20 minutes very easy. Then celebrate.</li></ul></div>
+    </div>
+  </section>
+
+  <section style="display:grid;gap:14px">
+    <h2 class="h2">Golden rules</h2>
+    <div class="rules">
+      <div class="card rule"><b>Easy means easy</b><p>About 80% of your running should be at conversational pace. Going too hard on easy days ruins the hard days.</p></div>
+      <div class="card rule"><b>Consistency wins</b><p>Missed a run? Skip it and carry on. Never squeeze two hard sessions together to catch up.</p></div>
+      <div class="card rule"><b>Nothing new on race day</b><p>Shoes, breakfast, gels and kit should all be tested on long runs first.</p></div>
+    </div>
+    <p class="warn"><b>Pain is a stop sign.</b> Normal tiredness and stiffness are fine. Sharp pain, pain that gets worse while you run, or pain that makes you limp means stop and take 2–3 days off. If it stays, see a doctor or physio before running again.</p>
+  </section>
+</div>
+
+<script>
+/* ---------- Plan data ----------
+   p = pace key shown inline: easy, long, tempo, goal, int (5K pace), fast (400 m reps) */
+const PLAN=[
+ {wk:"Recovery",title:"Recover from your 10K",note:"You ran 10K on 2 Oct. Let your legs recover before the plan starts.",days:[
+  ["2026-10-03","rest","Rest","A 20–30 minute walk is good for stiff legs.",0],
+  ["2026-10-04","easy","Easy run","4 km at {easy}. Should feel very relaxed.",4]]},
+ {wk:"Week 1",phase:"Base",title:"Build the routine",note:"All easy running plus one strength session. Find the rhythm of four runs a week.",days:[
+  ["2026-10-05","rest","Rest","",0],
+  ["2026-10-06","easy","Easy + strides","5 km at {easy}, then 4 × 20 s strides.",5],
+  ["2026-10-07","str","Strength","Full routine, 2 rounds.",0],
+  ["2026-10-08","easy","Easy run","6 km at {easy}.",6],
+  ["2026-10-09","rest","Rest","",0],
+  ["2026-10-10","easy","Easy run","4 km at {easy}.",4],
+  ["2026-10-11","long","Long run","8 km at {long}.",8]]},
+ {wk:"Week 2",phase:"Base",title:"First speed session",note:"Short, fast repeats to wake the legs up. The long run goes back to 10 km, now feeling comfortable.",days:[
+  ["2026-10-12","rest","Rest","",0],
+  ["2026-10-13","int","Intervals","1.5 km warm-up, 6 × 400 m at {fast} with 90 s jog, 1.5 km cool-down.",6],
+  ["2026-10-14","str","Strength","Full routine, 2–3 rounds.",0],
+  ["2026-10-15","easy","Easy run","6 km at {easy}.",6],
+  ["2026-10-16","rest","Rest","",0],
+  ["2026-10-17","easy","Easy run","5 km at {easy}.",5],
+  ["2026-10-18","long","Long run","10 km at {long}. Slower than your 2 Oct run.",10]]},
+ {wk:"Week 3",phase:"Build",title:"Longer reps and first tempo",note:"Two quality sessions this week. Keep the other runs truly easy.",days:[
+  ["2026-10-19","rest","Rest","",0],
+  ["2026-10-20","int","Intervals","1.5 km warm-up, 5 × 800 m at {int} with 2 min jog, 1.5 km cool-down.",7],
+  ["2026-10-21","str","Strength","Full routine, 3 rounds.",0],
+  ["2026-10-22","tempo","Tempo","1.5 km warm-up, 2 × 10 min at {tempo} with 3 min jog, 1.5 km cool-down.",7],
+  ["2026-10-23","rest","Rest","",0],
+  ["2026-10-24","easy","Easy run","5 km at {easy}.",5],
+  ["2026-10-25","long","Long run","11 km at {long}.",11]]},
+ {wk:"Week 4",phase:"Build",cut:1,title:"Easier week and a 5K test",note:"Less volume so your body catches up. Saturday's 5K time trial checks your fitness: use it to adjust your goal.",days:[
+  ["2026-10-26","rest","Rest","",0],
+  ["2026-10-27","easy","Easy + strides","5 km at {easy}, then 6 × 20 s strides.",5],
+  ["2026-10-28","str","Strength","Full routine, 2 rounds.",0],
+  ["2026-10-29","tempo","Tempo","1.5 km warm-up, 15 min continuous at {tempo}, 1.5 km cool-down.",6],
+  ["2026-10-30","rest","Rest","",0],
+  ["2026-10-31","int","5K time trial","1.5 km warm-up, 5 km hard but even, 1.5 km cool-down. Multiply your 5K time by 2.1 for a realistic 10K goal.",8],
+  ["2026-11-01","easy","Easy run","5 km very easy at {easy}.",5]]},
+ {wk:"Week 5",phase:"Peak",title:"Race pace practice",note:"The biggest week. The intervals are at your goal pace so it starts to feel familiar.",days:[
+  ["2026-11-02","rest","Rest","",0],
+  ["2026-11-03","int","Intervals","1.5 km warm-up, 4 × 1 km at {goal} with 2 min jog, 1.5 km cool-down.",7],
+  ["2026-11-04","str","Strength","Full routine, 3 rounds.",0],
+  ["2026-11-05","easy","Easy run","7 km at {easy}.",7],
+  ["2026-11-06","rest","Rest","",0],
+  ["2026-11-07","easy","Easy run","5 km at {easy}.",5],
+  ["2026-11-08","long","Long run","12 km at {long}. Your longest run. Practise race-day breakfast before it.",12]]},
+ {wk:"Week 6",phase:"Peak",title:"Sharpen",note:"Last hard week. The long run finishes at goal pace to rehearse a strong finish.",days:[
+  ["2026-11-09","rest","Rest","",0],
+  ["2026-11-10","int","Intervals","1.5 km warm-up, 6 × 600 m at {int} with 90 s jog, 1.5 km cool-down.",7],
+  ["2026-11-11","str","Strength","Lighter: 2 rounds.",0],
+  ["2026-11-12","tempo","Tempo","1.5 km warm-up, 20 min at {tempo}, 1.5 km cool-down.",8],
+  ["2026-11-13","rest","Rest","",0],
+  ["2026-11-14","easy","Easy run","5 km at {easy}.",5],
+  ["2026-11-15","long","Long run","10 km: 8 km at {long}, last 2 km at {goal}. Wear your race shoes and kit.",10]]},
+ {wk:"Week 7",phase:"Taper",title:"Taper and race",note:"Less running, a little speed, lots of sleep. You'll feel restless; that's the taper working.",days:[
+  ["2026-11-16","rest","Rest","",0],
+  ["2026-11-17","int","Sharpener","1.5 km warm-up, 3 × 1 km at {goal} with 2 min jog, 1 km cool-down.",5],
+  ["2026-11-18","easy","Easy run","4 km at {easy}. Mobility instead of strength this week.",4],
+  ["2026-11-19","easy","Easy + strides","3 km at {easy}, then 4 × 20 s strides.",3],
+  ["2026-11-20","rest","Rest","Lay out your kit. Early night.",0],
+  ["2026-11-21","race","RACE DAY · 10K","Start at {goal} plus 5 s/km, settle into {goal}, push the last 3 km.",10],
+  ["2026-11-22","rest","Recovery","Walk or 20 minutes very easy. You did it.",0]]}
+];
+const PHASES=[
+ {n:"Recover",d:"3–4 Oct",s:"Let the 10K settle",from:"2026-10-03",to:"2026-10-04"},
+ {n:"Base",d:"Weeks 1–2",s:"Routine and easy volume",from:"2026-10-05",to:"2026-10-18"},
+ {n:"Build",d:"Weeks 3–4",s:"Tempo, longer reps, 5K test",from:"2026-10-19",to:"2026-11-01"},
+ {n:"Peak",d:"Weeks 5–6",s:"Race pace and 12 km long run",from:"2026-11-02",to:"2026-11-15"},
+ {n:"Taper",d:"Week 7",s:"Rest up and race",from:"2026-11-16",to:"2026-11-22"}
+];
+const TYPES={easy:["Easy","t-easy","--easy"],int:["Intervals","t-int","--int"],tempo:["Tempo","t-tempo","--tempo"],long:["Long run","t-long","--long"],str:["Strength","t-str","--str"],rest:["Rest","t-rest","--rest"],race:["Race","t-race","--race"]};
+
+/* ---------- Helpers ---------- */
+const $=s=>document.querySelector(s);
+const parseD=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+const today=new Date();today.setHours(0,0,0,0);
+const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const TODAY=iso(today);
+const DOW=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+// Accepts 58:00, 58.00, 58,00, 58 (minutes), 1:02:30, 58m30s, 1h02m
+function parseT(s){
+  s=String(s).trim().toLowerCase().replace(/\s+/g,"");if(!s)return null;
+  const hm=s.match(/^(?:(\d+)h)?(?:(\d+)m(?:in)?)?(?:(\d+)s?)?$/);
+  if(hm&&/[hm]/.test(s))return (+(hm[1]||0))*3600+(+(hm[2]||0))*60+(+(hm[3]||0));
+  const p=s.split(/[:.,]/).map(Number);if(p.some(n=>isNaN(n)))return null;
+  if(p.length===3)return p[0]*3600+p[1]*60+p[2];
+  if(p.length===2)return p[0]<4&&p[1]>=0?p[0]*3600+p[1]*60:p[0]*60+p[1];   // "1:05" = 1 h 05 min
+  if(p.length===1)return p[0]*60;                                            // "58" = 58 min
+  return null}
+const fmtT=s=>{s=Math.round(s);const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return h?`${h}:${String(m).padStart(2,"0")}:${String(x).padStart(2,"0")}`:`${m}:${String(x).padStart(2,"0")}`};
+const fmtP=s=>{s=Math.round(s);return `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`};
+
+let done={};try{done=JSON.parse(localStorage.getItem("r10k-done")||"{}")}catch(e){}
+const save=()=>{try{localStorage.setItem("r10k-done",JSON.stringify(done))}catch(e){}};
+
+/* ---------- Paces ---------- */
+let G=337.5; // goal seconds per km
+function paceStr(k){
+  const r={easy:[G+60,G+90],long:[G+50,G+80],tempo:[G+8,G+15],goal:[G,G],int:[G-12,G-12],fast:[G-18,G-18]}[k];
+  return r[0]===r[1]?fmtP(r[0])+"/km":`${fmtP(r[0])}–${fmtP(r[1])}/km`;
+}
+const PACEINFO=[["easy","Easy","--easy","Talk in full sentences"],["long","Long run","--long","Slow, steady"],["tempo","Tempo","--tempo","Comfortably hard"],["goal","Race pace","--race","Your 10K goal"],["int","5K pace","--int","800 m and 600 m reps"],["fast","400 m reps","--int","Fast but controlled"]];
+function renderPaces(){
+  $("#paces").innerHTML=PACEINFO.map(([k,n,c,s])=>`<div class="pc"><span class="lbl"><i class="sw" style="background:var(${c})"></i>${n}</span><b>${paceStr(k)}</b><span>${s}</span></div>`).join("");
+  renderWeeks();renderSplits();renderNext();
+}
+let goalTouched=false;
+try{const sv=JSON.parse(localStorage.getItem("r10k-times")||"null");if(sv){$("#lastTime").value=sv.l;$("#goalTime").value=sv.g;goalTouched=sv.t}}catch(e){}
+function readTimes(){
+  const l=parseT($("#lastTime").value);
+  if(!goalTouched&&l){$("#goalTime").value=fmtT(Math.round(l*.97/15)*15)}
+  const g=parseT($("#goalTime").value);
+  if(g&&g>1500&&g<6000){G=g/10;$("#goalTime").style.borderColor="";$("#paceNote").textContent=l?`Goal is ${Math.round((1-g/l)*1000)/10}% faster than your 2 Oct run (${fmtP(l/10)}/km → ${fmtP(G)}/km).`:"Enter your 2 Oct time to compare."}
+  else{$("#goalTime").style.borderColor="var(--tempo)";$("#paceNote").textContent="Type a 10K time between 25 and 100 minutes, like 55:00 or 1:02:30. Paces below use your last valid goal."}
+  try{localStorage.setItem("r10k-times",JSON.stringify({l:$("#lastTime").value,g:$("#goalTime").value,t:goalTouched}))}catch(e){}
+  renderPaces();
+}
+$("#lastTime").addEventListener("input",readTimes);
+$("#goalTime").addEventListener("input",()=>{goalTouched=true;readTimes()});
+
+/* ---------- Rendering ---------- */
+const fill=t=>t.replace(/\{(\w+)\}/g,(_,k)=>`<span class="pz">${paceStr(k)}</span>`);
+function weekKm(w){return w.days.reduce((a,d)=>a+d[4],0)}
+function doneKm(w){return w.days.reduce((a,d)=>a+(done[d[0]]?d[4]:0),0)}
+function renderWeeks(){
+  $("#weeks").innerHTML=PLAN.map(w=>{
+    const cur=w.days.some(d=>d[0]===TODAY)||(w.wk==="Week 1"&&TODAY<"2026-10-05"&&false);
+    return `<article class="week${cur?" current":""}">
+      <div class="whead"><div><h3>${w.wk}${w.phase?` · ${w.phase}`:""}</h3><p>${w.title}. ${w.note}</p></div><span class="lbl num">${weekKm(w)} km planned</span></div>
+      ${w.days.map(d=>{const dt=parseD(d[0]),[tn,tc]=TYPES[d[1]],trainable=d[1]!=="rest";
+        const cls=["day",done[d[0]]?"done":"",d[0]===TODAY?"today":"",d[0]<TODAY?"past":"",d[1]==="race"?"racer":""].join(" ");
+        return `<div class="${cls}">
+          <div class="d"><b>${DOW[dt.getDay()]} ${dt.getDate()}</b><span>${MON[dt.getMonth()]}</span></div>
+          <span class="tag ${tc}">${tn}</span>
+          <div class="w"><b>${d[2]}</b>${d[3]?`<p>${fill(d[3])}</p>`:""}</div>
+          <span class="km">${d[4]?d[4]+" km":""}</span>
+          ${trainable?`<input type="checkbox" data-d="${d[0]}" aria-label="Mark ${d[2]} on ${DOW[dt.getDay()]} ${dt.getDate()} ${MON[dt.getMonth()]} as done" ${done[d[0]]?"checked":""}>`:"<span></span>"}
+        </div>`}).join("")}
+    </article>`}).join("");
+}
+$("#weeks").addEventListener("change",e=>{const d=e.target.dataset.d;if(!d)return;done[d]=e.target.checked;save();renderWeeks();renderVol();renderNext()});
+
+function renderVol(){
+  const max=Math.max(...PLAN.map(weekKm));
+  $("#vol").innerHTML=PLAN.map(w=>{const k=weekKm(w),dk=doneKm(w);
+    return `<div class="vrow${w.cut?" cut":""}"><span class="lbl">${w.wk==="Recovery"?"3–4 Oct":w.wk}</span><div class="track"><i style="width:${k/max*100}%"></i><em style="width:${dk/max*100}%"></em></div><b>${k} km</b></div>`}).join("");
+}
+function renderPhases(){
+  $("#phases").innerHTML=PHASES.map(p=>`<div class="ph${TODAY>=p.from&&TODAY<=p.to?" now":""}"><span class="lbl">${p.d}</span><b>${p.n}</b><span>${p.s}</span></div>`).join("");
+}
+function renderNext(){
+  const all=PLAN.flatMap(w=>w.days.map(d=>({d,w}))).filter(x=>x.d[1]!=="rest");
+  const total=all.length,c=all.filter(x=>done[x.d[0]]).length;
+  $("#pBar").style.width=(c/total*100)+"%";$("#pText").textContent=`${c} of ${total} sessions done · ${PLAN.reduce((a,w)=>a+doneKm(w),0)} of ${PLAN.reduce((a,w)=>a+weekKm(w),0)} km`;
+  const nx=all.find(x=>x.d[0]>=TODAY&&!done[x.d[0]]);
+  if(!nx){$("#nxTitle").textContent="All done";$("#nxMeta").innerHTML="";$("#nxText").textContent="Every session is ticked off. Enjoy the recovery.";return}
+  const dt=parseD(nx.d[0]),[tn,tc]=TYPES[nx.d[1]],diff=Math.round((dt-today)/864e5);
+  $("#nxTitle").textContent=nx.d[2];
+  $("#nxMeta").innerHTML=`<span class="tag ${tc}">${tn}</span><span class="lbl">${diff===0?"Today":diff===1?"Tomorrow":`${DOW[dt.getDay()]} ${dt.getDate()} ${MON[dt.getMonth()]} · in ${diff} days`}</span>${nx.d[4]?`<span class="lbl">${nx.d[4]} km</span>`:""}`;
+  $("#nxText").innerHTML=fill(nx.d[3]||"");
+}
+function renderSplits(){
+  let cum=0,head="<tr><th>km</th>",row="<tr><th>pace</th>",row2="<tr><th>time</th>",seg="<tr class=\"seg\"><td></td>";
+  for(let k=1;k<=10;k++){const p=k<=2?G+5:k<=7?G:G-5;cum+=p;head+=`<th>${k}</th>`;row+=`<td>${fmtP(p)}</td>`;row2+=`<td>${fmtT(cum)}</td>`}
+  seg+=`<td colspan="2">Hold back</td><td colspan="5">Settle into goal pace</td><td colspan="3">Push</td></tr>`;
+  $("#splits").innerHTML=head+"</tr>"+row+"</tr>"+row2+"</tr>"+seg;
+}
+$("#legend").innerHTML=Object.entries(TYPES).map(([k,[n,,c]])=>`<span><i class="sw" style="background:var(${c})"></i>${n}</span>`).join("");
+
+const race=parseD("2026-11-21");$("#daysLeft").textContent=Math.max(0,Math.round((race-today)/864e5));
+$("#totalKm").textContent=PLAN.reduce((a,w)=>a+weekKm(w),0)+" km";
+$("#peakKm").textContent=Math.max(...PLAN.map(weekKm))+" km";
+renderPhases();renderVol();readTimes();
+</script>
+
+</body></html>

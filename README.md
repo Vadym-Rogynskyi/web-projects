@@ -1,0 +1,11 @@
+# Web Projects
+
+Interactive websites by Vadym Rogynskyi.
+
+| Site | What it is |
+|---|---|
+| [Road to the 10K](road-to-the-10k/) | A 7-week 10K training plan with a race countdown, pace calculator, weekly checklists and race-day pacing. |
+| [Pace Gap Planner](pace-gap-planner/) | An interactive model showing how much pace to cut each week to hit a goal time. |
+| [Ten Kilometres Down](ten-kilometres-down/) | A scroll-driven 3D dive through the five ocean zones to the bottom of the Mariana Trench. |
+
+Each site is a single self-contained `index.html` file with no build step. Open any of them in a browser, or view them live on GitHub Pages.
