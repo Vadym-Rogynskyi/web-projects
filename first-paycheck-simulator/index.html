@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>First Paycheck Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Sans:wght@400..700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #EEF3F1;
+    --panel: #E0E9E5;
+    --ink: #14312D;
+    --ink-soft: #4C6661;
+    --rule: #C3D1CC;
+    --save: #1F8A5B;
+    --save-fill: rgba(31, 138, 91, 0.20);
+    --owe: #C93B55;
+    --owe-fill: rgba(201, 59, 85, 0.18);
+    --pin: #66788F;
+    --mark: #B77A00;
+    --mark-dot: #F2B134;
+    --rent: #14312D;
+    --other: #5E8C84;
+    --focus: #0B6BCB;
+    --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+    --body: "Instrument Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #0E1F1D;
+      --panel: #162E2A;
+      --ink: #E7F0ED;
+      --ink-soft: #9DB5AF;
+      --rule: #2C4742;
+      --save: #4CC38A;
+      --save-fill: rgba(76, 195, 138, 0.22);
+      --owe: #F0718A;
+      --owe-fill: rgba(240, 113, 138, 0.20);
+      --pin: #9AAAC0;
+      --mark: #F2B134;
+      --mark-dot: #F2B134;
+      --rent: #E7F0ED;
+      --other: #6FA49B;
+      --focus: #7DB8FF;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #0E1F1D;
+    --panel: #162E2A;
+    --ink: #E7F0ED;
+    --ink-soft: #9DB5AF;
+    --rule: #2C4742;
+    --save: #4CC38A;
+    --save-fill: rgba(76, 195, 138, 0.22);
+    --owe: #F0718A;
+    --owe-fill: rgba(240, 113, 138, 0.20);
+    --pin: #9AAAC0;
+    --mark: #F2B134;
+    --mark-dot: #F2B134;
+    --rent: #E7F0ED;
+    --other: #6FA49B;
+    --focus: #7DB8FF;
+  }
+
+  *, *::before, *::after { box-sizing: inherit; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 28px clamp(16px, 4vw, 48px) 48px;
+  }
+
+  /* Top bar */
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 24px;
+  }
+  .bar h1 {
+    margin: 0;
+    font-family: var(--display);
+    font-size: 1.125rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  button {
+    font: inherit;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--ink);
+    background: transparent;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    padding: 7px 16px;
+    cursor: pointer;
+  }
+  button:hover { background: var(--panel); }
+  button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  button:focus-visible, input:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+
+  /* The live sentence */
+  .verdict {
+    margin: 28px 0 32px;
+    max-width: 26ch;
+    font-family: var(--display);
+    font-weight: 650;
+    font-size: clamp(2rem, 5.2vw, 4rem);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    min-height: 2.04em;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+    gap: 40px;
+    align-items: start;
+  }
+
+  /* Controls */
+  .controls {
+    background: var(--panel);
+    border-radius: 18px;
+    padding: 22px 22px 10px;
+  }
+  .controls fieldset {
+    border: 0;
+    margin: 0 0 18px;
+    padding: 0;
+  }
+  .controls legend {
+    padding: 0;
+    margin-bottom: 10px;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.0625rem;
+    letter-spacing: -0.01em;
+  }
+  .control { margin-bottom: 12px; }
+  .control-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    font-size: 0.9375rem;
+  }
+  .control-head label { color: var(--ink-soft); }
+  .control-head output { font-weight: 600; text-align: right; }
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    display: block;
+    width: 100%;
+    height: 30px;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    --p: 50%;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(to right, var(--ink) var(--p), var(--rule) var(--p));
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    margin-top: -8px;
+    border-radius: 50%;
+    background: var(--ink);
+    border: 3px solid var(--panel);
+  }
+  input[type="range"]::-moz-range-track {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--rule);
+  }
+  input[type="range"]::-moz-range-progress {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--ink);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--ink);
+    border: 3px solid var(--panel);
+  }
+
+  /* Results */
+  .results { min-width: 0; }
+  .chart-wrap { position: relative; }
+  #chart { display: block; width: 100%; touch-action: pan-y; }
+  #chart text { font-family: var(--body); font-size: 12.5px; fill: var(--ink-soft); }
+  #chart .grid { stroke: var(--rule); stroke-width: 1; }
+  #chart .zero { stroke: var(--ink); stroke-width: 1.25; }
+  #chart .save-area { fill: var(--save-fill); }
+  #chart .save-line { fill: none; stroke: var(--save); stroke-width: 2; }
+  #chart .owe-area { fill: var(--owe-fill); }
+  #chart .owe-line { fill: none; stroke: var(--owe); stroke-width: 2; }
+  #chart .net-line { fill: none; stroke: var(--ink); stroke-width: 3.25; stroke-linejoin: round; stroke-linecap: round; }
+  #chart .pin-line { fill: none; stroke: var(--pin); stroke-width: 2.25; stroke-dasharray: 6 5; }
+  #chart .mark-line { stroke: var(--mark); stroke-width: 1.5; stroke-dasharray: 3 4; }
+  #chart .mark-dot { fill: var(--mark-dot); stroke: var(--paper); stroke-width: 2; }
+  #chart .mark-text { fill: var(--mark); font-weight: 600; font-size: 13px; }
+  #chart .end-dot { fill: var(--ink); stroke: var(--paper); stroke-width: 2; }
+  #chart .end-text { fill: var(--ink); font-weight: 700; font-size: 14px; }
+  #chart .hover-line { stroke: var(--ink-soft); stroke-width: 1; }
+  #chart .hover-dot { fill: var(--paper); stroke: var(--ink); stroke-width: 2; }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 20px;
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+  }
+  .legend li { display: flex; align-items: center; gap: 8px; }
+  .sw { width: 18px; height: 0; border-top: 3px solid; display: inline-block; }
+  .sw.save { border-color: var(--save); }
+  .sw.owe { border-color: var(--owe); }
+  .sw.net { border-color: var(--ink); border-top-width: 4px; }
+  .sw.pin { border-color: var(--pin); border-top-style: dashed; }
+  .readout {
+    min-height: 1.5em;
+    margin: 10px 0 0;
+    font-size: 0.9375rem;
+    color: var(--ink-soft);
+  }
+  .readout strong { color: var(--ink); font-weight: 600; }
+
+  .section-title {
+    margin: 34px 0 10px;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.0625rem;
+    letter-spacing: -0.01em;
+  }
+  .paybar {
+    display: flex;
+    height: 30px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--rule);
+  }
+  .paybar span { display: block; height: 100%; transition: width 160ms ease; }
+  .seg-rent { background: var(--rent); }
+  .seg-other { background: var(--other); }
+  .seg-loan { background: var(--owe); }
+  .seg-save { background: var(--save); }
+  .paykey {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px 18px;
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.875rem;
+  }
+  .paykey li { display: grid; grid-template-columns: 12px 1fr; column-gap: 8px; align-items: baseline; }
+  .paykey i { width: 12px; height: 12px; border-radius: 3px; display: block; align-self: center; }
+  .paykey .name { color: var(--ink-soft); }
+  .paykey .amt { grid-column: 2; font-weight: 600; font-size: 1rem; }
+  .short {
+    margin: 10px 0 0;
+    color: var(--owe);
+    font-weight: 600;
+    font-size: 0.9375rem;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: 34px 0 0;
+    border-top: 1.25px solid var(--ink);
+  }
+  .stats div { padding: 14px 16px 0 0; }
+  .stats dt { font-size: 0.875rem; color: var(--ink-soft); }
+  .stats dd {
+    margin: 2px 0 0;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.5rem;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+  .stats .delta {
+    display: block;
+    font-family: var(--body);
+    font-weight: 500;
+    font-size: 0.8125rem;
+    letter-spacing: 0;
+    color: var(--pin);
+    min-height: 1.3em;
+  }
+
+  .note {
+    margin: 44px 0 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+    max-width: 78ch;
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 880px) {
+    .layout { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+    .results { order: -1; }
+    .verdict { margin: 20px 0 22px; max-width: none; min-height: 0; }
+    .paykey, .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .stats div { padding-bottom: 6px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .paybar span { transition: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="bar">
+    <h1>First paycheck simulator</h1>
+    <div class="actions">
+      <button type="button" id="pinBtn" aria-pressed="false">Pin this plan to compare</button>
+      <button type="button" id="resetBtn">Reset to sample numbers</button>
+    </div>
+  </header>
+
+  <p class="verdict" id="verdict" aria-live="polite"></p>
+
+  <div class="layout">
+    <form class="controls" id="controls" aria-label="Plan settings" onsubmit="return false"></form>
+
+    <section class="results" aria-label="Results">
+      <div class="chart-wrap">
+        <svg id="chart" role="img" aria-labelledby="chartDesc"></svg>
+        <span id="chartDesc" hidden></span>
+      </div>
+      <ul class="legend" id="legend"></ul>
+      <p class="readout" id="readout"></p>
+
+      <h2 class="section-title">Where this month's pay goes</h2>
+      <div class="paybar" id="paybar" role="img" aria-label="Split of this month's pay"></div>
+      <ul class="paykey" id="paykey"></ul>
+      <p class="short" id="short" hidden></p>
+
+      <dl class="stats" id="stats"></dl>
+    </section>
+  </div>
+
+  <p class="note">
+    The sample numbers are fictional and describe no real person. The model is simplified: pay rises once a year,
+    living costs rise 2.5% a year, the loan carries a standard ten-year minimum payment, and investment returns are
+    steady. Real life is bumpier. This is a learning tool, not financial advice.
+  </p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var MONTHS = 120;
+  var COST_GROWTH = 0.025;
+  var SAMPLE = { pay: 3600, rent: 1350, other: 1400, loan: 32000, rate: 6.5, raise: 3, split: 50, ret: 6 };
+
+  var money0 = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+  function money(v) { return money0.format(Math.round(v)); }
+  function pct(v) { return (Math.round(v * 10) / 10) + '%'; }
+  function shortMoney(v) {
+    var a = Math.abs(v), s = v < 0 ? '\u2212' : '';
+    if (a >= 1000000) return s + '$' + (a / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+    if (a >= 1000) return s + '$' + Math.round(a / 1000) + 'k';
+    return s + '$' + Math.round(a);
+  }
+
+  var GROUPS = [
+    { title: 'Money in and out', items: [
+      { key: 'pay', label: 'Take-home pay each month', min: 2000, max: 9000, step: 50, fmt: money },
+      { key: 'rent', label: 'Rent', min: 400, max: 3500, step: 25, fmt: money },
+      { key: 'other', label: 'Everything else you spend', min: 400, max: 3500, step: 25, fmt: money },
+      { key: 'raise', label: 'Raise each year', min: 0, max: 10, step: 0.5, fmt: pct }
+    ]},
+    { title: 'The loan', items: [
+      { key: 'loan', label: 'Student loan balance', min: 0, max: 120000, step: 500, fmt: money },
+      { key: 'rate', label: 'Interest rate', min: 0, max: 12, step: 0.1, fmt: pct }
+    ]},
+    { title: 'What you do with the leftover', items: [
+      { key: 'split', label: 'Sent to the loan', min: 0, max: 100, step: 5,
+        fmt: function (v) { return v + '% loan, ' + (100 - v) + '% invested'; } },
+      { key: 'ret', label: 'Yearly return on investments', min: 0, max: 10, step: 0.5, fmt: pct }
+    ]}
+  ];
+
+  var state = Object.assign({}, SAMPLE);
+  var pinned = null;
+  var current = null;
+  var hoverMonth = null;
+  var startDate = new Date();
+
+  /* ---------- The model ---------- */
+  function simulate(p) {
+    var r = p.rate / 100 / 12;
+    var g = p.ret / 100 / 12;
+    var minPay = 0;
+    if (p.loan > 0) {
+      minPay = r > 0 ? p.loan * r / (1 - Math.pow(1 + r, -MONTHS)) : p.loan / MONTHS;
+    }
+    var loan = p.loan, sav = 0, interest = 0;
+    var debtFree = p.loan > 0 ? null : 0;
+    var rows = [{ m: 0, loan: loan, sav: 0, net: -loan }];
+    var first = null;
+
+    for (var m = 0; m < MONTHS; m++) {
+      var yr = Math.floor(m / 12);
+      var pay = p.pay * Math.pow(1 + p.raise / 100, yr);
+      var rent = p.rent * Math.pow(1 + COST_GROWTH, yr);
+      var other = p.other * Math.pow(1 + COST_GROWTH, yr);
+
+      var int = loan * r;
+      interest += int;
+      loan += int;
+
+      var due = Math.min(minPay, loan);
+      loan -= due;
+      var left = pay - rent - other - due;
+      var extra = 0, invest = left;
+      if (left > 0) {
+        extra = Math.min(loan, left * p.split / 100);
+        loan -= extra;
+        invest = left - extra;
+      }
+      if (loan < 0.005) loan = 0;
+      sav = (sav > 0 ? sav * (1 + g) : sav) + invest;
+
+      if (debtFree === null && loan === 0) debtFree = m + 1;
+      if (m === 0) {
+        first = { pay: pay, rent: rent, other: other, loan: due + extra, save: Math.max(0, invest), short: Math.max(0, -left) };
+      }
+      rows.push({ m: m + 1, loan: loan, sav: sav, net: sav - loan });
+    }
+    var end = rows[MONTHS];
+    var positive = null;
+    for (var i = 0; i <= MONTHS; i++) {
+      if (rows[i].net >= 0) { positive = i; break; }
+    }
+    return { rows: rows, first: first, debtFree: debtFree, positive: positive, interest: interest, net: end.net, sav: end.sav, hadLoan: p.loan > 0 };
+  }
+
+  /* ---------- Controls ---------- */
+  var controlsEl = document.getElementById('controls');
+  var inputs = {};
+
+  function buildControls() {
+    GROUPS.forEach(function (group) {
+      var fs = document.createElement('fieldset');
+      var lg = document.createElement('legend');
+      lg.textContent = group.title;
+      fs.appendChild(lg);
+      group.items.forEach(function (c) {
+        var wrap = document.createElement('div');
+        wrap.className = 'control';
+        var head = document.createElement('div');
+        head.className = 'control-head';
+        var label = document.createElement('label');
+        label.htmlFor = 'in-' + c.key;
+        label.textContent = c.label;
+        var out = document.createElement('output');
+        out.htmlFor = 'in-' + c.key;
+        head.appendChild(label);
+        head.appendChild(out);
+        var input = document.createElement('input');
+        input.type = 'range';
+        input.id = 'in-' + c.key;
+        input.min = c.min; input.max = c.max; input.step = c.step;
+        input.value = state[c.key];
+        input.addEventListener('input', function () {
+          state[c.key] = parseFloat(input.value);
+          paintControl(c);
+          update();
+        });
+        wrap.appendChild(head);
+        wrap.appendChild(input);
+        fs.appendChild(wrap);
+        inputs[c.key] = { input: input, out: out, cfg: c };
+        paintControl(c);
+      });
+      controlsEl.appendChild(fs);
+    });
+  }
+  function paintControl(c) {
+    var ref = inputs[c.key];
+    if (!ref) return;
+    var v = state[c.key];
+    ref.input.value = v;
+    ref.out.textContent = c.fmt(v);
+    ref.input.setAttribute('aria-valuetext', c.fmt(v));
+    ref.input.style.setProperty('--p', ((v - c.min) / (c.max - c.min) * 100) + '%');
+  }
+
+  /* ---------- Words ---------- */
+  function monthName(n) {
+    var d = new Date(startDate.getFullYear(), startDate.getMonth() + n, 1);
+    return d.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+  }
+  function span(n) {
+    var y = Math.floor(n / 12), mo = n % 12;
+    if (y === 0) return mo + ' mo';
+    if (mo === 0) return y + ' yr';
+    return y + ' yr ' + mo + ' mo';
+  }
+  function verdict(res) {
+    if (res.first.short > 0) {
+      return 'This budget runs ' + money(res.first.short) + ' short every month.';
+    }
+    var tail = res.net >= 0
+      ? 'worth ' + money(res.net) + ' ten years in.'
+      : money(-res.net) + ' in the hole ten years in.';
+    if (!res.hadLoan) return 'No loan to clear, and ' + tail;
+    return 'Debt-free by ' + monthName(res.debtFree) + ', and ' + tail;
+  }
+
+  /* ---------- Chart ---------- */
+  var svg = document.getElementById('chart');
+  var NS = 'http://www.w3.org/2000/svg';
+  var geom = null;
+
+  function el(name, attrs, text) {
+    var n = document.createElementNS(NS, name);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function niceStep(raw) {
+    var pow = Math.pow(10, Math.floor(Math.log10(raw)));
+    var f = raw / pow;
+    var nice = f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10;
+    return nice * pow;
+  }
+  function owed(d) { return d.loan + Math.max(0, -d.sav); }
+  function saved(d) { return Math.max(0, d.sav); }
+
+  function drawChart() {
+    var w = Math.max(300, Math.floor(svg.parentNode.clientWidth));
+    var h = w < 520 ? 300 : Math.min(440, Math.round(w * 0.52));
+    var mg = { t: 34, r: 18, b: 30, l: 50 };
+    var iw = w - mg.l - mg.r, ih = h - mg.t - mg.b;
+    var rows = current.rows;
+
+    var lo = 0, hi = 0;
+    var all = pinned ? rows.concat(pinned.rows) : rows;
+    all.forEach(function (d) {
+      lo = Math.min(lo, -owed(d), d.net);
+      hi = Math.max(hi, saved(d), d.net);
+    });
+    if (hi - lo < 2000) hi = lo + 2000;
+    var step = niceStep((hi - lo) / 5);
+    lo = Math.floor(lo / step) * step;
+    hi = Math.ceil(hi / step) * step;
+
+    function x(m) { return mg.l + m / MONTHS * iw; }
+    function y(v) { return mg.t + (hi - v) / (hi - lo) * ih; }
+    function path(data, fn) {
+      return data.map(function (d, i) { return (i ? 'L' : 'M') + x(d.m).toFixed(1) + ' ' + y(fn(d)).toFixed(1); }).join('');
+    }
+    function area(data, fn) {
+      return path(data, fn) + 'L' + x(MONTHS).toFixed(1) + ' ' + y(0).toFixed(1) + 'L' + x(0).toFixed(1) + ' ' + y(0).toFixed(1) + 'Z';
+    }
+
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+    svg.setAttribute('height', h);
+
+    for (var v = lo; v <= hi + 1; v += step) {
+      var isZero = Math.abs(v) < 1;
+      svg.appendChild(el('line', { x1: mg.l, x2: w - mg.r, y1: y(v), y2: y(v), 'class': isZero ? 'zero' : 'grid' }));
+      svg.appendChild(el('text', { x: mg.l - 8, y: y(v) + 4, 'text-anchor': 'end' }, shortMoney(v)));
+    }
+    var everyYears = w < 520 ? 2 : 1;
+    for (var yr = 0; yr <= 10; yr += everyYears) {
+      var label = yr === 0 ? 'Now' : yr + (yr === 1 ? ' yr' : ' yrs');
+      var anchor = yr === 0 ? 'start' : yr === 10 ? 'end' : 'middle';
+      svg.appendChild(el('text', { x: x(yr * 12), y: h - 8, 'text-anchor': anchor }, label));
+    }
+
+    svg.appendChild(el('path', { d: area(rows, saved), 'class': 'save-area' }));
+    svg.appendChild(el('path', { d: area(rows, function (d) { return -owed(d); }), 'class': 'owe-area' }));
+    svg.appendChild(el('path', { d: path(rows, saved), 'class': 'save-line' }));
+    svg.appendChild(el('path', { d: path(rows, function (d) { return -owed(d); }), 'class': 'owe-line' }));
+    if (pinned) svg.appendChild(el('path', { d: path(pinned.rows, function (d) { return d.net; }), 'class': 'pin-line' }));
+    svg.appendChild(el('path', { d: path(rows, function (d) { return d.net; }), 'class': 'net-line' }));
+
+    if (current.hadLoan && current.debtFree && current.first.short === 0) {
+      var mx = x(current.debtFree);
+      svg.appendChild(el('line', { x1: mx, x2: mx, y1: mg.t - 8, y2: y(0), 'class': 'mark-line' }));
+      svg.appendChild(el('circle', { cx: mx, cy: y(0), r: 6, 'class': 'mark-dot' }));
+      var markLabel = 'Debt-free, ' + monthName(current.debtFree);
+      var estWidth = markLabel.length * 7.4;
+      var flip = mx + 8 + estWidth > w - mg.r;
+      var tx = flip ? Math.max(mx - 8, mg.l + estWidth) : mx + 8;
+      svg.appendChild(el('text', {
+        x: tx, y: mg.t - 14,
+        'text-anchor': flip ? 'end' : 'start', 'class': 'mark-text'
+      }, markLabel));
+    }
+
+    var end = rows[MONTHS];
+    svg.appendChild(el('circle', { cx: x(MONTHS), cy: y(end.net), r: 5.5, 'class': 'end-dot' }));
+    var endY = Math.max(mg.t + 14, y(end.net) - 12);
+    svg.appendChild(el('text', { x: x(MONTHS) - 2, y: endY, 'text-anchor': 'end', 'class': 'end-text' }, money(end.net)));
+
+    var hg = el('g', { id: 'hoverG', visibility: 'hidden' });
+    hg.appendChild(el('line', { id: 'hoverLine', y1: mg.t, y2: mg.t + ih, 'class': 'hover-line' }));
+    hg.appendChild(el('circle', { id: 'hoverDot', r: 5, 'class': 'hover-dot' }));
+    svg.appendChild(hg);
+
+    geom = { x: x, y: y, mg: mg, iw: iw };
+    document.getElementById('chartDesc').textContent =
+      'Ten-year chart. ' + verdict(current) + ' Saved and invested reaches ' + money(current.sav) + '.';
+    paintHover();
+  }
+
+  function paintHover() {
+    var readout = document.getElementById('readout');
+    var hg = document.getElementById('hoverG');
+    if (hoverMonth === null || !geom) {
+      if (hg) hg.setAttribute('visibility', 'hidden');
+      readout.textContent = 'Hover or drag across the chart to read any month.';
+      return;
+    }
+    var d = current.rows[hoverMonth];
+    hg.setAttribute('visibility', 'visible');
+    var hx = geom.x(d.m);
+    var line = document.getElementById('hoverLine');
+    line.setAttribute('x1', hx); line.setAttribute('x2', hx);
+    var dot = document.getElementById('hoverDot');
+    dot.setAttribute('cx', hx); dot.setAttribute('cy', geom.y(d.net));
+    var when = hoverMonth === 0 ? 'Today' : monthName(hoverMonth);
+    readout.innerHTML = '<strong>' + when + '</strong>: saved ' + money(saved(d)) +
+      ', owed ' + money(owed(d)) + ', net worth <strong>' + money(d.net) + '</strong>' +
+      (pinned ? ' (pinned plan ' + money(pinned.rows[hoverMonth].net) + ')' : '');
+  }
+  function onPointer(e) {
+    if (!geom) return;
+    var rect = svg.getBoundingClientRect();
+    var px = e.clientX - rect.left;
+    var m = Math.round((px - geom.mg.l) / geom.iw * MONTHS);
+    hoverMonth = Math.max(0, Math.min(MONTHS, m));
+    paintHover();
+  }
+  svg.addEventListener('pointermove', onPointer);
+  svg.addEventListener('pointerdown', onPointer);
+  svg.addEventListener('pointerleave', function () { hoverMonth = null; paintHover(); });
+
+  /* ---------- Pay bar, stats, legend ---------- */
+  function drawPay() {
+    var f = current.first;
+    var total = Math.max(f.pay, f.rent + f.other + f.loan);
+    var parts = [
+      { cls: 'seg-rent', name: 'Rent', v: f.rent },
+      { cls: 'seg-other', name: 'Everything else', v: f.other },
+      { cls: 'seg-loan', name: 'Loan payment', v: f.loan },
+      { cls: 'seg-save', name: 'Invested', v: f.save }
+    ];
+    var bar = document.getElementById('paybar');
+    var key = document.getElementById('paykey');
+    bar.innerHTML = '';
+    key.innerHTML = '';
+    var said = [];
+    parts.forEach(function (p) {
+      var s = document.createElement('span');
+      s.className = p.cls;
+      s.style.width = (p.v / total * 100) + '%';
+      bar.appendChild(s);
+      var li = document.createElement('li');
+      li.innerHTML = '<i class="' + p.cls + '"></i><span class="name">' + p.name + '</span><span class="amt">' + money(p.v) + '</span>';
+      key.appendChild(li);
+      said.push(p.name + ' ' + money(p.v));
+    });
+    bar.setAttribute('aria-label', 'This month: ' + said.join(', '));
+    var short = document.getElementById('short');
+    if (f.short > 0) {
+      short.hidden = false;
+      short.textContent = 'Spending and the loan payment come to ' + money(f.short) +
+        ' more than this month\u2019s pay. Lower a cost or raise pay to close the gap.';
+    } else {
+      short.hidden = true;
+    }
+  }
+
+  function delta(now, then, moreWord, lessWord, fmt) {
+    var d = now - then;
+    if (Math.abs(d) < 0.5) return 'Same as pinned';
+    return fmt(Math.abs(d)) + ' ' + (d > 0 ? moreWord : lessWord) + ' than pinned';
+  }
+  function drawStats() {
+    var c = current, p = pinned;
+    var items = [
+      {
+        dt: 'Debt-free in',
+        dd: !c.hadLoan ? 'No loan' : span(c.debtFree),
+        delta: p && c.hadLoan && p.hadLoan ? delta(c.debtFree, p.debtFree, 'later', 'sooner', function (n) { return n + ' mo'; }) : ''
+      },
+      {
+        dt: 'Net worth above zero in',
+        dd: c.positive === null ? 'Not in ten years' : c.positive === 0 ? 'Already' : span(c.positive),
+        delta: p && c.positive !== null && p.positive !== null ? delta(c.positive, p.positive, 'later', 'sooner', function (n) { return n + ' mo'; }) : ''
+      },
+      { dt: 'Loan interest paid', dd: money(c.interest), delta: p ? delta(c.interest, p.interest, 'more', 'less', money) : '' },
+      { dt: 'Net worth at ten years', dd: money(c.net), delta: p ? delta(c.net, p.net, 'more', 'less', money) : '' }
+    ];
+    var dl = document.getElementById('stats');
+    dl.innerHTML = '';
+    items.forEach(function (it) {
+      var div = document.createElement('div');
+      div.innerHTML = '<dt>' + it.dt + '</dt><dd>' + it.dd + '<span class="delta">' + it.delta + '</span></dd>';
+      dl.appendChild(div);
+    });
+  }
+  function drawLegend() {
+    var html = '<li><span class="sw net"></span>Net worth</li>' +
+      '<li><span class="sw save"></span>Saved and invested</li>' +
+      '<li><span class="sw owe"></span>What you owe</li>';
+    if (pinned) html += '<li><span class="sw pin"></span>Pinned plan, net worth</li>';
+    document.getElementById('legend').innerHTML = html;
+  }
+
+  /* ---------- Wiring ---------- */
+  function update() {
+    current = simulate(state);
+    document.getElementById('verdict').textContent = verdict(current);
+    drawChart();
+    drawLegend();
+    drawPay();
+    drawStats();
+  }
+
+  var pinBtn = document.getElementById('pinBtn');
+  pinBtn.addEventListener('click', function () {
+    if (pinned) {
+      pinned = null;
+      pinBtn.textContent = 'Pin this plan to compare';
+      pinBtn.setAttribute('aria-pressed', 'false');
+    } else {
+      pinned = simulate(state);
+      pinBtn.textContent = 'Unpin plan';
+      pinBtn.setAttribute('aria-pressed', 'true');
+    }
+    update();
+  });
+  document.getElementById('resetBtn').addEventListener('click', function () {
+    state = Object.assign({}, SAMPLE);
+    GROUPS.forEach(function (g) { g.items.forEach(paintControl); });
+    update();
+  });
+
+  buildControls();
+  update();
+
+  var resizeTimer = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(drawChart, 80);
+  });
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(drawChart);
+  }
+})();
+</script>
+</body>
+</html>
