@@ -1,0 +1,365 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Baseline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700;800&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f5f2; --panel:#ffffff; --panel-2:#e7e9e3; --line: rgba(15,20,15,0.10);
+    --ink:#161c22; --muted:#565f5c; --faint:#89918c;
+    --accent:#a8862f; --accent-ink:#2a1c06;
+    --hard:#2a78d6; --clay:#eb6834; --grass:#1baf7a;
+    --s-good:#0ca30c; --s-warn:#fab219; --s-serious:#ec835a; --s-critical:#d03b3b;
+    --shadow: 0 16px 40px rgba(10,15,5,0.09);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#12151a; --panel:#191d22; --panel-2:#20252b; --line: rgba(230,235,225,0.10);
+      --ink:#eef0ea; --muted:#9aa0ab; --faint:#5c6169;
+      --accent:#caa25a; --accent-ink:#2a1c06;
+      --hard:#3987e5; --clay:#d95926; --grass:#199e70;
+      --shadow: 0 16px 40px rgba(0,0,0,0.45);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#12151a; --panel:#191d22; --panel-2:#20252b; --line: rgba(230,235,225,0.10);
+    --ink:#eef0ea; --muted:#9aa0ab; --faint:#5c6169;
+    --accent:#caa25a; --accent-ink:#2a1c06;
+    --hard:#3987e5; --clay:#d95926; --grass:#199e70;
+    --shadow: 0 16px 40px rgba(0,0,0,0.45);
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; background:var(--bg); color:var(--ink); }
+  body{ font-family:'Figtree', system-ui, -apple-system, sans-serif; padding:0 clamp(16px,3vw,28px) 44px; line-height:1.5; }
+  h1,h2,h3{ font-family:'Bricolage Grotesque', Georgia, serif; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; }
+  a{ color:var(--accent); }
+  button, select{ font-family:inherit; }
+  ::selection{ background:var(--accent); color:var(--accent-ink); }
+
+  .topbar{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding:22px 0 6px; }
+  .brand{ font-size:clamp(1.5rem,3.2vw,1.9rem); font-weight:700; letter-spacing:-0.01em; }
+  .brand em{ color:var(--accent); font-style:normal; }
+  .tagline{ font-family:'IBM Plex Mono', monospace; font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); }
+  .topbar .spacer{ flex:1 1 auto; }
+
+  .tour-toggle{ display:flex; background:var(--panel-2); border-radius:100px; padding:4px; }
+  .tour-toggle button{ font-family:'Bricolage Grotesque', serif; font-weight:600; font-size:0.86rem; padding:9px 18px; border-radius:100px; border:none; background:transparent; color:var(--muted); cursor:pointer; }
+  .tour-toggle button[aria-pressed="true"]{ background:var(--accent); color:var(--accent-ink); }
+
+  .disclaimer{ font-size:0.8rem; color:var(--muted); padding:10px 14px; margin:12px 0 18px; border:1px dashed var(--line); border-radius:10px; }
+  .disclaimer b{ color:var(--ink); }
+
+  .panel{ background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:20px 22px; box-shadow:var(--shadow); margin-bottom:20px; }
+  .panel-head{ margin-bottom:14px; }
+  .panel-head h2{ font-size:1.2rem; font-weight:700; }
+  .panel-head p{ margin:4px 0 0; font-size:0.85rem; color:var(--muted); max-width:66ch; }
+  .src{ font-family:'IBM Plex Mono', monospace; font-size:0.66rem; color:var(--faint); }
+  .src a{ color:var(--faint); }
+
+  button:focus-visible, select:focus-visible, a:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  [hidden]{ display:none !important; }
+
+  /* surface tags */
+  .surf{ display:inline-flex; align-items:center; gap:5px; font-family:'IBM Plex Mono', monospace; font-size:0.64rem; letter-spacing:0.04em; text-transform:uppercase; padding:3px 9px; border-radius:100px; font-weight:600; }
+  .surf::before{ content:''; width:6px; height:6px; border-radius:50%; background:currentColor; }
+  .surf.hard{ color:var(--hard); background:color-mix(in srgb, var(--hard) 15%, transparent); }
+  .surf.clay{ color:var(--clay); background:color-mix(in srgb, var(--clay) 15%, transparent); }
+  .surf.grass{ color:var(--grass); background:color-mix(in srgb, var(--grass) 15%, transparent); }
+  .surf-legend{ display:flex; gap:14px; flex-wrap:wrap; font-size:0.78rem; color:var(--muted); margin-top:4px; }
+  .surf-legend span{ display:inline-flex; align-items:center; gap:6px; }
+  .surf-legend i{ width:9px; height:9px; border-radius:50%; display:inline-block; }
+
+  /* ladder chart */
+  .ladder{ display:flex; flex-direction:column; gap:8px; }
+  .ladder-row{ display:grid; grid-template-columns:70px 1fr 60px; align-items:center; gap:10px; }
+  .ladder-label{ font-family:'IBM Plex Mono', monospace; font-size:0.78rem; font-weight:600; }
+  .ladder-track{ height:16px; background:var(--panel-2); border-radius:6px; overflow:hidden; }
+  .ladder-fill{ height:100%; background:var(--accent); border-radius:6px; }
+  .ladder-val{ font-family:'IBM Plex Mono', monospace; font-size:0.78rem; text-align:right; color:var(--muted); }
+  .ladder-note{ font-size:0.72rem; color:var(--faint); margin-top:8px; }
+
+  /* utr gauge */
+  .gauge-track{ height:10px; background:linear-gradient(90deg, var(--panel-2), var(--accent)); border-radius:6px; position:relative; margin:18px 0 6px; }
+  .gauge-ticks{ display:flex; justify-content:space-between; font-family:'IBM Plex Mono', monospace; font-size:0.68rem; color:var(--muted); }
+  .gauge-marker{ position:absolute; top:-6px; width:2px; height:22px; background:var(--ink); }
+  .gauge-marker .lbl{ position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-size:0.68rem; font-family:'IBM Plex Mono',monospace; white-space:nowrap; }
+
+  table{ width:100%; border-collapse:collapse; font-size:0.88rem; }
+  .table-wrap{ overflow-x:auto; }
+  thead th{ text-align:left; font-family:'IBM Plex Mono', monospace; font-size:0.62rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); padding:0 10px 8px; border-bottom:1px solid var(--line); white-space:nowrap; }
+  tbody td{ padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:middle; white-space:nowrap; }
+  tbody tr:last-child td{ border-bottom:none; }
+  .rank-cell{ font-family:'IBM Plex Mono', monospace; color:var(--muted); }
+  .name-cell b{ display:block; }
+  .name-cell span{ font-size:0.75rem; color:var(--muted); }
+  .pts-cell{ text-align:right; font-family:'IBM Plex Mono', monospace; }
+
+  .two-col{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  @media (max-width:820px){ .two-col{ grid-template-columns:1fr; } }
+
+  .steps{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px; counter-reset:step; }
+  .steps li{ display:flex; gap:12px; padding-left:0; counter-increment:step; }
+  .steps li::before{
+    content:counter(step); flex-shrink:0; width:26px; height:26px; border-radius:50%; background:var(--panel-2);
+    color:var(--accent); font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:0.8rem;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .steps li div{ font-size:0.88rem; padding-top:2px; }
+  .steps li b{ display:block; margin-bottom:2px; }
+
+  .bracket{ display:flex; flex-direction:column; gap:10px; }
+  .bracket-round{ font-family:'IBM Plex Mono', monospace; font-size:0.66rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); margin-top:6px; }
+  .match{ display:flex; align-items:center; justify-content:space-between; gap:10px; background:var(--panel-2); border-radius:10px; padding:10px 14px; font-size:0.86rem; flex-wrap:wrap; }
+  .match .side{ display:flex; align-items:center; gap:8px; }
+  .match .seed{ font-family:'IBM Plex Mono', monospace; font-size:0.7rem; color:var(--faint); }
+  .match b.winner{ color:var(--ink); }
+  .match .loser{ color:var(--muted); text-decoration:line-through; text-decoration-color:var(--faint); }
+  .match .score{ font-family:'IBM Plex Mono', monospace; font-size:0.8rem; color:var(--muted); }
+
+  .result-card{ border:1px solid var(--line); border-radius:12px; padding:14px 16px; background:var(--panel-2); }
+  .result-card + .result-card{ margin-top:10px; }
+  .result-card .title{ font-weight:700; font-size:0.95rem; margin-bottom:4px; }
+  .result-card .meta{ font-size:0.8rem; color:var(--muted); }
+
+  footer{ font-size:0.74rem; color:var(--faint); text-align:center; padding-top:10px; }
+</style>
+
+<div class="topbar">
+  <div>
+    <div class="brand">Base<em>line</em></div>
+    <div class="tagline">Real rankings, real results, your path up</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="tour-toggle" role="group" aria-label="Tour">
+    <button id="btn-juniors" aria-pressed="true">Juniors</button>
+    <button id="btn-pro" aria-pressed="false">Pro Tour</button>
+  </div>
+</div>
+<p class="disclaimer"><b>Sourced, dated content.</b> Rankings and results below are pulled from ITF, UTR Sports, Tennis Europe and tour reporting, cited throughout — but tennis rankings move every week. Treat point-in-time numbers as a snapshot from when this was built, and check the linked official pages for live figures.</p>
+
+<div id="view-juniors">
+
+  <section class="panel">
+    <div class="panel-head"><h2>The ITF junior pathway</h2><p>The ITF World Tennis Tour Juniors runs seven grades. The number in a grade's name is exactly how many ranking points its champion earns.</p></div>
+    <div class="ladder">
+      <div class="ladder-row"><div class="ladder-label">J30</div><div class="ladder-track"><div class="ladder-fill" style="width:3%"></div></div><div class="ladder-val">30 pts</div></div>
+      <div class="ladder-row"><div class="ladder-label">J60</div><div class="ladder-track"><div class="ladder-fill" style="width:6%"></div></div><div class="ladder-val">60 pts</div></div>
+      <div class="ladder-row"><div class="ladder-label">J100</div><div class="ladder-track"><div class="ladder-fill" style="width:10%"></div></div><div class="ladder-val">100 pts</div></div>
+      <div class="ladder-row"><div class="ladder-label">J200</div><div class="ladder-track"><div class="ladder-fill" style="width:20%"></div></div><div class="ladder-val">200 pts</div></div>
+      <div class="ladder-row"><div class="ladder-label">J300</div><div class="ladder-track"><div class="ladder-fill" style="width:30%"></div></div><div class="ladder-val">300 pts</div></div>
+      <div class="ladder-row"><div class="ladder-label">J500</div><div class="ladder-track"><div class="ladder-fill" style="width:50%"></div></div><div class="ladder-val">500 pts</div></div>
+      <div class="ladder-row"><div class="ladder-label">Slam</div><div class="ladder-track"><div class="ladder-fill" style="width:100%; background:var(--clay);"></div></div><div class="ladder-val">1,000 pts</div></div>
+    </div>
+    <p class="ladder-note">J30 is entry level; J500 is the highest regular grade below the four junior Grand Slams (Australian Open, French Open, Wimbledon, US Open). Since 2022, ITF World Tennis Number (WTN) has also been used alongside the ranking to decide who gets into a draw — its role expanded further from 1 January 2026. From 2026, J30/J60 events can also run as round-robin-to-elimination instead of straight knockout, to guarantee more matches.</p>
+    <p class="src">Source: <a href="https://www.itftennis.com/media/14276/2026-itf-world-tennis-tour-juniors-grading-criteria.pdf" target="_blank" rel="noopener">ITF Grading Criteria 2026</a> &middot; <a href="https://www.itftennis.com/en/news-and-media/articles/key-changes-to-itf-world-tennis-tour-juniors-from-1-january-2026/" target="_blank" rel="noopener">ITF: Key changes for 2026</a></p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Tennis Europe Junior Tour</h2><p>Europe's own ladder beneath the ITF, split by age group rather than by points — often where the pathway actually starts.</p></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Age group</th><th>Categories</th><th>Season-ending event</th></tr></thead>
+        <tbody>
+          <tr><td>12 & Under</td><td>Category 1, Category 2</td><td>—</td></tr>
+          <tr><td>14 & Under</td><td>Super Category, Category 1, 2</td><td>Junior Masters (top 8 boys & girls)</td></tr>
+          <tr><td>16 & Under</td><td>Category 1, 2, 3</td><td>Junior Masters (top 8 boys & girls)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ladder-note">The <b>Tennis Europe Junior Masters</b> caps the U14 and U16 seasons, inviting only the top eight ranked boys and girls in each age group — the closest thing junior tennis has to a season finale before players move up to the full ITF Juniors circuit.</p>
+    <p class="src">Source: <a href="https://www.tenniseurope.org/tournaments" target="_blank" rel="noopener">Tennis Europe Junior Tour</a> &middot; <a href="https://en.wikipedia.org/wiki/Tennis_Europe_Junior_Masters" target="_blank" rel="noopener">Tennis Europe Junior Masters</a></p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>UTR Rating, in plain terms</h2><p>The rating scouts, college coaches and academies actually check alongside your ITF ranking.</p></div>
+    <div class="gauge-track">
+      <div class="gauge-marker" style="left:6%"><span class="lbl">1.00</span></div>
+      <div class="gauge-marker" style="left:50%"><span class="lbl">8.75</span></div>
+      <div class="gauge-marker" style="left:94%"><span class="lbl">16.50</span></div>
+    </div>
+    <p style="font-size:0.8rem; color:var(--muted); margin-top:18px;">Every player worldwide sits on this one 1.00–16.50 scale — juniors, adults, pros, everyone — regardless of age, gender or where they play.</p>
+    <ul class="steps" style="margin-top:16px;">
+      <li><div><b>It's your last 30 matches, not your best day.</b> UTR is a weighted average of up to 30 of your most recent results from the last 12 months, so it tracks your current form, not a career high.</div></li>
+      <li><div><b>Margin matters, not just winning.</b> The algorithm weighs the rating gap between opponents and what share of games you won — winning more games than expected raises your rating even in a loss.</div></li>
+      <li><div><b>Six matches to reliability.</b> A single result gives you a projected rating; it takes about six matches for that number to stabilize.</div></li>
+    </ul>
+    <p class="src">Source: <a href="https://www.utrsports.net/pages/how-utr-works" target="_blank" rel="noopener">UTR Sports: How UTR works</a> &middot; <a href="https://support.universaltennis.com/en/support/solutions/articles/9000151895-what-s-the-best-way-to-improve-my-universal-tennis-rating-utr-rating-" target="_blank" rel="noopener">UTR Help Center: improving your rating</a></p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Steps to climb: ranking and UTR</h2><p>What actually moves both numbers, in order of impact.</p></div>
+    <ol class="steps">
+      <li><div><b>Play often, against a mix of levels.</b> UTR rewards frequent, varied match play more than a handful of big wins — the algorithm is most accurate for players who face opponents both above and below them.</div></li>
+      <li><div><b>Play up, not just to win.</b> Facing players slightly above your rating and taking games off them raises UTR faster than beating players well below you.</div></li>
+      <li><div><b>Start your ITF ranking at J30/J60.</b> These entry and developing-level events have softer acceptance criteria — bank your first ranking points here before your WTN/ranking can get you into J100+ fields.</div></li>
+      <li><div><b>Respect the entry system.</b> You can apply to at most three ITF World Tennis Tour Juniors events in one week, but you'll only stay accepted into one past the withdrawal deadline — plan your schedule instead of scattering entries.</div></li>
+      <li><div><b>Don't skip doubles.</b> Doubles points count toward your ranking too, and extra matches at the same tournament compound your UTR sample size.</div></li>
+      <li><div><b>Defend your points.</b> Junior rankings are rolling; a strong result you don't back up next season quietly falls off. Plan travel around events where you have points to protect or a realistic jump to make.</div></li>
+    </ol>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>2025 US Open Junior Championships — real results</h2><p>Semifinals and final only, straight from the official draw — not the earlier rounds.</p></div>
+    <div class="surf-legend" style="margin-bottom:14px;"><span class="surf hard">Hard court</span> Flushing Meadows, New York</div>
+    <div class="two-col">
+      <div>
+        <h3 style="font-size:0.95rem; margin-bottom:8px;">Boys' singles</h3>
+        <div class="bracket">
+          <div class="bracket-round">Semifinals</div>
+          <div class="match"><div class="side"><span class="seed">(1)</span><b class="winner">Ivan Ivanov</b> (BUL)</div><div class="score">6–1, 6–4</div><div class="side loser">Zangar Nurlanuly</div></div>
+          <div class="match"><div class="side"><span class="seed">(5)</span><b class="winner">Alexander Vasilev</b> (BUL)</div><div class="score">2–6, 6–1, 6–0</div><div class="side loser">Luis Miguel</div></div>
+          <div class="bracket-round">Final</div>
+          <div class="match"><div class="side"><b class="winner">Ivan Ivanov</b> (BUL)</div><div class="score">7–5, 6–3</div><div class="side loser">Alexander Vasilev (BUL)</div></div>
+        </div>
+        <p class="ladder-note">First all-Bulgarian junior Grand Slam final ever. Ivanov also won Wimbledon boys' singles in 2025, completing the same Wimbledon–US Open double as former world No.1 Grigor Dimitrov once did as a junior.</p>
+      </div>
+      <div>
+        <h3 style="font-size:0.95rem; margin-bottom:8px;">Girls' singles</h3>
+        <div class="bracket">
+          <div class="bracket-round">Semifinals</div>
+          <div class="match"><div class="side"><b class="winner">Lea Nilsson</b> (SWE)</div><div class="score">0–6, 6–1, 6–1</div><div class="side loser">Mika Stojsavljevic <span class="seed">(def. champ)</span></div></div>
+          <div class="match"><div class="side"><b class="winner">Jeline Vandromme</b> (BEL)</div><div class="score">6–3, 6–2</div><div class="side loser">Hannah Klugman</div></div>
+          <div class="bracket-round">Final</div>
+          <div class="match"><div class="side"><b class="winner">Jeline Vandromme</b> (BEL)</div><div class="score">7–6(7–2), 6–2</div><div class="side loser">Lea Nilsson (SWE)</div></div>
+        </div>
+        <p class="ladder-note">Vandromme's title extended her winning streak to 23 matches; Nilsson had come through qualifying to reach the final.</p>
+      </div>
+    </div>
+    <p class="src" style="margin-top:14px;">Source: <a href="https://www.usopen.org/en_US/news/articles/2025-09-05/ivanov_vasilev_set_allbulgarian_boys_final_at_2025_us_open.html" target="_blank" rel="noopener">US Open: boys' final recap</a> &middot; <a href="https://www.wtatennis.com/news/4357981/vandromme-captures-us-open-girls-title-now-on-23-match-winning-streak" target="_blank" rel="noopener">WTA: girls' final recap</a> &middot; <a href="https://en.wikipedia.org/wiki/2025_US_Open_%E2%80%93_Boys%27_singles" target="_blank" rel="noopener">Wikipedia: 2025 Boys' singles</a></p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Other recent junior Grand Slam results</h2></div>
+    <div class="result-card">
+      <div class="title">2026 French Open — Girls' singles</div>
+      <div class="meta"><span class="surf clay">Clay</span> Alisa Oktiabreva def. Sun Xinran, 6–2, 6–1</div>
+    </div>
+    <div class="result-card">
+      <div class="title">2025 French Open & Wimbledon — Boys' doubles</div>
+      <div class="meta"><span class="surf clay">Clay</span> <span class="surf grass">Grass</span> Alan Ważny & Oskari Paldanius won both major titles the same season.</div>
+    </div>
+    <p class="src" style="margin-top:12px;">Source: <a href="https://en.wikipedia.org/wiki/2026_French_Open_%E2%80%93_Girls%27_singles" target="_blank" rel="noopener">Wikipedia: 2026 French Open – Girls' singles</a></p>
+  </section>
+
+</div>
+
+<div id="view-pro" hidden>
+
+  <section class="panel">
+    <div class="panel-head"><h2>How the tours are built</h2><p>Same shape for men and women, different label on the middle tier.</p></div>
+    <div class="two-col">
+      <div>
+        <h3 style="font-size:0.95rem; margin-bottom:8px;">ATP</h3>
+        <div class="table-wrap"><table><tbody>
+          <tr><td><span class="surf hard">Slam</span></td><td>Australian Open, French Open, Wimbledon, US Open</td></tr>
+          <tr><td>Masters 1000</td><td>9 events, the tier just below the Slams</td></tr>
+          <tr><td>ATP 500 / 250</td><td>The weekly tour, graded by prize money and points</td></tr>
+        </tbody></table></div>
+      </div>
+      <div>
+        <h3 style="font-size:0.95rem; margin-bottom:8px;">WTA</h3>
+        <div class="table-wrap"><table><tbody>
+          <tr><td><span class="surf hard">Slam</span></td><td>Australian Open, French Open, Wimbledon, US Open</td></tr>
+          <tr><td>WTA 1000</td><td>The equivalent tier to the ATP Masters</td></tr>
+          <tr><td>WTA 500 / 250</td><td>The weekly tour, graded by prize money and points</td></tr>
+        </tbody></table></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Top 10 — mid-September 2026</h2><p>A dated snapshot from tour reporting — check the official ATP and WTA sites for this week's live list.</p></div>
+    <div class="two-col">
+      <div>
+        <h3 style="font-size:0.95rem; margin-bottom:8px;">ATP singles</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>#</th><th>Player</th><th style="text-align:right;">Points</th></tr></thead>
+          <tbody id="atp-body"></tbody>
+        </table></div>
+      </div>
+      <div>
+        <h3 style="font-size:0.95rem; margin-bottom:8px;">WTA singles</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>#</th><th>Player</th></tr></thead>
+          <tbody id="wta-body"></tbody>
+        </table></div>
+      </div>
+    </div>
+    <p class="src" style="margin-top:14px;">Source: <a href="https://www.tennisexplorer.com/ranking/atp-men/" target="_blank" rel="noopener">TennisExplorer: ATP rankings</a> &middot; <a href="https://www.olympics.com/en/news/wta-singles-world-rankings-complete-tennis-list-aryna-sabalenka-elena-rybakina-coco-gauff" target="_blank" rel="noopener">Olympics.com: WTA rankings</a></p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>From juniors to the tour</h2><p>The bridge most players actually cross — almost nobody jumps straight from junior Slams to ATP/WTA main draws.</p></div>
+    <ol class="steps">
+      <li><div><b>ITF World Tennis Tour (adults).</b> The pro entry rung — $15,000 to $100,000+ events — where players earn their first ATP/WTA ranking points, often while still junior-eligible.</div></li>
+      <li><div><b>Challenger Tour (men) / WTA 125 (women).</b> The level where most future top-100 players spend a season or several, learning to win best-of-three matches week after week.</div></li>
+      <li><div><b>Main tour qualifying.</b> Ranking gets you into qualifying draws for 250s and 500s before it gets you direct entry — winning three qualifying rounds becomes routine before winning main-draw rounds does.</div></li>
+      <li><div><b>Protected/direct entry.</b> Once ranked high enough, players get direct acceptance into bigger fields, and the cycle of defending points — the same one that shapes junior rankings — starts governing an entire career.</div></li>
+    </ol>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Why seeds "predict" outcomes</h2><p>There's no fabricated forecast here — just how ranking-based prediction actually works on tour.</p></div>
+    <p style="font-size:0.86rem; color:var(--muted);">Tournaments seed the draw by ranking so the highest-ranked players can't meet until the later rounds — that's the entire mechanism behind "the favorite is expected to reach the semifinal." Commentators and rating sites extend the same idea using UTR or Elo-style ranking gaps between two specific players to estimate a win probability before a match. It's a real, useful heuristic — and it's exactly why upsets are newsworthy: the gap predicts a tendency, not a result.</p>
+  </section>
+
+</div>
+
+<footer>Baseline — built from cited public sources, current as of build time. Not an official ITF, UTR, Tennis Europe, ATP or WTA product.</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  var ATP = [
+    ["1","Jannik Sinner","ITA","11,500"],
+    ["2","Alexander Zverev","GER","9,690"],
+    ["3","Carlos Alcaraz","ESP","5,560"],
+    ["4","Ben Shelton","USA","4,680"],
+    ["5","Félix Auger-Aliassime","CAN","3,890"],
+    ["6","Daniil Medvedev","","3,770"],
+    ["7","Flavio Cobolli","ITA","3,720"],
+    ["8","Frances Tiafoe","USA","3,380"],
+    ["9","Alex de Minaur","AUS","3,300"],
+    ["10","Taylor Fritz","USA","3,175"]
+  ];
+  var WTA = [
+    ["1","Elena Rybakina","KAZ"],
+    ["2","Aryna Sabalenka","",],
+    ["3","Jessica Pegula","USA"],
+    ["4","Coco Gauff","USA"],
+    ["5","Mirra Andreeva","",],
+    ["6","Elina Svitolina","UKR"],
+    ["7","Karolína Muchová","CZE"],
+    ["8","Linda Nosková","CZE"],
+    ["9","Marta Kostyuk","UKR"],
+    ["10","Iga Świątek","POL"]
+  ];
+
+  document.getElementById("atp-body").innerHTML = ATP.map(function(r){
+    return "<tr><td class=\"rank-cell\">"+r[0]+"</td><td class=\"name-cell\"><b>"+r[1]+"</b>"+(r[2]?"<span>"+r[2]+"</span>":"")+"</td><td class=\"pts-cell mono\">"+r[3]+"</td></tr>";
+  }).join("");
+  document.getElementById("wta-body").innerHTML = WTA.map(function(r){
+    return "<tr><td class=\"rank-cell\">"+r[0]+"</td><td class=\"name-cell\"><b>"+r[1]+"</b>"+(r[2]?"<span>"+r[2]+"</span>":"")+"</td></tr>";
+  }).join("");
+
+  var btnJ = document.getElementById("btn-juniors");
+  var btnP = document.getElementById("btn-pro");
+  var viewJ = document.getElementById("view-juniors");
+  var viewP = document.getElementById("view-pro");
+  function setView(v){
+    var isJ = v==="juniors";
+    btnJ.setAttribute("aria-pressed", String(isJ));
+    btnP.setAttribute("aria-pressed", String(!isJ));
+    viewJ.hidden = !isJ;
+    viewP.hidden = isJ;
+  }
+  btnJ.addEventListener("click", function(){ setView("juniors"); });
+  btnP.addEventListener("click", function(){ setView("pro"); });
+})();
+</script>
+
+</body></html>

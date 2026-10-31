@@ -1,0 +1,686 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Settle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;500;600;700&family=Karla:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#eef0ea;
+    --panel:#ffffff;
+    --panel-2:#e2e6dd;
+    --line: rgba(20,24,18,0.11);
+    --ink:#1c211d;
+    --muted:#5d655a;
+    --faint:#8b9285;
+    --brand:#a8792f;
+    --brand-ink:#2a1c07;
+    --c-rent:#2a78d6;
+    --c-buy:#1baf7a;
+    --c-close:#eb6834;
+    --shadow: 0 16px 40px rgba(20,20,10,0.10);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#15181a; --panel:#1d201d; --panel-2:#242822; --line: rgba(238,240,232,0.10);
+      --ink:#eef0ea; --muted:#9aa294; --faint:#5c6357; --brand:#caa25a; --brand-ink:#241a08;
+      --c-rent:#3987e5; --c-buy:#199e70; --c-close:#d95926;
+      --shadow: 0 16px 40px rgba(0,0,0,0.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#15181a; --panel:#1d201d; --panel-2:#242822; --line: rgba(238,240,232,0.10);
+    --ink:#eef0ea; --muted:#9aa294; --faint:#5c6357; --brand:#caa25a; --brand-ink:#241a08;
+    --c-rent:#3987e5; --c-buy:#199e70; --c-close:#d95926;
+    --shadow: 0 16px 40px rgba(0,0,0,0.4);
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; background:var(--bg); color:var(--ink); }
+  body{ font-family:'Karla', system-ui, -apple-system, sans-serif; padding:0 clamp(14px,3vw,28px) 44px; line-height:1.5; }
+  h1,h2,h3{ font-family:'Domine', Georgia, serif; margin:0; }
+  .num{ font-family:'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; }
+  a{ color:var(--brand); }
+  button, select, input{ font-family:inherit; }
+  ::selection{ background:var(--brand); color:var(--brand-ink); }
+
+  .topbar{ display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; padding:22px 0 6px; }
+  .brand{ font-size:clamp(1.5rem,3.2vw,1.9rem); font-weight:600; letter-spacing:-0.01em; }
+  .brand em{ color:var(--brand); font-style:normal; }
+  .tagline{ font-family:'IBM Plex Mono', monospace; font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); }
+
+  .disclaimer{ font-size:0.8rem; color:var(--muted); padding:10px 14px; margin:12px 0 18px; border:1px dashed var(--line); border-radius:10px; }
+  .disclaimer b{ color:var(--ink); }
+
+  .panel{ background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:20px 22px; box-shadow:var(--shadow); margin-bottom:20px; }
+  .panel-head{ margin-bottom:14px; }
+  .panel-head h2{ font-size:1.2rem; font-weight:600; }
+  .panel-head p{ margin:4px 0 0; font-size:0.84rem; color:var(--muted); max-width:64ch; }
+
+  .main-grid{ display:grid; grid-template-columns:1fr 1.25fr; gap:20px; align-items:start; }
+  @media (max-width:920px){ .main-grid{ grid-template-columns:1fr; } }
+
+  .field{ margin-bottom:16px; }
+  .field label{ display:block; font-family:'IBM Plex Mono', monospace; font-size:0.68rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  .field-row{ display:flex; gap:12px; }
+  .field-row .field{ flex:1 1 0; }
+
+  .stepper{ display:flex; align-items:center; gap:12px; }
+  .stepper button{ width:34px; height:34px; border-radius:50%; border:1px solid var(--line); background:var(--panel-2); color:var(--ink); font-size:1.1rem; cursor:pointer; }
+  .stepper button:hover{ border-color:var(--brand); }
+  .stepper .val{ font-family:'IBM Plex Mono', monospace; font-size:1.1rem; min-width:2.4em; text-align:center; }
+  .stepper .sub{ font-size:0.76rem; color:var(--muted); }
+
+  select, input[type="number"]{
+    width:100%; font-size:0.9rem; background:var(--panel-2); color:var(--ink); border:1px solid var(--line);
+    border-radius:9px; padding:9px 11px;
+  }
+  input[type="number"]{ font-family:'IBM Plex Mono', monospace; }
+
+  input[type="range"]{ width:100%; height:3px; border-radius:2px; background:var(--panel-2); appearance:none; -webkit-appearance:none; }
+  input[type="range"]::-webkit-slider-thumb{ -webkit-appearance:none; width:15px; height:15px; border-radius:50%; background:var(--ink); border:2px solid var(--brand); cursor:pointer; }
+  input[type="range"]::-moz-range-thumb{ width:15px; height:15px; border-radius:50%; background:var(--ink); border:2px solid var(--brand); cursor:pointer; }
+  .range-value{ font-family:'IBM Plex Mono', monospace; font-size:0.82rem; color:var(--muted); margin-top:5px; }
+  .range-value b{ color:var(--ink); }
+
+  button:focus-visible, select:focus-visible, input:focus-visible, tr:focus-visible{ outline:2px solid var(--brand); outline-offset:2px; }
+
+  .verdict{ padding:16px 18px; border-radius:14px; margin-bottom:16px; border:1px solid var(--line); }
+  .verdict.buy{ background: color-mix(in srgb, var(--c-buy) 14%, var(--panel)); }
+  .verdict.rent{ background: color-mix(in srgb, var(--c-rent) 14%, var(--panel)); }
+  .verdict.close{ background: color-mix(in srgb, var(--c-close) 14%, var(--panel)); }
+  .verdict .label{ font-family:'Domine', serif; font-weight:600; font-size:1.25rem; margin-bottom:4px; }
+  .verdict .sub{ font-size:0.86rem; color:var(--muted); }
+  .verdict.buy .label{ color:var(--c-buy); }
+  .verdict.rent .label{ color:var(--c-rent); }
+  .verdict.close .label{ color:var(--c-close); }
+
+  .rationale{ list-style:none; margin:0 0 16px; padding:0; display:flex; flex-direction:column; gap:8px; font-size:0.86rem; }
+  .rationale li{ padding-left:18px; position:relative; }
+  .rationale li::before{ content:'\2013'; position:absolute; left:0; color:var(--brand); }
+
+  .stat-row{ display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap; }
+  .stat-tile{ flex:1 1 140px; background:var(--panel-2); border-radius:12px; padding:10px 13px; }
+  .stat-tile .l{ font-family:'IBM Plex Mono', monospace; font-size:0.62rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); }
+  .stat-tile .v{ font-family:'IBM Plex Mono', monospace; font-size:1.2rem; font-weight:600; margin-top:2px; }
+  .stat-tile .b{ font-size:0.72rem; color:var(--faint); margin-top:2px; }
+
+  .chip-row{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+  .chip{ font-size:0.78rem; padding:6px 12px; border-radius:100px; border:1px solid var(--line); background:var(--panel-2); color:var(--ink); }
+
+  .bars{ display:flex; flex-direction:column; gap:10px; }
+  .bar-row{ display:flex; align-items:center; gap:10px; }
+  .bar-row .bar-label{ width:52px; font-size:0.78rem; color:var(--muted); flex-shrink:0; }
+  .bar-track{ flex:1 1 auto; height:22px; background:var(--panel-2); border-radius:6px; overflow:hidden; }
+  .bar-fill{ height:100%; border-radius:6px; display:flex; align-items:center; padding-left:8px; font-family:'IBM Plex Mono', monospace; font-size:0.74rem; color:#fff; white-space:nowrap; }
+  .bar-fill.rent{ background:var(--c-rent); }
+  .bar-fill.buy{ background:var(--c-buy); }
+
+  .table-wrap{ overflow-x:auto; }
+  table{ width:100%; border-collapse:collapse; font-size:0.86rem; }
+  thead th{ text-align:left; font-family:'IBM Plex Mono', monospace; font-size:0.62rem; letter-spacing:0.07em; text-transform:uppercase; color:var(--muted); padding:0 10px 8px; border-bottom:1px solid var(--line); white-space:nowrap; cursor:pointer; }
+  thead th:hover{ color:var(--ink); }
+  tbody td{ padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:middle; white-space:nowrap; }
+  tbody tr{ cursor:pointer; }
+  tbody tr:hover{ background:var(--panel-2); }
+  tbody tr.selected{ background: color-mix(in srgb, var(--brand) 12%, transparent); }
+  .city-cell b{ display:block; font-size:0.92rem; }
+  .city-cell span{ font-size:0.72rem; color:var(--muted); }
+  .num-cell{ text-align:right; font-family:'IBM Plex Mono', monospace; }
+  .v-chip{ display:inline-flex; align-items:center; gap:5px; font-family:'IBM Plex Mono', monospace; font-size:0.64rem; letter-spacing:0.04em; text-transform:uppercase; padding:3px 9px; border-radius:100px; }
+  .v-chip::before{ content:''; width:6px; height:6px; border-radius:50%; background:currentColor; }
+  .v-chip.buy{ color:var(--c-buy); background: color-mix(in srgb, var(--c-buy) 15%, transparent); }
+  .v-chip.rent{ color:var(--c-rent); background: color-mix(in srgb, var(--c-rent) 15%, transparent); }
+  .v-chip.close{ color:var(--c-close); background: color-mix(in srgb, var(--c-close) 15%, transparent); }
+
+  .filters{ display:flex; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+  .filters input[type="text"]{ flex:1 1 180px; background:var(--panel-2); border:1px solid var(--line); border-radius:9px; padding:9px 11px; color:var(--ink); font-size:0.86rem; }
+  .filters select{ flex:0 1 160px; }
+
+  .viz-root{ --chart-ink: var(--ink); --chart-muted: var(--muted); --chart-grid: var(--line); }
+  .chart-legend{ display:flex; gap:16px; flex-wrap:wrap; margin-top:10px; font-size:0.8rem; color:var(--muted); }
+  .chart-legend span{ display:inline-flex; align-items:center; gap:6px; }
+  .chart-legend i{ width:9px; height:9px; border-radius:50%; display:inline-block; }
+  svg text{ font-family:'Karla', sans-serif; }
+
+  .tooltip{ position:fixed; pointer-events:none; background:var(--ink); color:var(--bg); font-size:0.76rem; padding:8px 11px; border-radius:8px; opacity:0; transition:opacity 0.1s ease; z-index:40; max-width:220px; line-height:1.4; }
+  .tooltip.show{ opacity:1; }
+  .tooltip b{ display:block; margin-bottom:2px; }
+
+  .info-btn{ width:30px; height:30px; border-radius:50%; border:1px solid var(--line); background:var(--panel-2); color:var(--ink); cursor:pointer; font-family:'Domine',serif; font-style:italic; flex-shrink:0; }
+  .about-card{ font-size:0.85rem; color:var(--muted); margin-top:10px; padding-top:10px; border-top:1px solid var(--line); line-height:1.6; }
+  .about-card p{ margin:0 0 8px; }
+  .about-card p:last-child{ margin-bottom:0; }
+  .about-card b{ color:var(--ink); }
+
+  footer{ font-size:0.74rem; color:var(--faint); text-align:center; padding-top:10px; }
+
+  @media (max-width:600px){
+    .stat-row{ gap:8px; }
+    .field-row{ flex-direction:column; gap:0; }
+  }
+</style>
+
+<div class="topbar">
+  <div>
+    <div class="brand">Sett<em>le</em></div>
+    <div class="tagline">Buy or rent, sized to you</div>
+  </div>
+</div>
+<p class="disclaimer"><b>These are ballpark estimates.</b> Prices and rents here are simplified city medians for this demo, not live listings — verify with local sources and a lender or agent before deciding. Not financial or legal advice.</p>
+
+<div class="main-grid">
+  <section class="panel">
+    <div class="panel-head"><h2>Your household</h2><p>Tell us who's living there and what you can spend.</p></div>
+
+    <div class="field">
+      <label>People in the household</label>
+      <div class="stepper">
+        <button id="hh-minus" aria-label="Fewer people">−</button>
+        <span class="val num" id="hh-val">2</span>
+        <button id="hh-plus" aria-label="More people">+</button>
+        <span class="sub" id="hh-bedrooms"></span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="income">Household income (per year)</label>
+      <input type="number" id="income" min="0" step="1000" value="85000">
+    </div>
+
+    <div class="field">
+      <label for="city-select">City</label>
+      <select id="city-select"></select>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label for="down-pct">Down payment</label>
+        <input type="range" id="down-pct" min="0" max="30" step="1" value="10">
+        <div class="range-value" id="down-pct-out"></div>
+      </div>
+      <div class="field">
+        <label for="rate">Mortgage rate</label>
+        <input type="range" id="rate" min="3" max="9" step="0.125" value="6.5">
+        <div class="range-value" id="rate-out"></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="years">Years you plan to stay</label>
+      <input type="range" id="years" min="1" max="15" step="1" value="5">
+      <div class="range-value" id="years-out"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Our take</h2><p id="result-city-label"></p></div>
+    <div class="verdict" id="verdict-box">
+      <div class="label" id="verdict-label"></div>
+      <div class="sub" id="verdict-sub"></div>
+    </div>
+    <ul class="rationale" id="rationale-list"></ul>
+
+    <div class="stat-row">
+      <div class="stat-tile"><div class="l">Est. rent / mo</div><div class="v" id="stat-rent"></div><div class="b" id="stat-rent-sub"></div></div>
+      <div class="stat-tile"><div class="l">Est. buy / mo</div><div class="v" id="stat-buy"></div><div class="b" id="stat-buy-sub"></div></div>
+      <div class="stat-tile"><div class="l">Price-to-rent</div><div class="v" id="stat-ratio"></div><div class="b">price ÷ annual rent</div></div>
+    </div>
+
+    <div class="bars">
+      <div class="bar-row"><div class="bar-label">Rent</div><div class="bar-track"><div class="bar-fill rent" id="bar-rent"></div></div></div>
+      <div class="bar-row"><div class="bar-label">Buy</div><div class="bar-track"><div class="bar-fill buy" id="bar-buy"></div></div></div>
+    </div>
+
+    <div class="chip-row" id="type-chips" style="margin-top:16px;"></div>
+  </section>
+</div>
+
+<section class="panel">
+  <div class="panel-head"><h2>Every city in the dataset</h2><p>Sort or search to compare — the verdict column re-runs for your household on every row.</p></div>
+  <div class="filters">
+    <input type="text" id="filter-text" placeholder="Search city or state…">
+    <select id="filter-region">
+      <option value="">All regions</option>
+      <option value="Northeast">Northeast</option>
+      <option value="Midwest">Midwest</option>
+      <option value="South">South</option>
+      <option value="West">West</option>
+    </select>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th data-key="city">City</th>
+          <th data-key="region">Region</th>
+          <th data-key="rent" style="text-align:right;">Rent</th>
+          <th data-key="price" style="text-align:right;">Home price</th>
+          <th data-key="ratio" style="text-align:right;">Price/rent</th>
+          <th data-key="verdict">For you</th>
+        </tr>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-head"><h2>Where your city lands</h2><p>Every city plotted by price-to-rent ratio and how much more (or less) buying costs than renting each month, for your household. Your selected city is the larger, ringed dot.</p></div>
+  <div class="viz-root">
+    <svg id="scatter" viewBox="0 0 640 340" role="img" aria-label="Scatter chart of cities by price-to-rent ratio and monthly buy-versus-rent cost gap"></svg>
+    <div class="chart-legend">
+      <span><i style="background:var(--c-buy)"></i>Buying could make sense</span>
+      <span><i style="background:var(--c-close)"></i>It's close</span>
+      <span><i style="background:var(--c-rent)"></i>Renting looks better</span>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <button class="info-btn" id="btn-about" aria-expanded="false" aria-controls="about-card">i</button>
+    <h2 style="font-size:1rem;">How this is calculated</h2>
+  </div>
+  <div class="about-card" id="about-card" hidden>
+    <p>For each city we start from a median 1-bedroom rent and a baseline home price (sized for a typical 3-bedroom), then scale both by bedroom count using standard rent and price premiums per extra bedroom. Bedrooms recommended follow a simple rule: about one bedroom per two people.</p>
+    <p>The <b>buy</b> estimate assumes a 30-year fixed mortgage at your chosen rate and down payment, plus each state's typical effective property tax rate, ~0.35% annual insurance, ~1% annual maintenance, mortgage insurance (PMI) if you put down less than 20%, and an HOA estimate in condo- and co-op-heavy markets.</p>
+    <p>The verdict weighs the <b>price-to-rent ratio</b> (under 15 tends to favor buying, over 25 tends to favor renting), your <b>planned years in the home</b> (buying rarely pays off in under 3 years once closing costs are counted), and whether either option would eat an uncomfortable share of your income.</p>
+    <p>All of this is a simplified teaching model with estimated, non-live data — a real decision should start with current local listings and a conversation with a lender.</p>
+  </div>
+</section>
+
+<footer>Settle — an educational demo. Estimated city medians, not live listings. Not financial or legal advice.</footer>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var RAW = [
+    ["Birmingham","Alabama","AL","South",230000,950,0.0041,["Single-family home","Bungalow","Garden apartment"]],
+    ["Anchorage","Alaska","AK","West",380000,1300,0.0112,["Single-family home","Duplex","Mid-rise apartment"]],
+    ["Phoenix","Arizona","AZ","West",440000,1350,0.0060,["Single-family home","Garden apartment","Townhouse"]],
+    ["Tucson","Arizona","AZ","West",330000,1050,0.0060,["Single-family home","Garden apartment","Adobe ranch home"]],
+    ["Little Rock","Arkansas","AR","South",210000,900,0.0061,["Single-family home","Duplex","Garden apartment"]],
+    ["Los Angeles","California","CA","West",950000,2300,0.0075,["High-rise condo","Bungalow","Garden apartment","Craftsman home"]],
+    ["San Francisco","California","CA","West",1300000,2900,0.0075,["High-rise condo","Victorian multi-family","Mid-rise apartment"]],
+    ["San Diego","California","CA","West",980000,2250,0.0075,["Single-family home","Mid-rise condo","Garden apartment"]],
+    ["Sacramento","California","CA","West",500000,1650,0.0075,["Single-family home","Townhouse","Garden apartment"]],
+    ["Denver","Colorado","CO","West",580000,1600,0.0051,["Single-family home","Mid-rise condo","Townhouse"]],
+    ["Hartford","Connecticut","CT","Northeast",260000,1450,0.0179,["Colonial home","Triple-decker","Mid-rise apartment"]],
+    ["Wilmington","Delaware","DE","South",280000,1400,0.0057,["Row house","Single-family home","Garden apartment"]],
+    ["Washington","District of Columbia","DC","South",620000,2200,0.0056,["Row house","High-rise condo","Mid-rise apartment"]],
+    ["Miami","Florida","FL","South",570000,2200,0.0080,["High-rise condo","Mid-rise apartment","Single-family home"]],
+    ["Orlando","Florida","FL","South",390000,1600,0.0080,["Single-family home","Garden apartment","Townhouse"]],
+    ["Tampa","Florida","FL","South",390000,1700,0.0080,["Single-family home","Mid-rise condo","Bungalow"]],
+    ["Jacksonville","Florida","FL","South",310000,1300,0.0080,["Single-family home","Garden apartment","Townhouse"]],
+    ["Atlanta","Georgia","GA","South",400000,1500,0.0087,["Single-family home","Mid-rise apartment","Townhouse"]],
+    ["Honolulu","Hawaii","HI","West",700000,2000,0.0028,["High-rise condo","Mid-rise condo","Plantation-style home"]],
+    ["Boise","Idaho","ID","West",470000,1300,0.0058,["Single-family home","Townhouse","Garden apartment"]],
+    ["Chicago","Illinois","IL","Midwest",340000,1800,0.0209,["Vintage courtyard apartment","High-rise condo","Bungalow"]],
+    ["Indianapolis","Indiana","IN","Midwest",230000,1100,0.0085,["Single-family home","Bungalow","Garden apartment"]],
+    ["Des Moines","Iowa","IA","Midwest",230000,1000,0.0153,["Single-family home","Duplex","Garden apartment"]],
+    ["Wichita","Kansas","KS","Midwest",190000,800,0.0141,["Single-family home","Duplex","Ranch home"]],
+    ["Louisville","Kentucky","KY","South",240000,1050,0.0086,["Single-family home","Shotgun house","Garden apartment"]],
+    ["New Orleans","Louisiana","LA","South",260000,1350,0.0055,["Shotgun house","Creole cottage","Mid-rise apartment"]],
+    ["Portland","Maine","ME","Northeast",420000,1650,0.0109,["Colonial home","Triple-decker","Mid-rise apartment"]],
+    ["Baltimore","Maryland","MD","South",220000,1400,0.0106,["Row house","Single-family home","Mid-rise apartment"]],
+    ["Boston","Massachusetts","MA","Northeast",780000,2700,0.0105,["Triple-decker","High-rise condo","Brownstone"]],
+    ["Detroit","Michigan","MI","Midwest",90000,1000,0.0154,["Bungalow","Single-family home","Duplex"]],
+    ["Minneapolis","Minnesota","MN","Midwest",340000,1300,0.0104,["Single-family home","Mid-rise apartment","Duplex"]],
+    ["Jackson","Mississippi","MS","South",150000,850,0.0081,["Single-family home","Duplex","Ranch home"]],
+    ["St. Louis","Missouri","MO","Midwest",220000,1000,0.0092,["Single-family home","Brick bungalow","Garden apartment"]],
+    ["Kansas City","Missouri","MO","Midwest",280000,1100,0.0092,["Single-family home","Townhouse","Garden apartment"]],
+    ["Billings","Montana","MT","West",380000,1050,0.0069,["Single-family home","Ranch home","Townhouse"]],
+    ["Omaha","Nebraska","NE","Midwest",260000,1050,0.0158,["Single-family home","Duplex","Garden apartment"]],
+    ["Las Vegas","Nevada","NV","West",430000,1300,0.0053,["Single-family home","Garden apartment","Townhouse"]],
+    ["Manchester","New Hampshire","NH","Northeast",420000,1600,0.0186,["Colonial home","Triple-decker","Townhouse"]],
+    ["Newark","New Jersey","NJ","Northeast",380000,1900,0.0223,["Row house","Mid-rise apartment","Single-family home"]],
+    ["Albuquerque","New Mexico","NM","West",310000,1050,0.0071,["Single-family home","Adobe ranch home","Garden apartment"]],
+    ["New York","New York","NY","Northeast",780000,3600,0.0088,["High-rise condo","Pre-war co-op","Walk-up apartment","Brownstone"]],
+    ["Buffalo","New York","NY","Northeast",220000,1100,0.0201,["Single-family home","Duplex","Garden apartment"]],
+    ["Charlotte","North Carolina","NC","South",390000,1400,0.0069,["Single-family home","Mid-rise apartment","Townhouse"]],
+    ["Raleigh","North Carolina","NC","South",430000,1400,0.0069,["Single-family home","Townhouse","Garden apartment"]],
+    ["Fargo","North Dakota","ND","Midwest",290000,900,0.0098,["Single-family home","Duplex","Garden apartment"]],
+    ["Columbus","Ohio","OH","Midwest",300000,1150,0.0146,["Single-family home","Townhouse","Garden apartment"]],
+    ["Cleveland","Ohio","OH","Midwest",110000,950,0.0146,["Bungalow","Single-family home","Duplex"]],
+    ["Cincinnati","Ohio","OH","Midwest",250000,1100,0.0146,["Single-family home","Row house","Garden apartment"]],
+    ["Oklahoma City","Oklahoma","OK","South",220000,950,0.0085,["Single-family home","Ranch home","Garden apartment"]],
+    ["Tulsa","Oklahoma","OK","South",190000,850,0.0085,["Single-family home","Bungalow","Garden apartment"]],
+    ["Portland","Oregon","OR","West",550000,1500,0.0094,["Craftsman home","Mid-rise apartment","Townhouse"]],
+    ["Philadelphia","Pennsylvania","PA","Northeast",270000,1500,0.0146,["Row house","High-rise condo","Twin home"]],
+    ["Pittsburgh","Pennsylvania","PA","Northeast",230000,1200,0.0146,["Single-family home","Row house","Garden apartment"]],
+    ["Providence","Rhode Island","RI","Northeast",430000,1700,0.0140,["Triple-decker","Mid-rise apartment","Colonial home"]],
+    ["Charleston","South Carolina","SC","South",480000,1650,0.0056,["Single-family home","Historic row house","Townhouse"]],
+    ["Sioux Falls","South Dakota","SD","Midwest",300000,950,0.0114,["Single-family home","Ranch home","Garden apartment"]],
+    ["Nashville","Tennessee","TN","South",450000,1400,0.0064,["Single-family home","Townhouse","Mid-rise apartment"]],
+    ["Memphis","Tennessee","TN","South",210000,1050,0.0064,["Single-family home","Duplex","Garden apartment"]],
+    ["Houston","Texas","TX","South",330000,1200,0.0169,["Single-family home","Garden apartment","Townhouse"]],
+    ["Dallas","Texas","TX","South",400000,1300,0.0169,["Single-family home","Mid-rise apartment","Townhouse"]],
+    ["Austin","Texas","TX","South",530000,1400,0.0169,["Single-family home","Mid-rise condo","Bungalow"]],
+    ["San Antonio","Texas","TX","South",290000,1150,0.0169,["Single-family home","Garden apartment","Ranch home"]],
+    ["Salt Lake City","Utah","UT","West",540000,1350,0.0055,["Single-family home","Townhouse","Mid-rise apartment"]],
+    ["Burlington","Vermont","VT","Northeast",480000,1600,0.0179,["Colonial home","Townhouse","Garden apartment"]],
+    ["Richmond","Virginia","VA","South",340000,1400,0.0080,["Row house","Single-family home","Garden apartment"]],
+    ["Arlington","Virginia","VA","South",620000,2200,0.0080,["High-rise condo","Mid-rise apartment","Townhouse"]],
+    ["Seattle","Washington","WA","West",820000,2000,0.0093,["Single-family home","High-rise condo","Townhouse"]],
+    ["Charleston","West Virginia","WV","South",150000,800,0.0049,["Single-family home","Ranch home","Garden apartment"]],
+    ["Milwaukee","Wisconsin","WI","Midwest",260000,1150,0.0163,["Bungalow","Duplex","Mid-rise apartment"]],
+    ["Cheyenne","Wyoming","WY","West",330000,1050,0.0057,["Single-family home","Ranch home","Townhouse"]]
+  ];
+
+  var CITIES = RAW.map(function(r){
+    return { city:r[0], state:r[1], st:r[2], region:r[3], price:r[4], rent1:r[5], tax:r[6], types:r[7], id:r[0]+"-"+r[2] };
+  });
+
+  var RENT_RATIO = {0:0.80,1:1.0,2:1.30,3:1.78,4:2.20,5:2.55};
+  var PRICE_RATIO = {0:0.40,1:0.55,2:0.75,3:1.0,4:1.25,5:1.48};
+
+  function clamp(x,a,b){ return Math.max(a, Math.min(b,x)); }
+  function fmt0(n){ return "$" + Math.round(n).toLocaleString("en-US"); }
+  function fmt2(n){ return "$" + n.toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2}); }
+  function bedroomsFor(n){ if (n<=1) return 1; return Math.min(5, Math.ceil(n/2)); }
+
+  function rentForCity(c,br){ return c.rent1 * RENT_RATIO[br]; }
+  function priceForCity(c,br){ return c.price * PRICE_RATIO[br]; }
+
+  function mortgagePayment(principal, ratePct, years){
+    var r = ratePct/100/12, n = years*12;
+    if (principal<=0) return 0;
+    if (r===0) return principal/n;
+    return principal * r * Math.pow(1+r,n) / (Math.pow(1+r,n)-1);
+  }
+
+  function hasCondo(c){ return c.types.some(function(t){ return /condo|co-op/i.test(t); }); }
+
+  function computeCosts(city, br, downPct, ratePct){
+    var rentBase = rentForCity(city, br);
+    var price = priceForCity(city, br);
+    var loan = price * (1 - downPct/100);
+    var pi = mortgagePayment(loan, ratePct, 30);
+    var tax = price * city.tax / 12;
+    var ins = price * 0.0035 / 12;
+    var maint = price * 0.01 / 12;
+    var hoa = hasCondo(city) ? 280 : 0;
+    var pmi = downPct < 20 ? loan * 0.006 / 12 : 0;
+    var buy = pi + tax + ins + maint + hoa + pmi;
+    var rent = rentBase + 25;
+    return { price:price, rentBase:rentBase, rent:rent, buy:buy, pi:pi, tax:tax, ins:ins, maint:maint, hoa:hoa, pmi:pmi, ratio: price/(rentBase*12) };
+  }
+
+  function computeVerdict(costs, years, downPct, income){
+    var mi = income/12;
+    var buyBurden = mi>0 ? costs.buy/mi : 1;
+    var rentBurden = mi>0 ? costs.rent/mi : 1;
+    var ratio = costs.ratio;
+    var score = 0;
+    if (ratio<15) score+=2; else if (ratio<20) score+=1; else if (ratio<25) score-=1; else score-=2;
+    if (years<3) score-=2; else if (years<5) score-=1; else if (years>=8) score+=1;
+    if (buyBurden>0.43) score-=2; else if (buyBurden>0.33) score-=1;
+    if (downPct<10) score-=1; else if (downPct>=20) score+=1;
+    var forced = buyBurden>0.5;
+    var key, label;
+    if (forced || score<=-2){ key="rent"; label="Renting looks better"; }
+    else if (score>=2){ key="buy"; label="Buying could make sense"; }
+    else { key="close"; label="It's close — either can work"; }
+    return { key:key, label:label, score:score, buyBurden:buyBurden, rentBurden:rentBurden, ratio:ratio, forced:forced };
+  }
+
+  // ---------- state ----------
+  var state = { household:2, income:85000, cityId: "New York-NY", downPct:10, rate:6.5, years:5, sort:{key:"ratio", dir:1}, filterText:"", filterRegion:"" };
+
+  function cityById(id){ return CITIES.filter(function(c){ return c.id===id; })[0]; }
+
+  // ---------- dom refs ----------
+  var hhVal = document.getElementById("hh-val");
+  var hhBedrooms = document.getElementById("hh-bedrooms");
+  var incomeEl = document.getElementById("income");
+  var citySelect = document.getElementById("city-select");
+  var downPctEl = document.getElementById("down-pct");
+  var downPctOut = document.getElementById("down-pct-out");
+  var rateEl = document.getElementById("rate");
+  var rateOut = document.getElementById("rate-out");
+  var yearsEl = document.getElementById("years");
+  var yearsOut = document.getElementById("years-out");
+
+  // populate city select grouped by state
+  (function(){
+    var byState = {};
+    CITIES.forEach(function(c){
+      byState[c.state] = byState[c.state] || [];
+      byState[c.state].push(c);
+    });
+    var states = Object.keys(byState).sort();
+    citySelect.innerHTML = states.map(function(st){
+      var opts = byState[st].map(function(c){
+        return '<option value="' + c.id + '">' + c.city + ", " + c.st + "</option>";
+      }).join("");
+      return '<optgroup label="' + st + '">' + opts + "</optgroup>";
+    }).join("");
+    citySelect.value = state.cityId;
+  })();
+
+  document.getElementById("hh-minus").addEventListener("click", function(){ state.household = clamp(state.household-1,1,10); renderAll(); });
+  document.getElementById("hh-plus").addEventListener("click", function(){ state.household = clamp(state.household+1,1,10); renderAll(); });
+  incomeEl.addEventListener("input", function(){ state.income = Math.max(0, parseFloat(incomeEl.value)||0); renderAll(); });
+  citySelect.addEventListener("change", function(){ state.cityId = citySelect.value; renderAll(); });
+  downPctEl.addEventListener("input", function(){ state.downPct = parseFloat(downPctEl.value); renderAll(); });
+  rateEl.addEventListener("input", function(){ state.rate = parseFloat(rateEl.value); renderAll(); });
+  yearsEl.addEventListener("input", function(){ state.years = parseInt(yearsEl.value,10); renderAll(); });
+
+  document.getElementById("filter-text").addEventListener("input", function(e){ state.filterText = e.target.value.toLowerCase(); renderTable(); });
+  document.getElementById("filter-region").addEventListener("change", function(e){ state.filterRegion = e.target.value; renderTable(); });
+
+  document.querySelectorAll("thead th[data-key]").forEach(function(th){
+    th.addEventListener("click", function(){
+      var key = th.getAttribute("data-key");
+      if (state.sort.key===key) state.sort.dir *= -1; else { state.sort.key = key; state.sort.dir = 1; }
+      renderTable();
+    });
+  });
+
+  var aboutBtn = document.getElementById("btn-about");
+  var aboutCard = document.getElementById("about-card");
+  aboutBtn.addEventListener("click", function(){
+    var open = aboutCard.hidden;
+    aboutCard.hidden = !open;
+    aboutBtn.setAttribute("aria-expanded", String(open));
+  });
+
+  function reorderTypes(types, household){
+    if (household < 4) return types;
+    var familyRe = /single|town|row|duplex|craftsman|colonial|ranch|bungalow|twin|triple-decker|shotgun|creole|plantation|adobe/i;
+    return types.slice().sort(function(a,b){
+      return (familyRe.test(b)?1:0) - (familyRe.test(a)?1:0);
+    });
+  }
+
+  function renderResult(){
+    var city = cityById(state.cityId);
+    var br = bedroomsFor(state.household);
+    var costs = computeCosts(city, br, state.downPct, state.rate);
+    var verdict = computeVerdict(costs, state.years, state.downPct, state.income);
+
+    document.getElementById("result-city-label").textContent =
+      city.city + ", " + city.st + " — " + (br===1?"1 bedroom":br+" bedrooms") + " for " + state.household + (state.household===1?" person":" people");
+
+    var box = document.getElementById("verdict-box");
+    box.className = "verdict " + verdict.key;
+    document.getElementById("verdict-label").textContent = verdict.label;
+    document.getElementById("verdict-sub").textContent =
+      fmt0(costs.buy) + "/mo to buy vs " + fmt0(costs.rent) + "/mo to rent — buying costs " +
+      (costs.buy>=costs.rent ? fmt0(costs.buy-costs.rent)+" more" : fmt0(costs.rent-costs.buy)+" less") + " per month.";
+
+    var bullets = [];
+    bullets.push("Price-to-rent ratio here is " + costs.ratio.toFixed(1) + " — " +
+      (costs.ratio<15 ? "well under 15, a classic buy signal." : costs.ratio<20 ? "in the 15–20 range, roughly neutral." : costs.ratio<25 ? "in the 20–25 range, leaning toward renting." : "over 25, a classic rent signal."));
+    bullets.push("Buying would use about " + Math.round(verdict.buyBurden*100) + "% of your gross income each month" +
+      (verdict.buyBurden>0.43 ? " — that's a real stretch." : verdict.buyBurden>0.33 ? " — workable, but tight." : " — comfortably under the usual 30% guideline."));
+    bullets.push("Renting would use about " + Math.round(verdict.rentBurden*100) + "% of your gross income" +
+      (verdict.rentBurden>0.4 ? ", also a stretch — a smaller unit or a roommate would help." : "."));
+    bullets.push(state.years<3
+      ? "Staying only " + state.years + " year" + (state.years===1?"":"s") + " makes buying hard to recoup once closing costs are counted."
+      : "Planning to stay " + state.years + "+ years gives buying more time to pay off its upfront costs.");
+    document.getElementById("rationale-list").innerHTML = bullets.map(function(b){ return "<li>"+b+"</li>"; }).join("");
+
+    document.getElementById("stat-rent").textContent = fmt0(costs.rent) + "/mo";
+    document.getElementById("stat-rent-sub").textContent = "median rent + insurance";
+    document.getElementById("stat-buy").textContent = fmt0(costs.buy) + "/mo";
+    document.getElementById("stat-buy-sub").textContent = "P&I, tax, insurance, upkeep";
+    document.getElementById("stat-ratio").textContent = costs.ratio.toFixed(1);
+
+    var maxBar = Math.max(costs.rent, costs.buy, 1);
+    document.getElementById("bar-rent").style.width = clamp(costs.rent/maxBar*100,4,100) + "%";
+    document.getElementById("bar-rent").textContent = fmt0(costs.rent);
+    document.getElementById("bar-buy").style.width = clamp(costs.buy/maxBar*100,4,100) + "%";
+    document.getElementById("bar-buy").textContent = fmt0(costs.buy);
+
+    var types = reorderTypes(city.types, state.household);
+    document.getElementById("type-chips").innerHTML = types.map(function(t){ return '<span class="chip">'+t+"</span>"; }).join("");
+
+    hhVal.textContent = state.household;
+    hhBedrooms.textContent = "→ " + br + " bedroom" + (br===1?"":"s") + " recommended";
+    downPctOut.innerHTML = "<b>" + state.downPct + "%</b> — " + fmt0(costs.price*state.downPct/100) + " on a " + fmt0(costs.price) + " home";
+    rateOut.innerHTML = "<b>" + state.rate.toFixed(3).replace(/0+$/,"").replace(/\.$/,"") + "%</b> fixed, 30-year";
+    yearsOut.innerHTML = "<b>" + state.years + (state.years>=15?"+":"") + "</b> year" + (state.years===1?"":"s");
+    incomeEl.value = state.income;
+  }
+
+  function allComputed(){
+    var br = bedroomsFor(state.household);
+    return CITIES.map(function(c){
+      var costs = computeCosts(c, br, state.downPct, state.rate);
+      var verdict = computeVerdict(costs, state.years, state.downPct, state.income);
+      return { city:c, costs:costs, verdict:verdict };
+    });
+  }
+
+  function renderTable(){
+    var rows = allComputed();
+    if (state.filterText){
+      rows = rows.filter(function(r){
+        return (r.city.city+" "+r.city.state+" "+r.city.st).toLowerCase().indexOf(state.filterText) >= 0;
+      });
+    }
+    if (state.filterRegion){ rows = rows.filter(function(r){ return r.city.region===state.filterRegion; }); }
+
+    var key = state.sort.key, dir = state.sort.dir;
+    rows.sort(function(a,b){
+      var av, bv;
+      if (key==="city"){ av=a.city.city; bv=b.city.city; return dir*av.localeCompare(bv); }
+      if (key==="region"){ av=a.city.region; bv=b.city.region; return dir*av.localeCompare(bv); }
+      if (key==="rent"){ av=a.costs.rentBase; bv=b.costs.rentBase; }
+      else if (key==="price"){ av=a.costs.price; bv=b.costs.price; }
+      else if (key==="ratio"){ av=a.costs.ratio; bv=b.costs.ratio; }
+      else { av=a.verdict.score; bv=b.verdict.score; }
+      return dir*(av-bv);
+    });
+
+    document.getElementById("table-body").innerHTML = rows.map(function(r){
+      var sel = r.city.id===state.cityId ? " selected" : "";
+      return '<tr data-id="' + r.city.id + '" class="' + sel.trim() + '" tabindex="0" role="button" aria-label="Select ' + r.city.city + '">' +
+        '<td class="city-cell"><b>' + r.city.city + '</b><span>' + r.city.state + '</span></td>' +
+        '<td>' + r.city.region + '</td>' +
+        '<td class="num-cell">' + fmt0(r.costs.rentBase) + '</td>' +
+        '<td class="num-cell">' + fmt0(r.costs.price) + '</td>' +
+        '<td class="num-cell">' + r.costs.ratio.toFixed(1) + '</td>' +
+        '<td><span class="v-chip ' + r.verdict.key + '">' + r.verdict.label.replace("Renting looks better","Rent").replace("Buying could make sense","Buy").replace("It's close — either can work","Close") + '</span></td>' +
+      '</tr>';
+    }).join("");
+
+    document.querySelectorAll("#table-body tr").forEach(function(tr){
+      tr.addEventListener("click", function(){ state.cityId = tr.getAttribute("data-id"); citySelect.value = state.cityId; renderAll(); });
+      tr.addEventListener("keydown", function(e){
+        if (e.key==="Enter" || e.key===" "){ e.preventDefault(); state.cityId = tr.getAttribute("data-id"); citySelect.value = state.cityId; renderAll(); }
+      });
+    });
+  }
+
+  var tooltipEl = document.getElementById("tooltip");
+  function showTooltip(x,y,html){ tooltipEl.innerHTML = html; tooltipEl.style.left=(x+14)+"px"; tooltipEl.style.top=(y+14)+"px"; tooltipEl.classList.add("show"); }
+  function hideTooltip(){ tooltipEl.classList.remove("show"); }
+
+  function themeVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+  function renderScatter(){
+    var rows = allComputed();
+    var svg = document.getElementById("scatter");
+    var W=640, H=340, pad={l:46,r:16,t:16,b:40};
+    var xs = rows.map(function(r){ return r.costs.ratio; });
+    var ys = rows.map(function(r){ return r.costs.buy-r.costs.rent; });
+    var xMin = Math.min.apply(null,xs)-1, xMax = Math.max.apply(null,xs)+1;
+    var yMin = Math.min.apply(null,ys), yMax = Math.max.apply(null,ys);
+    var yPad = (yMax-yMin)*0.08 || 50;
+    yMin -= yPad; yMax += yPad;
+
+    function X(v){ return pad.l + (v-xMin)/(xMax-xMin) * (W-pad.l-pad.r); }
+    function Y(v){ return pad.t + (1-(v-yMin)/(yMax-yMin)) * (H-pad.t-pad.b); }
+
+    var grid = themeVar("--line"), muted = themeVar("--muted"), ink = themeVar("--ink");
+    var svgParts = [];
+
+    var xTicks = [10,15,20,25,30,35].filter(function(v){ return v>=xMin && v<=xMax; });
+    xTicks.forEach(function(v){
+      var x = X(v);
+      svgParts.push('<line x1="'+x+'" y1="'+pad.t+'" x2="'+x+'" y2="'+(H-pad.b)+'" stroke="'+grid+'" stroke-width="1"/>');
+      svgParts.push('<text x="'+x+'" y="'+(H-pad.b+18)+'" font-size="10" fill="'+muted+'" text-anchor="middle">'+v+'</text>');
+    });
+    var yTicks = 4;
+    for (var i=0;i<=yTicks;i++){
+      var yv = yMin + (yMax-yMin)*i/yTicks;
+      var y = Y(yv);
+      svgParts.push('<line x1="'+pad.l+'" y1="'+y+'" x2="'+(W-pad.r)+'" y2="'+y+'" stroke="'+grid+'" stroke-width="1"/>');
+      svgParts.push('<text x="'+(pad.l-8)+'" y="'+(y+3)+'" font-size="10" fill="'+muted+'" text-anchor="end">'+(yv>=0?"+":"")+Math.round(yv/50)*50+'</text>');
+    }
+    if (yMin<0 && yMax>0){
+      var y0 = Y(0);
+      svgParts.push('<line x1="'+pad.l+'" y1="'+y0+'" x2="'+(W-pad.r)+'" y2="'+y0+'" stroke="'+muted+'" stroke-width="1.2" stroke-dasharray="4,4"/>');
+    }
+    svgParts.push('<text x="'+(W/2)+'" y="'+(H-6)+'" font-size="10" fill="'+muted+'" text-anchor="middle">Price-to-rent ratio</text>');
+
+    var colorFor = { buy: themeVar("--c-buy"), rent: themeVar("--c-rent"), close: themeVar("--c-close") };
+
+    rows.forEach(function(r){
+      var x = X(r.costs.ratio), y = Y(r.costs.buy-r.costs.rent);
+      var isSel = r.city.id===state.cityId;
+      var col = colorFor[r.verdict.key];
+      var radius = isSel ? 8 : 5;
+      svgParts.push('<g class="dot" data-id="'+r.city.id+'" style="cursor:pointer;">' +
+        '<circle cx="'+x+'" cy="'+y+'" r="14" fill="transparent"/>' +
+        '<circle cx="'+x+'" cy="'+y+'" r="'+radius+'" fill="'+col+'" fill-opacity="0.85" stroke="'+(isSel?ink:"none")+'" stroke-width="'+(isSel?2:0)+'"/>' +
+      '</g>');
+    });
+
+    svg.innerHTML = svgParts.join("");
+
+    svg.querySelectorAll(".dot").forEach(function(g){
+      g.addEventListener("mouseenter", function(e){
+        var r = rows.filter(function(rr){ return rr.city.id===g.getAttribute("data-id"); })[0];
+        var gap = r.costs.buy-r.costs.rent;
+        showTooltip(e.clientX, e.clientY,
+          "<b>"+r.city.city+", "+r.city.st+"</b>" +
+          "Price/rent: "+r.costs.ratio.toFixed(1)+"<br>" +
+          "Buying vs renting: "+(gap>=0?"+":"")+fmt0(gap)+"/mo<br>" +
+          r.verdict.label);
+      });
+      g.addEventListener("mousemove", function(e){ tooltipEl.style.left=(e.clientX+14)+"px"; tooltipEl.style.top=(e.clientY+14)+"px"; });
+      g.addEventListener("mouseleave", hideTooltip);
+      g.addEventListener("click", function(){ state.cityId = g.getAttribute("data-id"); citySelect.value = state.cityId; renderAll(); });
+    });
+  }
+
+  function renderAll(){
+    citySelect.value = state.cityId;
+    renderResult();
+    renderTable();
+    renderScatter();
+  }
+
+  window.addEventListener("resize", renderScatter);
+
+  renderAll();
+})();
+</script>
+
+</body></html>

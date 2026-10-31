@@ -1,0 +1,680 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
+<title>Speakeasy</title>
+<meta name="description" content="Practice a new language with a roleplay chatbot at your level — pick a scenario, chat in the language, get gentle corrections and translations, and build a vocabulary notebook.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Noto+Sans:wght@400;600&family=Noto+Sans+JP:wght@400;600&family=Noto+Sans+KR:wght@400;600&family=Noto+Sans+SC:wght@400;600&family=Noto+Sans+Arabic:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #F5F3F8; --panel: #FFFFFF; --panel-2: #ECE8F3;
+    --ink: #1B1730; --ink-2: #5A5471; --muted: #8B85A0;
+    --line: #E3DEEE; --line-2: #D0C9E2;
+
+    --accent: #5B4FE0; --accent-ink: #4438B8; --accent-soft: #EAE7FB;
+    --correct: #B8791E; --correct-soft: #F7EAD3;
+    --vocab: #17876F; --vocab-soft: #DEF3EC;
+    --pos: #1E8A5F; --pos-soft: #E1F1E9;
+    --alert: #C23A3A; --alert-soft: #F8E3E1;
+
+    --lvl-a1: #8FA8F0; --lvl-a2: #7C8FE8; --lvl-b1: #6E6FE0; --lvl-b2: #7C54D6; --lvl-c1: #8C3FC4; --lvl-c2: #9C2FA2;
+
+    --shadow-sm: 0 1px 2px rgba(30,20,50,.06);
+    --shadow: 0 1px 2px rgba(30,20,50,.06), 0 14px 36px rgba(30,20,50,.10);
+    --radius: 18px;
+    --font: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --chatfont: "Noto Sans", "Noto Sans JP", "Noto Sans KR", "Noto Sans SC", "Noto Sans Arabic", "Noto Sans Devanagari", "Nunito", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #130F1E; --panel: #1C1730; --panel-2: #251F3B;
+      --ink: #EDEAF7; --ink-2: #B0A8C9; --muted: #7D7495;
+      --line: #2C2545; --line-2: #3B3259;
+      --accent: #8C81FF; --accent-ink: #C1B9FF; --accent-soft: #251E45;
+      --correct: #E0A94E; --correct-soft: #332711;
+      --vocab: #43C7A8; --vocab-soft: #123128;
+      --pos: #4FC787; --pos-soft: #123024;
+      --alert: #E88178; --alert-soft: #34201D;
+      --lvl-a1: #8FA8F0; --lvl-a2: #97A0F2; --lvl-b1: #9C93F2; --lvl-b2: #AC8AEE; --lvl-c1: #C08AEE; --lvl-c2: #DE7FDA;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.5);
+      --shadow: 0 1px 2px rgba(0,0,0,.5), 0 18px 48px rgba(0,0,0,.55);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #130F1E; --panel: #1C1730; --panel-2: #251F3B;
+    --ink: #EDEAF7; --ink-2: #B0A8C9; --muted: #7D7495;
+    --line: #2C2545; --line-2: #3B3259;
+    --accent: #8C81FF; --accent-ink: #C1B9FF; --accent-soft: #251E45;
+    --correct: #E0A94E; --correct-soft: #332711;
+    --vocab: #43C7A8; --vocab-soft: #123128;
+    --pos: #4FC787; --pos-soft: #123024;
+    --alert: #E88178; --alert-soft: #34201D;
+    --lvl-a1: #8FA8F0; --lvl-a2: #97A0F2; --lvl-b1: #9C93F2; --lvl-b2: #AC8AEE; --lvl-c1: #C08AEE; --lvl-c2: #DE7FDA;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.5);
+    --shadow: 0 1px 2px rgba(0,0,0,.5), 0 18px 48px rgba(0,0,0,.55);
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  .num { font-variant-numeric: tabular-nums; }
+  h1, h2, h3, h4 { margin: 0; font-weight: 800; letter-spacing: -.01em; }
+  a { color: var(--accent); }
+  button { font-family: inherit; }
+
+  .nav { position: sticky; top: 0; z-index: 30; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .nav-in { max-width: 1000px; margin: 0 auto; display: flex; align-items: center; gap: 10px; padding: 11px clamp(12px, 3vw, 24px); }
+  .brand { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 19px; letter-spacing: -.02em; }
+  .brand svg { width: 21px; height: 21px; color: var(--accent); }
+  .spacer { flex: 1; }
+  .iconbtn { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; border: 1px solid var(--line-2); background: var(--panel); color: var(--ink-2); cursor: pointer; }
+  .iconbtn:hover { color: var(--ink); border-color: var(--muted); }
+  .iconbtn svg { width: 16px; height: 16px; }
+
+  main { max-width: 1000px; margin: 0 auto; padding: clamp(14px, 3vw, 26px) clamp(12px, 3vw, 24px) 90px; }
+  .btn { border: 1px solid var(--accent); background: var(--accent); color: #fff; font-weight: 800; font-size: 13.5px; padding: 10px 16px; border-radius: 12px; cursor: pointer; }
+  .btn.ghost { background: transparent; color: var(--ink-2); border-color: var(--line-2); }
+  .btn.ghost:hover { color: var(--ink); border-color: var(--muted); }
+  .btn.sm { padding: 6px 12px; font-size: 12px; border-radius: 9px; }
+  .btn.wide { width: 100%; text-align: center; }
+  .btn.danger { background: transparent; color: var(--alert); border-color: color-mix(in srgb, var(--alert) 40%, var(--line-2)); }
+  .btn[disabled] { opacity: .45; cursor: default; }
+
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: clamp(14px, 2.4vw, 20px); }
+  .panel + .panel { margin-top: 16px; }
+  .p-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .p-head h2, .p-head h3 { font-size: 17px; flex: 1 1 auto; }
+  .p-head .hint { color: var(--muted); font-size: 12px; font-weight: 600; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .grid { display: grid; gap: 12px; }
+  @media (min-width: 720px) { .grid.c2 { grid-template-columns: 1fr 1fr; } }
+
+  label.f { display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 700; color: var(--ink-2); }
+  input, select, textarea { font: inherit; font-size: 14px; color: var(--ink); background: var(--panel); border: 1px solid var(--line-2); border-radius: 10px; padding: 9px 10px; width: 100%; }
+  input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  .chip { border: 1px solid var(--line-2); background: var(--panel); color: var(--ink-2); font-weight: 700; font-size: 12.5px; border-radius: 999px; padding: 7px 13px; cursor: pointer; }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+  .seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: 10px; overflow: hidden; }
+  .seg button { border: 0; background: var(--panel); color: var(--ink-2); font-weight: 700; font-size: 12px; padding: 7px 12px; cursor: pointer; }
+  .seg button + button { border-left: 1px solid var(--line-2); }
+  .seg button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+
+  /* language grid */
+  .lang-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
+  .lang-cell { border: 1px solid var(--line-2); background: var(--panel); border-radius: 13px; padding: 11px; cursor: pointer; text-align: left; }
+  .lang-cell:hover { border-color: var(--accent); }
+  .lang-cell[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+  .lang-cell .en { font-weight: 800; font-size: 14px; }
+  .lang-cell .native { font-family: var(--chatfont); font-size: 12px; color: var(--ink-2); margin-top: 1px; }
+
+  /* level picker */
+  .level-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+  .level-cell { border: 1px solid var(--line-2); background: var(--panel); border-radius: 13px; padding: 11px; cursor: pointer; text-align: left; display: flex; gap: 9px; align-items: flex-start; }
+  .level-cell:hover { border-color: var(--accent); }
+  .level-cell[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+  .level-dot { width: 13px; height: 13px; border-radius: 999px; margin-top: 3px; flex: none; }
+  .level-cell .code { font-family: var(--mono); font-weight: 700; font-size: 11.5px; color: var(--muted); }
+  .level-cell .lb { font-weight: 800; font-size: 13.5px; }
+  .level-cell .d { font-size: 11.5px; color: var(--ink-2); margin-top: 2px; }
+  .level-badge { display: inline-flex; align-items: center; gap: 5px; font-weight: 800; font-size: 12px; padding: 4px 10px; border-radius: 999px; color: #fff; }
+
+  /* scenario cards */
+  .scenario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+  .scenario-card { border: 1px solid var(--line-2); background: var(--panel); border-radius: 14px; padding: 12px; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 6px; }
+  .scenario-card:hover { border-color: var(--accent); box-shadow: var(--shadow-sm); }
+  .scenario-card[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+  .scenario-card .ic { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; color: #fff; }
+  .scenario-card .ic svg { width: 18px; height: 18px; }
+  .scenario-card .t { font-weight: 800; font-size: 14px; }
+  .scenario-card .d { font-size: 12px; color: var(--ink-2); line-height: 1.4; }
+  .cat-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 14px 0 8px; }
+  .cat-label:first-child { margin-top: 0; }
+
+  /* chat */
+  .chatwrap { display: flex; flex-direction: column; gap: 14px; }
+  .chat-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .chat-head .ttl { font-size: 17px; font-weight: 800; }
+  .chat-head .sub { font-size: 12px; color: var(--muted); }
+  .chat-log { display: flex; flex-direction: column; gap: 12px; }
+  .bubble-row { display: flex; gap: 9px; }
+  .bubble-row.me { flex-direction: row-reverse; }
+  .bavatar { width: 30px; height: 30px; border-radius: 999px; display: grid; place-items: center; color: #fff; flex: none; font-size: 14px; }
+  .bubble { max-width: 78%; }
+  .bubble .txt { background: var(--panel); border: 1px solid var(--line); border-radius: 16px 16px 16px 4px; padding: 10px 13px; font-family: var(--chatfont); font-size: 15px; line-height: 1.55; }
+  .bubble-row.me .bubble .txt { background: var(--accent); color: #fff; border-color: var(--accent); border-radius: 16px 16px 4px 16px; }
+  .bubble .tr { font-size: 12.5px; color: var(--muted); font-style: italic; margin-top: 4px; padding: 0 4px; }
+  .bubble-row.me .bubble .tr { text-align: right; }
+  .vocab-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
+  .vchip { display: inline-flex; align-items: center; gap: 5px; background: var(--vocab-soft); color: var(--vocab); font-size: 11.5px; font-weight: 700; padding: 4px 9px; border-radius: 999px; cursor: pointer; border: 1px solid transparent; font-family: var(--chatfont); }
+  .vchip.saved { border-color: var(--vocab); }
+  .correction-box { background: var(--correct-soft); border-left: 3px solid var(--correct); border-radius: 10px; padding: 9px 12px; font-size: 12.5px; color: var(--ink); max-width: 78%; }
+  .correction-box .cl { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .03em; color: var(--correct); margin-bottom: 3px; }
+  .correction-box .cf { font-family: var(--chatfont); font-weight: 700; margin-bottom: 3px; }
+
+  .typing { display: flex; gap: 4px; align-items: center; height: 18px; }
+  .typing span { width: 6px; height: 6px; border-radius: 999px; background: var(--muted); animation: bounce 1.2s infinite ease-in-out; }
+  .typing span:nth-child(2) { animation-delay: .15s; } .typing span:nth-child(3) { animation-delay: .3s; }
+  @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-4px); opacity: 1; } }
+
+  .composer { display: flex; gap: 8px; align-items: flex-end; position: sticky; bottom: 10px; background: var(--panel); border: 1px solid var(--line-2); border-radius: 16px; padding: 8px; box-shadow: var(--shadow); }
+  .composer textarea { border: 0; resize: none; min-height: 40px; max-height: 120px; font-family: var(--chatfont); font-size: 15px; padding: 8px; }
+  .composer textarea:focus-visible { outline: none; }
+  .sendbtn { border: 0; background: var(--accent); color: #fff; width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; cursor: pointer; flex: none; }
+  .sendbtn svg { width: 17px; height: 17px; }
+  .sendbtn[disabled] { opacity: .4; cursor: default; }
+  .tools-row { display: flex; gap: 7px; flex-wrap: wrap; }
+
+  .notice { font-size: 12.5px; color: var(--ink-2); background: var(--panel-2); border-radius: 12px; padding: 11px 13px; }
+  .notice.warn { background: var(--correct-soft); color: var(--correct); }
+  .notice.alert { background: var(--alert-soft); color: var(--alert); }
+
+  .vocab-list { display: flex; flex-direction: column; }
+  .vocab-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+  .vocab-row:last-child { border-bottom: 0; }
+  .vocab-row .w { font-family: var(--chatfont); font-weight: 700; flex: 1; }
+  .vocab-row .t { color: var(--ink-2); flex: 1; }
+  .vocab-row .lg { font-size: 10.5px; color: var(--muted); font-weight: 700; }
+
+  .empty { text-align: center; padding: 40px 16px; }
+  .empty h3 { font-size: 18px; margin-bottom: 6px; }
+  .empty p { color: var(--ink-2); font-size: 13px; margin: 0 0 14px; }
+
+  .modal-bg { position: fixed; inset: 0; background: rgba(15,10,25,.55); z-index: 55; display: grid; place-items: center; padding: 14px; overflow: auto; }
+  .modal { background: var(--panel); border: 1px solid var(--line-2); border-radius: 18px; box-shadow: var(--shadow); padding: 20px; width: 100%; max-width: 440px; margin: auto; }
+  .modal h3 { font-size: 18px; margin-bottom: 12px; }
+
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; } .typing span { animation: none; opacity: .8; } }
+</style>
+
+<div class="nav">
+  <div class="nav-in">
+    <span class="brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-8.9 8.4 9 9 0 0 1-2.6-.4L4 21l1.5-4.2A8.4 8.4 0 1 1 21 11.5Z"/></svg>Speakeasy</span>
+    <span class="spacer"></span>
+    <button class="iconbtn" id="vocabBtn" aria-label="Vocabulary notebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20V2H6.5A2.5 2.5 0 0 0 4 4.5z"/></svg></button>
+    <button class="iconbtn" id="themeBtn" aria-label="Theme"><svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg></button>
+  </div>
+</div>
+<main id="view"></main>
+
+<script>
+/* ==================================================================== */
+(function () {
+  "use strict";
+  var STORE_KEY = "speakeasy-v1", THEME_KEY = "speakeasy-theme";
+
+  /* ---------------- dom helpers ---------------- */
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  function el(tag, attrs, kids) {
+    var n = document.createElement(tag);
+    if (attrs) for (var k in attrs) {
+      var v = attrs[k]; if (v == null) continue;
+      if (k === "class") n.className = v;
+      else if (k === "text") n.textContent = v;
+      else if (k === "html") n.innerHTML = v;
+      else if (k.slice(0, 2) === "on") n.addEventListener(k.slice(2), v);
+      else n.setAttribute(k, v);
+    }
+    (kids || []).forEach(function (c) { if (c != null) n.appendChild(typeof c === "string" ? document.createTextNode(c) : c); });
+    return n;
+  }
+  function uid(p) { return p + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  function esc(s) { return String(s == null ? "" : s); }
+
+  /* ---------------- languages ---------------- */
+  // key, english name, native name, rtl
+  var LANGS = [
+    ["en", "English", "English", 0], ["es", "Spanish", "Español", 0], ["fr", "French", "Français", 0],
+    ["de", "German", "Deutsch", 0], ["it", "Italian", "Italiano", 0], ["pt", "Portuguese", "Português", 0],
+    ["zh", "Mandarin Chinese", "中文", 0], ["ja", "Japanese", "日本語", 0], ["ko", "Korean", "한국어", 0],
+    ["ru", "Russian", "Русский", 0], ["ar", "Arabic", "العربية", 1], ["hi", "Hindi", "हिन्दी", 0]
+  ];
+  var LANG = {}; LANGS.forEach(function (l) { LANG[l[0]] = { key: l[0], en: l[1], native: l[2], rtl: !!l[3] }; });
+
+  /* ---------------- CEFR levels ---------------- */
+  var LEVELS = [
+    { key: "A1", label: "Beginner", color: "var(--lvl-a1)", desc: "First words and phrases", guidance: "Use only the most common, high-frequency words and very short present-tense sentences (about 4-8 words). No idioms, no subordinate clauses. Speak slowly and simply, as if to a total beginner, and repeat key words naturally." },
+    { key: "A2", label: "Elementary", color: "var(--lvl-a2)", desc: "Simple, everyday exchanges", guidance: "Use simple, common vocabulary and basic past or future tense in short sentences. Keep grammar straightforward and avoid idioms, but allow slightly longer exchanges than an absolute beginner." },
+    { key: "B1", label: "Intermediate", color: "var(--lvl-b1)", desc: "Can handle most situations", guidance: "Use everyday vocabulary and a variety of common tenses in clear, moderate-length sentences. A few very common idioms are fine if the context makes them clear. Invite simple opinions and reasons." },
+    { key: "B2", label: "Upper-Intermediate", color: "var(--lvl-b2)", desc: "Fluent, natural pace", guidance: "Speak fluently and naturally at a normal pace with a broad vocabulary, including some idiomatic expressions and more complex sentence structures. Minimal simplification." },
+    { key: "C1", label: "Advanced", color: "var(--lvl-c1)", desc: "Nuanced and precise", guidance: "Use natural, nuanced, idiomatic language with complex sentence structures, much as you would with a fluent adult native speaker. Do not simplify." },
+    { key: "C2", label: "Mastery", color: "var(--lvl-c2)", desc: "Indistinguishable from native", guidance: "Speak exactly as you would to a native speaker — full complexity, nuance, humour, culturally specific references and idioms. No simplification whatsoever." }
+  ];
+  var LEVEL = {}; LEVELS.forEach(function (l) { LEVEL[l.key] = l; });
+
+  /* ---------------- scenario icons (by category) ---------------- */
+  var CATS = {
+    everyday: { label: "Everyday life", color: "var(--vocab)", icon: 'M17 8h1a4 4 0 1 1 0 8h-1M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z M6 1v3M10 1v3M14 1v3' },
+    travel: { label: "Travel", color: "var(--accent)", icon: 'M2 16l20-7-7 20-3-8z M15 12l-3 3' },
+    work: { label: "Work & business", color: "var(--correct)", icon: 'M3 7h18v13H3z M8 7V4h8v3 M3 12h18' },
+    social: { label: "Social", color: "var(--lvl-c2)", icon: 'M21 11.5a8.4 8.4 0 0 1-8.9 8.4 9 9 0 0 1-2.6-.4L4 21l1.5-4.2A8.4 8.4 0 1 1 21 11.5Z' },
+    health: { label: "Health & help", color: "var(--alert)", icon: 'M12 3v18M3 12h18' }
+  };
+  function catIcon(cat, size) { return '<svg viewBox="0 0 24 24" width="' + (size || 18) + '" height="' + (size || 18) + '" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="' + CATS[cat].icon + '"/></svg>'; }
+
+  // key, category, title, blurb (user-facing), role (for the AI)
+  var SCENARIOS = [
+    ["cafe", "everyday", "Ordering at a café", "Order a drink and maybe a snack from the barista.", "You are a friendly, slightly chatty barista at a busy café. The learner is a customer ordering a drink and perhaps a snack. Ask clarifying questions (size, milk, to-go or here) and make brief small talk."],
+    ["grocery", "everyday", "Grocery shopping", "Find items and ask a shop assistant for help.", "You are a helpful shop assistant at a local grocery store. The learner is looking for specific items and asking where things are or whether something is in stock."],
+    ["roommate", "everyday", "Meeting a new roommate", "It's move-in day — get to know each other.", "You are the learner's new roommate, meeting them for the first time on move-in day. Make friendly small talk, ask about their habits, and casually agree on a house rule or two."],
+    ["airport", "travel", "Airport check-in", "Check in for a flight and ask about baggage.", "You are an airline check-in agent at the airport counter. The learner is checking in for a flight, asking about baggage allowance and seat preference. Be efficient but polite."],
+    ["hotel", "travel", "Hotel check-in", "Check into your hotel and ask about amenities.", "You are a hotel receptionist. The learner is checking in. Confirm their reservation, ask for ID, and answer questions about breakfast times, wifi, and hotel amenities."],
+    ["directions", "travel", "Asking for directions", "You're lost — ask a local how to get somewhere.", "You are a friendly local the learner has stopped on the street to ask for directions to a well-known landmark nearby. Give clear, simple directions and offer a helpful local tip."],
+    ["taxi", "travel", "Taxi ride", "Chat with the driver on the way to your destination.", "You are a talkative taxi driver. The learner just got in. Confirm the destination, then make easy small talk about the weather, the city, or their trip during the ride."],
+    ["interview", "work", "Job interview", "Answer interview questions for a role you applied to.", "You are a hiring manager interviewing the learner for a job they applied for. Ask about their experience, strengths, and why they want the role. Keep a professional, encouraging tone."],
+    ["client-call", "work", "Client phone call", "Discuss a project update with a client.", "You are a client on a phone call with the learner, who is giving you a project update. Ask a few clarifying questions and raise one small concern to discuss."],
+    ["first-day", "work", "First day at work", "A coworker shows you around on day one.", "You are a friendly coworker showing the learner around on their first day at a new job. Introduce the office, explain a routine, and invite questions."],
+    ["party", "social", "Meeting someone at a party", "Strike up a conversation with someone new.", "You are a stranger the learner has just started talking to at a party. Make natural small talk — ask what brought them there, their interests — and keep it light and friendly."],
+    ["host-family", "social", "Dinner with a host family", "You're staying with a host family — dinner conversation.", "You are hosting the learner for dinner during a homestay. Ask about their day, their home country, and offer them more food. Warm, curious, a little informal."],
+    ["plans", "social", "Making plans with a friend", "Decide on weekend plans with a close friend.", "You are a close friend of the learner, texting or chatting about what to do this weekend. Suggest an activity, negotiate a time, and keep the tone casual and familiar."],
+    ["doctor", "health", "Doctor's appointment", "Describe symptoms during a check-up.", "You are a calm, attentive doctor during a routine check-up. The learner will describe how they're feeling. Ask follow-up questions and give simple, reassuring advice."],
+    ["help", "health", "Asking a stranger for help", "A small mishap — ask someone nearby for help.", "You are a stranger the learner approaches after a minor mishap (they lost something, need a pharmacy, twisted an ankle slightly). Keep it low-stress and kind, and help them sort it out."]
+  ];
+  var SCEN = {}; SCENARIOS.forEach(function (s) { SCEN[s[0]] = { key: s[0], cat: s[1], title: s[2], blurb: s[3], role: s[4] }; });
+
+  /* ================= state / persistence ================= */
+  function defaultSettings() { return { support: "en", target: "es", level: "A1" }; }
+  var S = load() || { settings: defaultSettings(), vocab: [], session: null };
+  function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch (e) {} }
+  function load() { try { var r = localStorage.getItem(STORE_KEY); return r ? JSON.parse(r) : null; } catch (e) { return null; } }
+
+  var ui = { view: "setup", pickCat: "everyday", pending: false, lastError: null, showAllTranslations: false, savedFlash: {} };
+
+  /* ================= sample capability wrapper ================= */
+  var samplePromise = null;
+  function getSample() {
+    if (!samplePromise) {
+      samplePromise = (function () {
+        try { if (window.claude && typeof window.claude.use === "function") return window.claude.use("sample").catch(function () { return null; }); }
+        catch (e) {}
+        return Promise.resolve(null);
+      })();
+    }
+    return samplePromise;
+  }
+  var PERMANENT_CODES = ["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed"];
+  function isPermanent(code) { return PERMANENT_CODES.indexOf(code) > -1; }
+  function errCopy(code) {
+    switch (code) {
+      case "not_granted": return "AI features are turned off for this page (or your organization has them off). The roleplay chat needs that to work.";
+      case "sampling_disabled": return "AI roleplay isn't available for this account right now.";
+      case "not_declared": case "capability_disabled": case "capability_removed": return "AI roleplay isn't available in this view — you can still browse levels and scenarios.";
+      case "rate_limited": return "That's a lot of messages at once — wait a moment and try again.";
+      case "session_expired": return "Please sign in again to continue.";
+      case "refused": return "Let's try that differently — rephrase your last message.";
+      case "empty_completion": return "No reply came back — try rephrasing your message.";
+      case "invalid_json": return "That reply got garbled on the way back — try again.";
+      case "prompt_too_large": return "This conversation got long — trimming it automatically. Try sending again.";
+      case "upstream_error": return "Something hiccuped reaching Claude — try again in a moment.";
+      default: return "Something went wrong — try again in a moment.";
+    }
+  }
+
+  /* ================= prompt builders ================= */
+  function buildInstruction(session) {
+    var t = LANG[session.target], s = LANG[session.support], lvl = LEVEL[session.level], scen = SCEN[session.scenarioKey];
+    return [
+      "You are running an immersive, level-appropriate ROLEPLAY conversation to help someone practice " + t.en + ".",
+      "ROLE: " + scen.role,
+      "SETTING: " + scen.blurb,
+      "LEARNER LEVEL: " + lvl.key + " (" + lvl.label + "). " + lvl.guidance,
+      "The learner's native / support language is " + s.en + ".",
+      'Write the "reply" field entirely in ' + t.en + ", in character, calibrated to that level. Never break character inside \"reply\" and never explain grammar inside it — that belongs in the other fields.",
+      "Reply with ONLY one JSON object, no other text before or after it, matching exactly this shape:",
+      '{"reply": "your in-character line(s), in ' + t.en + '", "reply_translation": "a natural translation of reply into ' + s.en + '", "correction": "a corrected version of the learner\'s PREVIOUS message in ' + t.en + ' if it had a real mistake worth fixing, else null", "correction_note": "one short, encouraging sentence in ' + s.en + ' explaining the fix, else null", "new_words": [up to 3 objects like {"word": "a useful word or short phrase from this exchange, in ' + t.en + '", "translation": "its meaning in ' + s.en + '"}]}',
+      "Rules: if there is no learner message yet, open the roleplay naturally in character and set correction and correction_note to null. Only include a correction for a genuine mistake — never invent one, and never correct a message that was already fine. Keep \"reply\" a natural, short spoken exchange (a line or two) unless the moment truly calls for more. Stay warm, patient and encouraging — this is a safe space to make mistakes."
+    ].join("\n");
+  }
+  function buildTurnsForSend(session) {
+    var turns = [{ role: "user", content: buildInstruction(session) }];
+    if (!session.log.length) { turns.push({ role: "user", content: "[There is no learner message yet — begin the roleplay now with your opening line.]" }); return turns; }
+    session.log.slice(-20).forEach(function (e) { turns.push({ role: e.who === "user" ? "user" : "assistant", content: e.text }); });
+    return turns;
+  }
+  function buildTranslatePrompt(text, supportKey, targetKey) {
+    var s = LANG[supportKey], t = LANG[targetKey];
+    return 'Translate between ' + s.en + ' and ' + t.en + '. Detect which of the two the input is written in and translate it into the other.\nInput: "' + String(text).replace(/"/g, '\\"').slice(0, 500) + '"\nReply with ONLY a JSON object: {"input_language": "' + s.en + ' or ' + t.en + '", "translation": "the translation", "note": "a brief one-sentence usage tip or a more casual alternative, or null"}';
+  }
+  function buildHintPrompt(session) {
+    var t = LANG[session.target], s = LANG[session.support], lvl = LEVEL[session.level], scen = SCEN[session.scenarioKey];
+    var recent = session.log.slice(-6).map(function (e) { return (e.who === "user" ? "Learner: " : "Other person: ") + e.text; }).join("\n");
+    return 'The learner is roleplaying "' + scen.title + '" in ' + t.en + ' at level ' + lvl.key + '. Recent conversation:\n' + (recent || "(nothing said yet)") + '\nSuggest ONE natural, short thing the learner could say next, in ' + t.en + ' at their level, to keep the conversation going naturally.\nReply with ONLY JSON: {"suggestion": "the suggested line, in ' + t.en + '", "suggestion_translation": "the same, in ' + s.en + '"}';
+  }
+
+  /* ================= reply normalisation ================= */
+  function normalizeBotReply(data) {
+    data = data || {};
+    var reply = (typeof data.reply === "string" && data.reply.trim()) ? data.reply.trim() : "…";
+    var out = { who: "bot", text: reply, at: Date.now() };
+    if (typeof data.reply_translation === "string" && data.reply_translation.trim()) out.translation = data.reply_translation.trim();
+    if (typeof data.correction === "string" && data.correction.trim() && data.correction.trim().toLowerCase() !== "null") out.correction = data.correction.trim();
+    if (typeof data.correction_note === "string" && data.correction_note.trim() && data.correction_note.trim().toLowerCase() !== "null") out.correction_note = data.correction_note.trim();
+    if (Array.isArray(data.new_words)) out.new_words = data.new_words.filter(function (w) { return w && typeof w.word === "string" && w.word.trim(); }).slice(0, 3).map(function (w) { return { word: w.word.trim(), translation: (typeof w.translation === "string" ? w.translation.trim() : "") }; });
+    return out;
+  }
+
+  /* ================= engine: chat turns ================= */
+  var inFlight = null;
+  function stopInFlight() { if (inFlight) { try { inFlight.abort(); } catch (e) {} inFlight = null; } ui.pending = false; render(); }
+  function sendTurn(userText) {
+    var session = S.session; if (!session) return;
+    if (userText != null) { var t = userText.trim(); if (!t) return; session.log.push({ who: "user", text: t, at: Date.now() }); }
+    ui.lastError = null; ui.pending = true; save(); render();
+    var turns = buildTurnsForSend(session);
+    inFlight = new AbortController();
+    getSample().then(function (fn) {
+      if (!fn) { ui.pending = false; ui.lastError = { code: "not_declared" }; render(); return; }
+      fn.json(turns, { modelTier: "quick", cache: false, signal: inFlight.signal }).then(function (data) {
+        ui.pending = false; inFlight = null;
+        session.log.push(normalizeBotReply(data));
+        save(); render();
+      }).catch(function (e) {
+        ui.pending = false; inFlight = null;
+        if (e && e.code === "cancelled") { render(); return; }
+        ui.lastError = e || { code: "upstream_error" }; render();
+      });
+    });
+  }
+  function startSession(scenarioKey) {
+    S.session = { scenarioKey: scenarioKey, target: S.settings.target, support: S.settings.support, level: S.settings.level, startedAt: Date.now(), log: [] };
+    save(); ui.view = "chat"; ui.lastError = null; render();
+    sendTurn(null);
+  }
+  function endSession() { if (inFlight) stopInFlight(); S.session = null; save(); ui.view = "setup"; render(); }
+
+  /* ================= engine: translate tool ================= */
+  var translateBusy = false;
+  function runTranslate(text, onOk, onErr) {
+    translateBusy = true; render();
+    getSample().then(function (fn) {
+      if (!fn) { translateBusy = false; onErr({ code: "not_declared" }); render(); return; }
+      fn.json(buildTranslatePrompt(text, S.settings.support, S.settings.target), { modelTier: "quick" }).then(function (data) {
+        translateBusy = false; onOk(data); render();
+      }).catch(function (e) { translateBusy = false; onErr(e || { code: "upstream_error" }); render(); });
+    });
+  }
+
+  /* ================= engine: hint tool ================= */
+  var hintBusy = false;
+  function runHint(onOk, onErr) {
+    if (!S.session) return;
+    hintBusy = true; render();
+    getSample().then(function (fn) {
+      if (!fn) { hintBusy = false; onErr({ code: "not_declared" }); render(); return; }
+      fn.json(buildHintPrompt(S.session), { modelTier: "quick" }).then(function (data) {
+        hintBusy = false; onOk(data); render();
+      }).catch(function (e) { hintBusy = false; onErr(e || { code: "upstream_error" }); render(); });
+    });
+  }
+
+  /* ================= vocab notebook ================= */
+  function isWordSaved(word, lang) { return S.vocab.some(function (v) { return v.lang === lang && v.word.toLowerCase() === word.toLowerCase(); }); }
+  function saveWord(word, translation, lang) {
+    if (isWordSaved(word, lang)) return;
+    S.vocab.unshift({ id: uid("v"), word: word, translation: translation, lang: lang, savedAt: Date.now() });
+    save();
+  }
+  function removeWord(id) { S.vocab = S.vocab.filter(function (v) { return v.id !== id; }); save(); render(); }
+
+  /* ================= SETUP VIEW ================= */
+  function renderSetup(root) {
+    root.appendChild(el("div", { class: "panel" }, [
+      el("div", { class: "p-head" }, [el("h2", { text: "Let's practice" }), el("span", { class: "hint", text: "pick your languages" })]),
+      el("div", { style: "font-size:13px;font-weight:800;color:var(--ink-2);margin-bottom:8px", text: "I speak" }),
+      el("div", { class: "lang-grid" }, LANGS.map(function (l) { return langCell(l[0], "support"); })),
+      el("div", { style: "font-size:13px;font-weight:800;color:var(--ink-2);margin:16px 0 8px", text: "I'm learning" }),
+      el("div", { class: "lang-grid" }, LANGS.map(function (l) { return langCell(l[0], "target"); }))
+    ]));
+
+    var lvl = LEVEL[S.settings.level];
+    var lp = el("div", { class: "panel" });
+    lp.appendChild(el("div", { class: "p-head" }, [el("h3", { text: "Your level" }), el("span", { class: "level-badge", style: "background:" + lvl.color, text: lvl.key + " · " + lvl.label })]));
+    lp.appendChild(el("div", { class: "level-grid" }, LEVELS.map(levelCell)));
+    root.appendChild(lp);
+
+    var sp = el("div", { class: "panel" });
+    sp.appendChild(el("div", { class: "p-head" }, [el("h2", { text: "Pick a scenario" }), el("span", { class: "hint", text: "tap one to start chatting in " + LANG[S.settings.target].en })]));
+    Object.keys(CATS).forEach(function (catKey) {
+      var list = SCENARIOS.filter(function (s) { return s[1] === catKey; });
+      sp.appendChild(el("div", { class: "cat-label", text: CATS[catKey].label }));
+      var grid = el("div", { class: "scenario-grid" });
+      list.forEach(function (s) { grid.appendChild(scenarioCard(SCEN[s[0]])); });
+      sp.appendChild(grid);
+    });
+    root.appendChild(sp);
+
+    if (S.vocab.length) {
+      root.appendChild(el("div", { class: "panel" }, [
+        el("div", { class: "p-head" }, [el("h3", { text: "Vocabulary notebook" }), el("span", { class: "hint", text: S.vocab.length + " word" + (S.vocab.length === 1 ? "" : "s") + " saved" })]),
+        el("button", { class: "btn ghost sm", onclick: openVocabModal }, ["Open notebook"])
+      ]));
+    }
+  }
+  function langCell(key, which) {
+    var l = LANG[key], cur = which === "support" ? S.settings.support : S.settings.target;
+    return el("button", { class: "lang-cell", "aria-pressed": String(cur === key), onclick: function () {
+      if (which === "support") S.settings.support = key; else S.settings.target = key;
+      if (S.settings.support === S.settings.target) { if (which === "support") S.settings.target = LANGS.filter(function (l2) { return l2[0] !== key; })[0][0]; else S.settings.support = LANGS.filter(function (l2) { return l2[0] !== key; })[0][0]; }
+      save(); render();
+    } }, [el("div", { class: "en", text: l.en }), el("div", { class: "native", text: l.native, dir: "auto" })]);
+  }
+  function levelCell(l) {
+    return el("button", { class: "level-cell", "aria-pressed": String(S.settings.level === l.key), onclick: function () { S.settings.level = l.key; save(); render(); } }, [
+      el("span", { class: "level-dot", style: "background:" + l.color }),
+      el("div", {}, [el("div", { class: "code", text: l.key }), el("div", { class: "lb", text: l.label }), el("div", { class: "d", text: l.desc })])
+    ]);
+  }
+  function scenarioCard(s) {
+    var cat = CATS[s.cat];
+    return el("button", { class: "scenario-card", onclick: function () { startSession(s.key); } }, [
+      el("div", { class: "ic", style: "background:" + cat.color, html: catIcon(s.cat) }),
+      el("div", { class: "t", text: s.title }),
+      el("div", { class: "d", text: s.blurb })
+    ]);
+  }
+
+  /* ================= vocab modal ================= */
+  function openVocabModal() {
+    var body = el("div");
+    function draw() {
+      body.innerHTML = "";
+      if (!S.vocab.length) { body.appendChild(el("div", { class: "empty" }, [el("h3", { text: "No words yet" }), el("p", { text: "Tap a word chip during a conversation to save it here." })])); return; }
+      var byLang = {}; S.vocab.forEach(function (v) { (byLang[v.lang] = byLang[v.lang] || []).push(v); });
+      Object.keys(byLang).forEach(function (lk) {
+        body.appendChild(el("div", { class: "cat-label", text: (LANG[lk] || { en: lk }).en }));
+        var list = el("div", { class: "vocab-list" });
+        byLang[lk].forEach(function (v) {
+          list.appendChild(el("div", { class: "vocab-row" }, [
+            el("span", { class: "w", text: v.word, dir: "auto" }), el("span", { class: "t", text: v.translation }),
+            el("button", { class: "btn sm ghost", onclick: function () { removeWord(v.id); draw(); } }, ["Remove"])
+          ]));
+        });
+        body.appendChild(list);
+      });
+    }
+    draw();
+    var m = el("div", { class: "modal", style: "max-width:520px" }, [
+      el("div", { class: "p-head" }, [el("h3", { text: "Vocabulary notebook" }), el("button", { class: "btn sm", onclick: function () {
+        var lines = S.vocab.map(function (v) { return v.word + " — " + v.translation; });
+        try { navigator.clipboard.writeText(lines.join("\n")); toast("Copied " + lines.length + " words"); } catch (e) {}
+      } }, ["Copy all"])]),
+      body,
+      el("div", { class: "row", style: "margin-top:14px" }, [el("button", { class: "btn wide", onclick: function () { bg.remove(); } }, ["Close"])])
+    ]);
+    var bg = el("div", { class: "modal-bg", onclick: function (e) { if (e.target === bg) bg.remove(); } }, [m]);
+    document.body.appendChild(bg);
+  }
+
+  /* ================= CHAT VIEW ================= */
+  var SEND_ICO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>';
+  var translateState = { open: false, input: "", result: null, error: null };
+  var hintState = { text: null };
+
+  function renderChat(root) {
+    var session = S.session;
+    if (!session) { ui.view = "setup"; renderSetup(root); return; }
+    var t = LANG[session.target], s = LANG[session.support], lvl = LEVEL[session.level], scen = SCEN[session.scenarioKey];
+
+    root.appendChild(el("div", { class: "chat-head" }, [
+      el("span", { class: "level-badge", style: "background:" + lvl.color, text: lvl.key }),
+      el("div", {}, [el("div", { class: "ttl", text: scen.title }), el("div", { class: "sub", text: "Practicing " + t.en + " · translations in " + s.en })]),
+      el("span", { class: "spacer" }),
+      el("button", { class: "btn sm ghost", onclick: function () { ui.showAllTranslations = !ui.showAllTranslations; render(); } }, [ui.showAllTranslations ? "Hide translations" : "Show translations"]),
+      el("button", { class: "btn sm ghost", onclick: function () { if (confirm("End this conversation? You can start a new one anytime — your saved words stay in your notebook.")) endSession(); } }, ["End"])
+    ]));
+
+    var chatPanel = el("div", { class: "panel" });
+    var log = el("div", { class: "chat-log" });
+    session.log.forEach(function (entry) {
+      if (entry.who === "bot" && entry.correction) log.appendChild(correctionBox(entry));
+      log.appendChild(bubble(entry, session));
+    });
+    if (ui.pending) log.appendChild(typingRow(session));
+    chatPanel.appendChild(log);
+    root.appendChild(chatPanel);
+
+    if (ui.lastError) root.appendChild(errorNotice(ui.lastError));
+    if (!session.log.length && !ui.pending && !ui.lastError) root.appendChild(el("div", { class: "notice" }, ["Starting the roleplay…"]));
+
+    root.appendChild(translatePanel());
+
+    var ta = el("textarea", { placeholder: "Type in " + t.en + "…", rows: "1", dir: "auto" });
+    ta.addEventListener("input", function () { ta.style.height = "auto"; ta.style.height = Math.min(120, ta.scrollHeight) + "px"; });
+    function doSend() { var v = ta.value; if (!v.trim() || ui.pending) return; ta.value = ""; ta.style.height = "auto"; sendTurn(v); }
+    ta.addEventListener("keydown", function (e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); doSend(); } });
+
+    var toolsRow = el("div", { class: "tools-row", style: "margin-bottom:8px" }, [
+      el("button", { class: "btn sm ghost", disabled: (ui.pending || hintBusy || !session.log.length) ? "" : null, onclick: function () {
+        runHint(function (data) { hintState.text = (data && typeof data.suggestion === "string") ? data : { suggestion: "…", suggestion_translation: "" }; render(); }, function (e) { ui.lastError = e; render(); });
+      } }, [hintBusy ? "Thinking of a hint…" : "💡 Need a hint?"]),
+      el("button", { class: "btn sm ghost", onclick: function () { translateState.open = !translateState.open; render(); } }, [translateState.open ? "Close translator" : "🌐 Quick translate"]),
+      ui.pending ? el("button", { class: "btn sm danger", onclick: stopInFlight }, ["Stop"]) : null
+    ]);
+    root.appendChild(toolsRow);
+
+    if (hintState.text) {
+      root.appendChild(el("div", { class: "notice" }, [
+        el("div", { style: "font-weight:800;margin-bottom:2px;font-family:var(--chatfont)", text: hintState.text.suggestion, dir: "auto" }),
+        hintState.text.suggestion_translation ? el("div", { style: "color:var(--muted)", text: hintState.text.suggestion_translation }) : null,
+        el("button", { class: "btn sm ghost", style: "margin-top:6px", onclick: function () { ta.value = hintState.text.suggestion; hintState.text = null; ta.dispatchEvent(new Event("input")); ta.focus(); render(); } }, ["Use this"])
+      ]));
+    }
+
+    root.appendChild(el("div", { class: "composer" }, [ta, el("button", { class: "sendbtn", "aria-label": "Send", disabled: ui.pending ? "" : null, onclick: doSend, html: SEND_ICO })]));
+    setTimeout(function () { var lp = root.querySelector(".chat-log"); if (lp) lp.scrollIntoView && window.scrollTo(0, document.body.scrollHeight); }, 0);
+  }
+
+  function bubble(entry, session) {
+    var isUser = entry.who === "user";
+    var row = el("div", { class: "bubble-row" + (isUser ? " me" : "") });
+    row.appendChild(isUser
+      ? el("div", { class: "bavatar", style: "background:var(--accent)" })
+      : el("div", { class: "bavatar", style: "background:" + LEVEL[session.level].color, html: catIcon(SCEN[session.scenarioKey].cat, 15) }));
+    var b = el("div", { class: "bubble" });
+    b.appendChild(el("div", { class: "txt", text: entry.text, dir: "auto" }));
+    if (!isUser && entry.translation && ui.showAllTranslations) b.appendChild(el("div", { class: "tr", text: entry.translation, dir: "auto" }));
+    if (!isUser && entry.new_words && entry.new_words.length) {
+      b.appendChild(el("div", { class: "vocab-chips" }, entry.new_words.map(function (w) {
+        var saved = isWordSaved(w.word, session.target);
+        return el("button", { class: "vchip" + (saved ? " saved" : ""), text: (saved ? "✓ " : "+ ") + w.word, onclick: function () {
+          if (!isWordSaved(w.word, session.target)) { saveWord(w.word, w.translation, session.target); toast("Saved “" + w.word + "”"); render(); }
+        } });
+      })));
+    }
+    row.appendChild(b);
+    return row;
+  }
+  function correctionBox(entry) {
+    var row = el("div", { class: "bubble-row" });
+    row.appendChild(el("div", { class: "bavatar", style: "background:var(--correct-soft)" }));
+    row.appendChild(el("div", { class: "correction-box" }, [
+      el("div", { class: "cl", text: "A small fix" }),
+      el("div", { class: "cf", text: entry.correction, dir: "auto" }),
+      entry.correction_note ? el("div", { text: entry.correction_note }) : null
+    ]));
+    return row;
+  }
+  function typingRow(session) {
+    var row = el("div", { class: "bubble-row" });
+    row.appendChild(el("div", { class: "bavatar", style: "background:" + LEVEL[session.level].color, html: catIcon(SCEN[session.scenarioKey].cat, 15) }));
+    row.appendChild(el("div", { class: "bubble" }, [el("div", { class: "txt" }, [el("div", { class: "typing" }, [el("span"), el("span"), el("span")])])]));
+    return row;
+  }
+  function errorNotice(e) {
+    var box = el("div", { class: "notice " + (isPermanent(e.code) ? "alert" : "warn") }, [errCopy(e.code)]);
+    if (!isPermanent(e.code) && e.code !== "refused" && e.code !== "empty_completion") {
+      box.appendChild(el("div", { style: "margin-top:8px" }, [el("button", { class: "btn sm", onclick: function () { ui.lastError = null; sendTurn(null); } }, ["Try again"])]));
+    } else if (e.code === "refused" || e.code === "empty_completion") {
+      box.appendChild(el("div", { style: "margin-top:8px;font-size:12px", text: "Try rephrasing your last message and send it again." }));
+    }
+    return box;
+  }
+
+  function translatePanel() {
+    if (!translateState.open) return el("div");
+    var s = LANG[S.settings.support], t = LANG[S.settings.target];
+    var inputI = el("input", { placeholder: "A word or phrase in " + s.en + " or " + t.en + "…", value: translateState.input, dir: "auto" });
+    inputI.addEventListener("input", function () { translateState.input = inputI.value; });
+    function go() {
+      var v = inputI.value.trim(); if (!v) return;
+      translateState.error = null; translateState.result = null;
+      runTranslate(v, function (data) { translateState.result = data; }, function (e) { translateState.error = e; });
+    }
+    inputI.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); go(); } });
+    var panel = el("div", { class: "panel", style: "margin-bottom:8px" }, [
+      el("div", { class: "row" }, [inputI, el("button", { class: "btn sm", disabled: translateBusy ? "" : null, onclick: go }, [translateBusy ? "…" : "Translate"])])
+    ]);
+    if (translateState.result) {
+      var r = translateState.result;
+      panel.appendChild(el("div", { style: "margin-top:10px" }, [
+        el("div", { style: "font-weight:800;font-family:var(--chatfont);font-size:15px", text: (typeof r.translation === "string" ? r.translation : "…"), dir: "auto" }),
+        r.note ? el("div", { style: "color:var(--muted);font-size:12.5px;margin-top:3px", text: r.note }) : null
+      ]));
+    }
+    if (translateState.error) panel.appendChild(el("div", { style: "margin-top:10px" }, [errorNotice(translateState.error)]));
+    return panel;
+  }
+
+  /* ================= toast / theme / boot ================= */
+  function toast(msg) {
+    var el2 = el("div", { style: "position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 16px;border-radius:999px;font-weight:800;font-size:13px;z-index:80;box-shadow:var(--shadow);max-width:90vw;text-align:center", text: msg });
+    document.body.appendChild(el2);
+    setTimeout(function () { el2.style.opacity = "0"; el2.style.transition = "opacity .4s"; }, 2200);
+    setTimeout(function () { el2.remove(); }, 2800);
+  }
+  var SUN = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+  var MOON = '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>';
+  function applyTheme(t) {
+    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+    else document.documentElement.removeAttribute("data-theme");
+    var dark = t === "dark" || (t !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+    $("#themeIcon").innerHTML = dark ? SUN : MOON;
+  }
+  var savedTheme = null; try { savedTheme = localStorage.getItem(THEME_KEY); } catch (e) {}
+  applyTheme(savedTheme);
+  $("#themeBtn").addEventListener("click", function () {
+    var cur = document.documentElement.getAttribute("data-theme");
+    var now = cur || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    var next = now === "dark" ? "light" : "dark";
+    try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
+    applyTheme(next); render();
+  });
+  $("#vocabBtn").addEventListener("click", openVocabModal);
+
+  function render() {
+    var host = $("#view"); host.innerHTML = "";
+    var root = el("div"); host.appendChild(root);
+    if (S.session) { ui.view = "chat"; renderChat(root); } else { ui.view = "setup"; renderSetup(root); }
+  }
+  render();
+
+})();
+</script>
+
+</body></html>

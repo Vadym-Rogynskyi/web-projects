@@ -1,0 +1,897 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
+<title>Habit Ledger</title>
+<meta name="description" content="A daily habit tracker: add habits, then each day check off what you've kept and see what's still to do.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+  :root {
+    --bg: #EEF0EC;
+    --surface: #FBFBF9;
+    --surface-2: #F3F4F0;
+    --ink: #1B211F;
+    --muted: #6A716C;
+    --faint: #9AA09B;
+    --line: #E2E4DE;
+    --line-strong: #CED1C9;
+    --accent: #2A43B8;
+    --done: #3C7A54;
+    --done-soft: #E5EFE8;
+    --streak: #B4712A;
+    --shadow: 0 1px 2px rgba(20,25,20,.04), 0 10px 34px rgba(20,25,20,.07);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #111312;
+      --surface: #1B1F1C;
+      --surface-2: #232723;
+      --ink: #E7EAE4;
+      --muted: #9AA19B;
+      --faint: #6B726C;
+      --line: #2C312D;
+      --line-strong: #3B413B;
+      --accent: #8EA2FF;
+      --done: #6FB78A;
+      --done-soft: #21322A;
+      --streak: #E0A257;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 38px rgba(0,0,0,.45);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #111312;
+    --surface: #1B1F1C;
+    --surface-2: #232723;
+    --ink: #E7EAE4;
+    --muted: #9AA19B;
+    --faint: #6B726C;
+    --line: #2C312D;
+    --line-strong: #3B413B;
+    --accent: #8EA2FF;
+    --done: #6FB78A;
+    --done-soft: #21322A;
+    --streak: #E0A257;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 38px rgba(0,0,0,.45);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Hanken Grotesk", system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    padding: clamp(16px, 5vw, 56px) 16px 96px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .sheet {
+    width: 100%;
+    max-width: 580px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    padding: clamp(20px, 4vw, 38px);
+    animation: rise .5s cubic-bezier(.2,.7,.3,1) both;
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } }
+
+  /* ---- masthead ---- */
+  .masthead {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .eyebrow {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  h1 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(28px, 7vw, 38px);
+    line-height: 1.05;
+    margin: 6px 0 0;
+    letter-spacing: -.01em;
+    text-wrap: balance;
+  }
+  .theme-toggle {
+    flex-shrink: 0;
+    width: 34px; height: 34px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: var(--surface-2);
+    color: var(--muted);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: color .2s, border-color .2s, transform .2s;
+  }
+  .theme-toggle:hover { color: var(--ink); border-color: var(--muted); }
+  .theme-toggle:active { transform: scale(.92); }
+
+  /* ---- day bar ---- */
+  .daybar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px 0 4px;
+  }
+  .daylabel { text-align: center; line-height: 1.2; }
+  .day-rel {
+    display: block;
+    font-family: "Fraunces", Georgia, serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 20px;
+    color: var(--ink);
+  }
+  .day-full {
+    display: block;
+    font-size: 12.5px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .nav {
+    width: 36px; height: 36px;
+    flex-shrink: 0;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background .18s, border-color .18s, opacity .18s;
+  }
+  .nav:hover:not(:disabled) { background: var(--surface-2); border-color: var(--muted); }
+  .nav:disabled { opacity: .28; cursor: default; }
+
+  /* ---- summary ---- */
+  .summary {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 18px 0 8px;
+    padding: 14px 16px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  .ring { width: 52px; height: 52px; flex-shrink: 0; transform: rotate(-90deg); }
+  .ring-track { fill: none; stroke: var(--line-strong); stroke-width: 3.4; }
+  .ring-meter {
+    fill: none;
+    stroke: var(--done);
+    stroke-width: 3.4;
+    stroke-linecap: round;
+    transition: stroke-dasharray .55s cubic-bezier(.3,.8,.3,1);
+  }
+  .summary-text strong {
+    display: block;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 19px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.01em;
+  }
+  .summary-text span { font-size: 13px; color: var(--muted); }
+
+  /* ---- groups + rows ---- */
+  .group { margin-top: 22px; }
+  .group-head {
+    font-family: "Fraunces", Georgia, serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--muted);
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding-bottom: 4px;
+  }
+  .group-head::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+  .group-count {
+    font-family: "IBM Plex Mono", monospace;
+    font-style: normal;
+    font-size: 11px;
+    color: var(--faint);
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 13px 4px;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .row:hover .row-name { color: var(--accent); }
+
+  .check {
+    flex-shrink: 0;
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    color: #fff;
+    transition: background .2s, border-color .2s, transform .15s;
+  }
+  .check svg { width: 15px; height: 15px; opacity: 0; transform: scale(.6); transition: opacity .18s, transform .2s; }
+  .check:hover { border-color: var(--muted); }
+  .row.is-done .check {
+    background: var(--done);
+    border-color: var(--done);
+  }
+  .row.is-done .check svg { opacity: 1; transform: scale(1); }
+  .row.just-changed .check { transform: scale(1.12); }
+
+  .row-main { flex: 1; min-width: 0; }
+  .row-name {
+    display: block;
+    font-size: 15.5px;
+    font-weight: 500;
+    transition: color .18s;
+  }
+  .row.is-done .row-name {
+    color: var(--muted);
+    text-decoration: line-through;
+    text-decoration-color: var(--line-strong);
+  }
+  .row-meta {
+    font-size: 11.5px;
+    color: var(--faint);
+    font-family: "IBM Plex Mono", monospace;
+    letter-spacing: .02em;
+  }
+
+  .streak {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12.5px;
+    color: var(--streak);
+    font-variant-numeric: tabular-nums;
+  }
+  .streak svg { width: 11px; height: 14px; }
+
+  /* ---- empty state ---- */
+  .empty {
+    text-align: center;
+    padding: 34px 16px;
+    color: var(--muted);
+  }
+  .empty strong {
+    display: block;
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 500;
+    font-size: 18px;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .empty span { font-size: 13.5px; }
+
+  /* ---- add ---- */
+  .add { margin-top: 24px; }
+  .add-toggle {
+    width: 100%;
+    padding: 12px;
+    border: 1px dashed var(--line-strong);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color .18s, color .18s, background .18s;
+  }
+  .add-toggle:hover { border-color: var(--accent); color: var(--accent); background: var(--surface-2); }
+
+  .add-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface-2);
+  }
+  .add-form input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--line-strong);
+    border-radius: 7px;
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+    font-size: 15px;
+  }
+  .add-form input[type="text"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+
+  .daypick { display: flex; gap: 6px; flex-wrap: wrap; }
+  .daypick button {
+    width: 34px; height: 34px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+    color: var(--muted);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s, color .15s, border-color .15s;
+  }
+  .daypick button[aria-pressed="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  :root[data-theme="dark"] .daypick button[aria-pressed="true"],
+  .daypick button[aria-pressed="true"] { color: var(--bg); }
+
+  .add-actions { display: flex; gap: 8px; }
+  .add-actions button {
+    padding: 9px 16px;
+    border-radius: 7px;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: #fff;
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .add-actions button.ghost {
+    background: transparent;
+    color: var(--muted);
+    border-color: var(--line-strong);
+  }
+  .add-actions button.ghost:hover { color: var(--ink); }
+
+  /* ---- manage ---- */
+  .manage-toggle {
+    display: block;
+    margin: 16px auto 0;
+    padding: 6px 10px;
+    border: none;
+    background: transparent;
+    color: var(--faint);
+    font: inherit;
+    font-size: 12px;
+    font-family: "IBM Plex Mono", monospace;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .manage-toggle:hover { color: var(--ink); }
+
+  .manage {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .manage h2 {
+    font-family: "Fraunces", Georgia, serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 16px;
+    margin: 0 0 12px;
+    color: var(--muted);
+  }
+  .m-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px 12px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .m-name {
+    padding: 7px 9px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-size: 14.5px;
+    font-weight: 500;
+    min-width: 0;
+  }
+  .m-name:hover { border-color: var(--line); }
+  .m-name:focus-visible { outline: 2px solid var(--accent); outline-offset: 0; background: var(--surface); }
+  .m-del {
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+    color: var(--muted);
+    font: inherit;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .m-del:hover { color: #c0392b; border-color: #c0392b; }
+  .m-days { grid-column: 1 / -1; display: flex; gap: 5px; flex-wrap: wrap; }
+  .m-days button {
+    width: 30px; height: 30px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+    color: var(--faint);
+    font: inherit; font-size: 11px; font-weight: 600;
+    cursor: pointer;
+  }
+  .m-days button[aria-pressed="true"] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--surface);
+  }
+
+  button:focus-visible, .row:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+  }
+</style>
+
+<div class="sheet">
+  <header class="masthead">
+    <div class="brand">
+      <span class="eyebrow">Daily practice &middot; <span id="year">2026</span></span>
+      <h1>Habit Ledger</h1>
+    </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Switch colour theme" title="Switch theme">
+      <svg id="themeIcon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
+    </button>
+  </header>
+
+  <div class="daybar">
+    <button class="nav" data-nav="-1" aria-label="Previous day">&lsaquo;</button>
+    <div class="daylabel">
+      <span class="day-rel" id="dayRel">Today</span>
+      <span class="day-full" id="dayFull">&nbsp;</span>
+    </div>
+    <button class="nav" data-nav="1" aria-label="Next day">&rsaquo;</button>
+  </div>
+
+  <div class="summary">
+    <svg class="ring" viewBox="0 0 36 36" role="img" aria-label="Day progress">
+      <circle class="ring-track" cx="18" cy="18" r="15.915"></circle>
+      <circle class="ring-meter" cx="18" cy="18" r="15.915" pathLength="100" stroke-dasharray="0 100"></circle>
+    </svg>
+    <div class="summary-text">
+      <strong id="sumCount">0 / 0</strong>
+      <span id="sumWord">&nbsp;</span>
+    </div>
+  </div>
+
+  <main id="list"></main>
+
+  <section class="add">
+    <button class="add-toggle" id="addToggle">＋&nbsp;&nbsp;New habit</button>
+    <form class="add-form" id="addForm" hidden>
+      <input type="text" id="habitName" placeholder="e.g. Read for 20 minutes" maxlength="60" autocomplete="off" required>
+      <div>
+        <div class="eyebrow" style="margin-bottom:7px">Repeats on</div>
+        <div class="daypick" id="dayPick"></div>
+      </div>
+      <div class="add-actions">
+        <button type="submit">Add habit</button>
+        <button type="button" class="ghost" id="addCancel">Cancel</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="manage" id="manageSection" hidden>
+    <h2>All habits</h2>
+    <div id="manageList"></div>
+  </section>
+  <button class="manage-toggle" id="manageToggle">Manage habits</button>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var STORE = "habit-ledger-v1";
+  var THEME_KEY = "habit-ledger-theme";
+  var DAY_ABBR = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  var DAY_LETTER = ["S", "M", "T", "W", "T", "F", "S"];
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- date helpers ---------- */
+  function ymd(d) {
+    return d.getFullYear() + "-" +
+      String(d.getMonth() + 1).padStart(2, "0") + "-" +
+      String(d.getDate()).padStart(2, "0");
+  }
+  function parseYmd(s) { var p = s.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function today() { return ymd(new Date()); }
+  function shift(dateStr, n) { var d = parseYmd(dateStr); d.setDate(d.getDate() + n); return ymd(d); }
+
+  /* ---------- storage ---------- */
+  function save() {
+    try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {}
+  }
+  function load() {
+    try {
+      var raw = localStorage.getItem(STORE);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    return null;
+  }
+
+  /* ---------- first-run seed ---------- */
+  function seed() {
+    var start = shift(today(), -42);
+    var habits = [
+      { id: "h1", name: "Drink 8 glasses of water", days: [0, 1, 2, 3, 4, 5, 6], created: start },
+      { id: "h2", name: "Read for 20 minutes", days: [0, 1, 2, 3, 4, 5, 6], created: start },
+      { id: "h3", name: "Walk outside", days: [1, 2, 3, 4, 5], created: start },
+      { id: "h4", name: "Journal before bed", days: [0, 1, 2, 3, 4, 5, 6], created: start },
+      { id: "h5", name: "Stretch", days: [1, 3, 5], created: start }
+    ];
+    var log = {};
+    for (var i = 21; i >= 1; i--) {
+      var ds = shift(today(), -i);
+      var dow = parseYmd(ds).getDay();
+      var day = {};
+      day.h1 = 1;
+      if (i % 4 !== 0) day.h2 = 1;
+      if (dow >= 1 && dow <= 5 && i % 2 === 0) day.h3 = 1;
+      if (i % 3 !== 0) day.h4 = 1;
+      if ((dow === 1 || dow === 3 || dow === 5) && i % 2 !== 0) day.h5 = 1;
+      log[ds] = day;
+    }
+    return { habits: habits, log: log };
+  }
+
+  var state = load() || seed();
+  var viewDate = today();
+  var manageOpen = false;
+  var newHabitDays = [0, 1, 2, 3, 4, 5, 6];
+
+  /* ---------- model queries ---------- */
+  function isScheduled(h, dateStr) {
+    if (dateStr < h.created) return false;
+    return h.days.indexOf(parseYmd(dateStr).getDay()) !== -1;
+  }
+  function isDone(id, dateStr) {
+    return !!(state.log[dateStr] && state.log[dateStr][id]);
+  }
+  function setDone(id, dateStr, val) {
+    if (!state.log[dateStr]) state.log[dateStr] = {};
+    if (val) state.log[dateStr][id] = 1;
+    else delete state.log[dateStr][id];
+    save();
+  }
+  function streak(h, dateStr) {
+    var count = 0;
+    var d = parseYmd(dateStr);
+    if (!isDone(h.id, ymd(d))) d.setDate(d.getDate() - 1);
+    for (var i = 0; i < 400; i++) {
+      var s = ymd(d);
+      if (s < h.created) break;
+      if (h.days.indexOf(d.getDay()) !== -1) {
+        if (isDone(h.id, s)) count++;
+        else break;
+      }
+      d.setDate(d.getDate() - 1);
+    }
+    return count;
+  }
+
+  /* ---------- rendering ---------- */
+  var $ = function (id) { return document.getElementById(id); };
+
+  function relLabel(dateStr) {
+    if (dateStr === today()) return "Today";
+    if (dateStr === shift(today(), -1)) return "Yesterday";
+    if (dateStr === shift(today(), 1)) return "Tomorrow";
+    return parseYmd(dateStr).toLocaleDateString(undefined, { weekday: "long" });
+  }
+  function scheduleText(h) {
+    if (h.days.length === 7) return "every day";
+    var wd = [1, 2, 3, 4, 5];
+    if (h.days.length === 5 && wd.every(function (n) { return h.days.indexOf(n) !== -1; })) return "weekdays";
+    if (h.days.length === 2 && h.days.indexOf(0) !== -1 && h.days.indexOf(6) !== -1) return "weekends";
+    return h.days.slice().sort().map(function (n) { return DAY_ABBR[n].toLowerCase(); }).join(" · ");
+  }
+
+  var flame = '<svg viewBox="0 0 12 16" aria-hidden="true"><path d="M6 0c1.1 3.2 4 4.3 4 8a4 4 0 1 1-8 0c0-2 1-3.2 1-3.2.1 1.1 1 2 2 2 .1-2-1-3.1 1-6.6z" fill="currentColor"/></svg>';
+  var tick = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  function rowEl(h) {
+    var done = isDone(h.id, viewDate);
+    var row = document.createElement("div");
+    row.className = "row" + (done ? " is-done" : "");
+    row.setAttribute("data-row", h.id);
+    var st = streak(h, viewDate);
+    row.innerHTML =
+      '<span class="check" role="checkbox" tabindex="0" aria-checked="' + done + '" aria-label="Mark: ' + esc(h.name) + '">' + tick + '</span>' +
+      '<span class="row-main">' +
+        '<span class="row-name">' + esc(h.name) + '</span>' +
+        (h.days.length !== 7 ? '<span class="row-meta">' + scheduleText(h) + '</span>' : '') +
+      '</span>' +
+      (st >= 2 ? '<span class="streak" title="' + st + '-day streak">' + flame + st + '</span>' : '');
+    function toggle() { onToggle(h.id); }
+    row.addEventListener("click", toggle);
+    row.querySelector(".check").addEventListener("keydown", function (e) {
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); e.stopPropagation(); toggle(); }
+    });
+    return row;
+  }
+
+  function groupEl(title, list) {
+    var g = document.createElement("div");
+    g.className = "group";
+    var head = document.createElement("div");
+    head.className = "group-head";
+    head.innerHTML = title + ' <span class="group-count">' + list.length + '</span>';
+    g.appendChild(head);
+    list.forEach(function (h) { g.appendChild(rowEl(h)); });
+    return g;
+  }
+
+  function emptyEl(title, msg) {
+    var e = document.createElement("div");
+    e.className = "empty";
+    e.innerHTML = "<strong>" + title + "</strong><span>" + msg + "</span>";
+    return e;
+  }
+
+  function setRing(pct) {
+    $("list"); // noop guard
+    var m = document.querySelector(".ring-meter");
+    if (m) m.setAttribute("stroke-dasharray", pct + " 100");
+  }
+
+  function render() {
+    var d = parseYmd(viewDate);
+    $("dayRel").textContent = relLabel(viewDate);
+    $("dayFull").textContent = d.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
+    document.querySelector('[data-nav="1"]').disabled = viewDate >= today();
+
+    var scheduled = state.habits.filter(function (h) { return isScheduled(h, viewDate); });
+    var kept = scheduled.filter(function (h) { return isDone(h.id, viewDate); });
+    var todo = scheduled.filter(function (h) { return !isDone(h.id, viewDate); });
+    var total = scheduled.length;
+    var pct = total ? Math.round((kept.length / total) * 100) : 0;
+
+    $("sumCount").textContent = kept.length + " / " + total;
+    var word = "nothing scheduled";
+    if (total) {
+      word = todo.length === 0
+        ? "all kept — nicely done"
+        : kept.length + " kept, " + todo.length + " to go";
+    }
+    $("sumWord").textContent = word;
+    setRing(pct);
+
+    var list = $("list");
+    list.innerHTML = "";
+    if (state.habits.length === 0) {
+      list.appendChild(emptyEl("No habits yet", "Add your first habit below to start keeping the ledger."));
+    } else if (total === 0) {
+      list.appendChild(emptyEl("Nothing scheduled", "No habits fall on this day. Add one that repeats today, or check another day."));
+    } else {
+      if (todo.length) list.appendChild(groupEl("To do", todo));
+      if (kept.length) list.appendChild(groupEl("Kept", kept));
+    }
+
+    renderManage();
+  }
+
+  function onToggle(id) {
+    var next = !isDone(id, viewDate);
+    setDone(id, viewDate, next);
+    var row = document.querySelector('[data-row="' + id + '"]');
+    if (row && !reduced) {
+      row.classList.toggle("is-done", next);
+      row.classList.add("just-changed");
+      var chk = row.querySelector(".check");
+      if (chk) chk.setAttribute("aria-checked", String(next));
+      setTimeout(render, 300);
+    } else {
+      render();
+    }
+  }
+
+  /* ---------- manage panel ---------- */
+  function renderManage() {
+    var sec = $("manageSection");
+    sec.hidden = !manageOpen;
+    $("manageToggle").textContent = manageOpen ? "Hide habit list" : "Manage habits";
+    if (!manageOpen) return;
+
+    var wrap = $("manageList");
+    wrap.innerHTML = "";
+    if (state.habits.length === 0) {
+      wrap.appendChild(emptyEl("Empty ledger", "Add a habit to see it here."));
+      return;
+    }
+    state.habits.forEach(function (h) {
+      var row = document.createElement("div");
+      row.className = "m-row";
+
+      var name = document.createElement("input");
+      name.className = "m-name";
+      name.value = h.name;
+      name.maxLength = 60;
+      name.setAttribute("aria-label", "Habit name");
+      name.addEventListener("change", function () {
+        var v = name.value.trim();
+        if (v) { h.name = v; save(); } else { name.value = h.name; }
+        render();
+      });
+
+      var del = document.createElement("button");
+      del.className = "m-del";
+      del.type = "button";
+      del.textContent = "Remove";
+      del.addEventListener("click", function () {
+        state.habits = state.habits.filter(function (x) { return x.id !== h.id; });
+        save();
+        render();
+      });
+
+      var days = document.createElement("div");
+      days.className = "m-days";
+      for (var i = 0; i < 7; i++) {
+        (function (i) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.textContent = DAY_LETTER[i];
+          b.setAttribute("aria-label", DAY_ABBR[i]);
+          b.setAttribute("aria-pressed", String(h.days.indexOf(i) !== -1));
+          b.addEventListener("click", function () {
+            var at = h.days.indexOf(i);
+            if (at === -1) h.days.push(i);
+            else if (h.days.length > 1) h.days.splice(at, 1);
+            b.setAttribute("aria-pressed", String(h.days.indexOf(i) !== -1));
+            save();
+            render();
+          });
+          days.appendChild(b);
+        })(i);
+      }
+
+      row.appendChild(name);
+      row.appendChild(del);
+      row.appendChild(days);
+      wrap.appendChild(row);
+    });
+  }
+
+  /* ---------- add habit ---------- */
+  function buildDayPick() {
+    var wrap = $("dayPick");
+    wrap.innerHTML = "";
+    for (var i = 0; i < 7; i++) {
+      (function (i) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.textContent = DAY_LETTER[i];
+        b.setAttribute("aria-label", DAY_ABBR[i]);
+        b.setAttribute("aria-pressed", String(newHabitDays.indexOf(i) !== -1));
+        b.addEventListener("click", function () {
+          var at = newHabitDays.indexOf(i);
+          if (at === -1) newHabitDays.push(i);
+          else newHabitDays.splice(at, 1);
+          b.setAttribute("aria-pressed", String(newHabitDays.indexOf(i) !== -1));
+        });
+        wrap.appendChild(b);
+      })(i);
+    }
+  }
+
+  function openAdd(open) {
+    $("addForm").hidden = !open;
+    $("addToggle").hidden = open;
+    if (open) { $("habitName").focus(); }
+  }
+
+  $("addToggle").addEventListener("click", function () { openAdd(true); });
+  $("addCancel").addEventListener("click", function () {
+    openAdd(false);
+    $("habitName").value = "";
+    newHabitDays = [0, 1, 2, 3, 4, 5, 6];
+    buildDayPick();
+  });
+  $("addForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var v = $("habitName").value.trim();
+    if (!v) return;
+    if (newHabitDays.length === 0) newHabitDays = [0, 1, 2, 3, 4, 5, 6];
+    state.habits.push({
+      id: "h" + Date.now().toString(36),
+      name: v,
+      days: newHabitDays.slice().sort(),
+      created: today()
+    });
+    save();
+    $("habitName").value = "";
+    newHabitDays = [0, 1, 2, 3, 4, 5, 6];
+    buildDayPick();
+    openAdd(false);
+    render();
+  });
+
+  /* ---------- day nav ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll(".nav"), function (btn) {
+    btn.addEventListener("click", function () {
+      var n = +btn.getAttribute("data-nav");
+      if (n > 0 && viewDate >= today()) return;
+      viewDate = shift(viewDate, n);
+      render();
+    });
+  });
+
+  /* ---------- manage toggle ---------- */
+  $("manageToggle").addEventListener("click", function () {
+    manageOpen = !manageOpen;
+    render();
+    if (manageOpen) $("manageSection").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "nearest" });
+  });
+
+  /* ---------- theme ---------- */
+  var SUN = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+  var MOON = '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>';
+  function applyTheme(t) {
+    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+    else document.documentElement.removeAttribute("data-theme");
+    var dark = t === "dark" || (t !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    $("themeIcon").innerHTML = dark ? SUN : MOON;
+  }
+  var savedTheme = null;
+  try { savedTheme = localStorage.getItem(THEME_KEY); } catch (e) {}
+  applyTheme(savedTheme);
+  $("themeToggle").addEventListener("click", function () {
+    var cur = document.documentElement.getAttribute("data-theme");
+    var sysDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var now = cur ? cur : (sysDark ? "dark" : "light");
+    var next = now === "dark" ? "light" : "dark";
+    try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
+    applyTheme(next);
+  });
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  /* ---------- boot ---------- */
+  $("year").textContent = new Date().getFullYear();
+  buildDayPick();
+  render();
+})();
+</script>
+
+</body></html>
