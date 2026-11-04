@@ -8,7 +8,7 @@ Interactive websites by Vadym Rogynskyi.
 | [Pace Gap Planner](pace-gap-planner/) | An interactive model showing how much pace to cut each week to hit a goal time. |
 | [Ten Kilometres Down](ten-kilometres-down/) | A scroll-driven 3D dive through the five ocean zones to the bottom of the Mariana Trench. |
 | [First Paycheck Simulator](first-paycheck-simulator/) | Plan a first job's budget and student loan payoff, and see net worth over ten years. |
-| [Settle](settle/) | A buy-vs-rent advisor across 70 US cities, sized to your household, income, down payment and time horizon. |
+| [Settle](settle/) | A buy-vs-rent advisor across 70 US cities, sized to your household, income, down payment and time horizon — with a break-even chart, best-match cities and shareable result links. |
 | [Savings Atlas](savings-atlas/) | A savings-goal tracker with progress bars, a monthly-amount calculator and a guide to saving well. |
 | [Habit Ledger](habit-ledger/) | A daily habit tracker: check off what you kept and see what's left. |
 
