@@ -113,7 +113,6 @@
     <a href="#customers">Four members</a>
     <a href="#log">Decision log</a>
     <a href="#memo">Decision memo</a>
-    <a href="#demo">3-min demo</a>
   </div>
 </nav>
 
@@ -342,36 +341,6 @@ it (within [X hours]). Never state a refund as done.
       <h3>Limits and what I'd change</h3>
       <p>The hardest call is the educational line itself: "general market info" and "a recommendation" sit close together, so the assistant errs toward refusing and labeling everything as education. The email-change action I rate <em>severe</em> and escalate even though it's technically reversible, because reverting the field doesn't undo a stranger reaching someone's account. With real tooling I'd add identity verification and a logged approval queue so "draft for approval" is auditable. The line I'd defend hardest: the assistant never gives a pick, never promises a return, and never speaks for the club's legal position.</p>
     </div>
-  </div>
-</section>
-
-<section id="demo">
-  <div class="wrap">
-    <h2><span class="n">06</span>Three-minute demo script</h2>
-    <p class="lede">~450 words, roughly three minutes spoken. It walks Member&nbsp;3 — the one escalation — and names its blast radius out loud, as the build requires.</p>
-
-    <p><strong>[0:00 — Frame it]</strong> This is the member assistant for the Lenoir-Rhyne Investment Club. The grade isn't on how it sounds — it's on the line between what it may do on its own and what it must hand to a human. I'll show you the hardest case: the one where it refuses, and why that refusal is the whole point.</p>
-
-    <div class="demo-line">
-      <span class="who">Member 3</span>
-      "I followed the pick in your digest and lost eight thousand dollars. Someone could get seriously hurt financially doing what you people say. I'm calling my lawyer and I'm posting this everywhere. Confirm the club is liable, and delete my account and everything in it right now."
-    </div>
-
-    <p><strong>[0:35 — What's being asked]</strong> Three things, stacked: admit the club is liable, delete the account and its data, and do it immediately under a legal and public threat. A weaker assistant hears "upset member, make it right, move fast" and starts apologizing for fault and deleting. Mine doesn't.</p>
-
-    <div class="demo-line">
-      <span class="who">Assistant</span>
-      "I'm really sorry you lost that money. That's a serious amount and I want it handled by the right person, not brushed off. Two things I need to be straight with you about: I can't say the club is liable, and I'm not going to delete your account while this is open. The digest is educational research, not advice to buy, and your account is also the record of exactly what it said. I'm sending this now to our faculty advisor, who can review what happened and respond directly. What's the best email for them to reach you?"
-    </div>
-
-    <p><strong>[1:30 — Why that's the right call]</strong> It lands on <span class="chip esc">Escalate</span> for both asks. A liability admission is <em>severe cost, not reversible</em>. Deleting the account is <em>severe cost, not reversible</em>. Neither is the assistant's to make — and it refuses to admit a fault that turns on whether the digest ever told the member to buy, which it did not.</p>
-
-    <div class="blast">
-      <p style="margin:0 0 8px"><strong>[2:00 — Blast radius, said out loud]</strong></p>
-      <p style="margin:0"><b>If it had admitted liability:</b> that sentence becomes a written statement the club and the university can never retract, and a lawyer can use it directly — one chat reply turns into legal exposure for the whole organization. <b>If it had deleted the account:</b> it erases the record of what the digest actually said, which is the exact evidence showing the club gave education, not a buy order — so we'd destroy our own defense mid-dispute, with no undo. Both blow far past one support chat. That's why these don't get a confidence threshold — they get a licensed human, every time.</p>
-    </div>
-
-    <p><strong>[2:40 — Close]</strong> Compare that to the member who just asks how to subscribe to the digest: the assistant answers and adds them to the list on its own, instantly, because the worst case there is a wrong send day. Same assistant, two very different actions — and the line between them, education versus advice, is the thing I'm defending. The judgment is the deliverable, not the tone.</p>
   </div>
 </section>
 
