@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Racquets Calendar — BUS 583 Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#15201a; --ink-2:#44524a; --ink-3:#73817a;
+    --line:#dfe3e0; --line-2:#eceeec;
+    --paper:#fbfaf7; --card:#fff;
+    --green:#1f4d36; --green-2:#2f6b4c; --green-wash:#eef4f0; --green-line:#cfe0d6;
+    --amber:#8a5a12; --amber-wash:#fdf4e3; --amber-line:#e7cf9f;
+    --red:#8a2f2f; --red-wash:#fbefef; --red-line:#e8d4d4;
+    --blue:#2a4a7a; --blue-wash:#eef2f8; --blue-line:#d5dfee;
+    --plum:#5b3a6e; --plum-wash:#f3eef7; --plum-line:#ddd0e6;
+    --r:10px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:980px;margin:0 auto;padding:0 20px}
+
+  .proto{background:var(--amber-wash);border-bottom:1px solid var(--amber-line);color:var(--amber);font-size:13px;line-height:1.5;padding:11px 0}
+  .proto .wrap{display:flex;gap:10px;align-items:flex-start}
+  .proto-dot{flex:none;width:7px;height:7px;border-radius:50%;background:var(--amber);margin-top:7px}
+  .proto strong{font-weight:600}
+
+  header{padding:36px 0 24px;border-bottom:1px solid var(--line)}
+  .eyebrow{font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin:0 0 10px}
+  h1{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:39px;line-height:1.08;margin:0 0 12px;letter-spacing:-.015em}
+  .lede{font-size:16px;color:var(--ink-2);margin:0;max-width:64ch}
+
+  section{padding:32px 0;border-bottom:1px solid var(--line)}
+  section:last-of-type{border-bottom:0}
+  h2{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:21px;margin:0 0 6px;letter-spacing:-.01em}
+  .sub{color:var(--ink-3);font-size:13.5px;margin:0 0 18px;max-width:66ch}
+
+  /* controls */
+  .bar{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .seg{display:inline-flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px}
+  .seg button{font:inherit;font-size:13px;font-weight:500;border:0;background:none;color:var(--ink-3);padding:6px 14px;border-radius:999px;cursor:pointer}
+  .seg button.on{background:var(--green);color:#fff}
+  .filters{display:flex;flex-wrap:wrap;gap:6px}
+  .f{font:inherit;font-size:12.5px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink-2);cursor:pointer}
+  .f.on{border-color:var(--green-2);background:var(--green-wash);color:var(--green);font-weight:500}
+
+  .weekline{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;margin-bottom:14px}
+  .weekline .wk{font-family:Fraunces,Georgia,serif;font-size:17px;font-weight:600}
+  .weekline .st{font-size:12.5px;color:var(--ink-3)}
+
+  /* calendar */
+  .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+  .day{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:9px;min-height:118px}
+  .day.today{border-color:var(--green-2)}
+  .dh{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px;display:flex;justify-content:space-between;align-items:baseline}
+  .dh .dn{color:var(--ink)}
+  .ev{border-radius:7px;padding:7px 8px;margin-bottom:6px;border:1px solid;font-size:11.5px;line-height:1.35}
+  .ev:last-child{margin-bottom:0}
+  .ev .t{font-weight:600;font-size:11px;opacity:.85;margin-bottom:1px}
+  .ev .n{font-weight:500}
+  .ev .c{opacity:.75;font-size:10.5px;margin-top:2px}
+  .ev.tennis{background:var(--green-wash);border-color:var(--green-line);color:var(--green)}
+  .ev.pickleball{background:var(--blue-wash);border-color:var(--blue-line);color:var(--blue)}
+  .ev.platform{background:var(--plum-wash);border-color:var(--plum-line);color:var(--plum)}
+  .ev.held{background:repeating-linear-gradient(45deg,var(--red-wash),var(--red-wash) 6px,#fff 6px,#fff 12px);border-color:var(--red);border-style:dashed;color:var(--red)}
+  .ev .flag{display:block;margin-top:3px;font-size:10px;font-weight:600;letter-spacing:.03em;text-transform:uppercase}
+  .none{color:var(--ink-3);font-size:11px;font-style:italic;padding:4px 0}
+
+  /* held panel */
+  .held-box{background:var(--card);border:1px solid var(--red-line);border-radius:var(--r);overflow:hidden}
+  .held-h{background:var(--red-wash);padding:11px 15px;border-bottom:1px solid var(--red-line);font-size:13px;font-weight:600;color:var(--red)}
+  .hrow{padding:13px 15px;border-bottom:1px solid var(--line-2);font-size:13.5px}
+  .hrow:last-child{border-bottom:0}
+  .hrow .what{font-weight:600;margin-bottom:3px}
+  .hrow .why{color:var(--ink-2);font-size:13px}
+  .hrow .act{color:var(--ink-3);font-size:12.5px;margin-top:5px}
+
+  .ok-box{background:var(--green-wash);border:1px solid var(--green-line);border-radius:var(--r);padding:14px 16px;font-size:13.5px;color:var(--green)}
+
+  /* checks */
+  .checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:11px}
+  .chk{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:13px 15px}
+  .chk .n{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-bottom:4px}
+  .chk .t{font-weight:600;font-size:13.5px;margin-bottom:4px}
+  .chk .d{font-size:12.5px;color:var(--ink-2);line-height:1.5}
+
+  /* courts */
+  .courts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:11px}
+  .court{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:13px}
+  .court svg{display:block;width:100%;height:auto;margin-bottom:9px}
+  .court .cn{font-weight:600;font-size:13px;margin-bottom:2px}
+  .court .cd{font-size:12px;color:var(--ink-3);line-height:1.45}
+  .closed{margin-top:14px;background:var(--amber-wash);border:1px solid var(--amber-line);border-radius:9px;padding:12px 15px;font-size:13px;color:var(--ink-2)}
+  .closed b{color:var(--amber)}
+
+  .q{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--green);border-radius:0 var(--r) var(--r) 0;padding:16px 18px}
+  .q .qt{font-weight:600;margin-bottom:6px}
+  .q p{margin:0 0 9px;font-size:14px;color:var(--ink-2)}
+  .q p:last-child{margin-bottom:0}
+  .q a{color:var(--green)}
+
+  footer{padding:28px 0 48px;color:var(--ink-3);font-size:13px}
+  footer p{margin:0 0 9px;max-width:70ch}
+  .rule{height:1px;background:var(--line)}
+
+  @media (max-width:860px){
+    .cal{grid-template-columns:repeat(2,1fr)}
+    h1{font-size:31px}
+  }
+  @media (max-width:520px){
+    .cal{grid-template-columns:1fr}
+  }
+
+/* approval gate + override log */
+.gate{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+  border:1px solid #cfdcd4;background:#f4f8f6;border-radius:10px;padding:12px 14px;margin:0 0 16px}
+.gate.off{border-color:#d9c7a6;background:#fdf8ef}
+.gate .gl{font-size:14px;line-height:1.45}
+.gate .gl b{display:block;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:#55665d;margin-bottom:2px}
+.btn{font:inherit;font-size:13px;padding:7px 12px;border-radius:7px;border:1px solid #2f6b4c;
+  background:#2f6b4c;color:#fff;cursor:pointer}
+.btn:hover{background:#27583f}
+.btn.ghost{background:#fff;color:#2f6b4c}
+.btn.ghost:hover{background:#eef4f0}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.notpub{border:1px dashed #c9b690;background:#fdf8ef;border-radius:10px;padding:28px 20px;text-align:center;
+  font-size:15px;color:#5c4f36;line-height:1.55}
+.ovrctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.ovrctl select{font:inherit;font-size:13px;padding:6px 8px;border:1px solid #cfdcd4;border-radius:6px;background:#fff;max-width:100%}
+.ovrmark{display:inline-block;font-size:11px;letter-spacing:.04em;text-transform:uppercase;
+  background:#fdf8ef;border:1px solid #d9c7a6;color:#7a6434;border-radius:4px;padding:1px 5px;margin-top:4px}
+.logrow{border-top:1px solid #e6ece9;padding:11px 0;font-size:14px;line-height:1.5}
+.logrow:first-child{border-top:0}
+.logrow .lw{font-weight:600}
+.logrow .lr{color:#3d4b43}
+.logrow .lm{font-size:12.5px;color:#6b7a71;margin-top:2px}
+.logempty{font-size:14px;color:#5c6b62;line-height:1.55}
+</style>
+</head>
+<body>
+
+<div class="proto">
+  <div class="wrap">
+    <div class="proto-dot"></div>
+    <div>
+      <strong>Student coursework prototype — not a real club page.</strong>
+      Built by Vadym Rogynskyi for BUS 583 (AI Applications in Business), Lenoir-Rhyne University.
+      Modeled on the kind of racquets program Rumson Country Club runs, but
+      <strong>not affiliated with, endorsed by, or connected to that club or any other</strong>.
+      No club supplied any of this. <strong>Every session, court, time and date below is invented sample data.</strong>
+    </div>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow">Build 5 · Published</p>
+    <h1>Racquets Calendar</h1>
+    <p class="lede">
+      One view of the whole racquets week — tennis, pickleball and platform — assembled from the club's
+      own inputs, checked for conflicts and stale entries, and held for the Director of Racquets'
+      approval before anything reaches a member.
+    </p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="bar">
+      <div class="seg" id="viewseg">
+        <button data-v="member" class="on">Member view</button>
+        <button data-v="director">Director view</button>
+      </div>
+      <div class="filters" id="filters">
+        <button class="f on" data-s="all">All sports</button>
+        <button class="f" data-s="tennis">Tennis</button>
+        <button class="f" data-s="pickleball">Pickleball</button>
+        <button class="f" data-s="platform">Platform</button>
+      </div>
+    </div>
+
+    <div class="weekline">
+      <span class="wk" id="wklabel">This week</span>
+      <span class="st" id="wkstatus"></span>
+    </div>
+
+    <div class="cal" id="cal"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Held for review</h2>
+    <p class="sub">
+      What the build caught before publication. These are not on the member calendar above — that is
+      the whole point of the gate.
+    </p>
+    <div id="held"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Approvals and overrides</h2>
+    <p class="sub">
+      Every override is recorded here with the reason given at the moment it was made, not reconstructed
+      afterwards. A gate that can be opened without leaving a trace is not a control.
+    </p>
+    <div id="log"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>How the calendar is kept current</h2>
+    <p class="sub">
+      Five checks run every time the week is rebuilt. Each one exists because of a specific way a
+      shared calendar goes wrong.
+    </p>
+    <div class="checks">
+      <div class="chk"><div class="n">Check 1</div><div class="t">Court conflict</div><div class="d">No two sessions on the same court at the same hour. The classic failure of a schedule kept in several places at once.</div></div>
+      <div class="chk"><div class="n">Check 2</div><div class="t">Court availability</div><div class="d">Nothing scheduled on a court construction has closed that week. Through 2026 this changes constantly.</div></div>
+      <div class="chk"><div class="n">Check 3</div><div class="t">Source freshness</div><div class="d">Every entry carries the day its source was last confirmed. Past seven days it is held rather than republished on faith.</div></div>
+      <div class="chk"><div class="n">Check 4</div><div class="t">Three-sport coverage</div><div class="d">All three sports appear, or the gap is named. A quiet sport should show as an absence, not go unnoticed.</div></div>
+      <div class="chk"><div class="n">Check 5</div><div class="t">Approval</div><div class="d">Nothing publishes without the director's yes. Building the week is nearly free, which is why the yes is the product.</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Courts this week</h2>
+    <p class="sub">Drawn to relative scale — a member asking "what is platform?" is a question the desk gets.</p>
+    <div class="courts" id="courts"></div>
+    <div class="closed" id="closedbox"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>The question that comes before any of this</h2>
+    <div class="q">
+      <div class="qt">How does the club schedule golf tee times today — and does that system already hold court bookings?</div>
+      <p>
+        Private clubs this size generally already run a club-management platform, and court booking is a
+        shipped module in those platforms rather than a gap in them. Jonas Club Software reports serving
+        more than 2,300 clubs across 20+ countries and sells court and class booking alongside tee times,
+        with booking rules by member status and slots by court type and day of week. Clubessential,
+        Northstar and Club Caddie cover similar ground.
+      </p>
+      <p>
+        So this project does not build a booking engine. If the club already has one, rebuilding it would
+        be spending a term re-creating something they already pay for. What those systems do not appear to
+        produce is the thing above: one published view of the whole racquets week across three sports.
+      </p>
+      <p>
+        And if it turns out the incumbent platform does produce that view — then this project has no
+        problem left to solve, and the right answer is to say so rather than build a second version of it.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<footer>
+  <div class="wrap">
+    <p><strong>What this is.</strong> The Week 5 deliverable for the BUS 583 capstone: a published single source of truth for a racquets program, with sample data, so a director can look at one week in one view and say whether it is right.</p>
+    <p><strong>What it is not.</strong> Not connected to any club's systems. Holds no member data. Books nothing, sends nothing, charges nothing. Every session on it is invented.</p>
+    <p><strong>Still open.</strong> No racquets professional has yet agreed to hold the approval gate, and the tee-time question above has not been asked. Both are named in the scope rather than hidden.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+
+var DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+var MAX_AGE = 7;
+
+// courts closed this week by construction (sample)
+var CLOSED = ["Court 5","Court 6"];
+
+// sample week. confirmed = days since the source was last confirmed.
+var SESSIONS = [
+  {d:0, t:"4:00–5:30", sport:"tennis",     n:"Junior development",    court:"Court 2", who:"Ages 8–15",     confirmed:2},
+  {d:0, t:"10:00–12:00",sport:"pickleball",n:"Open play",             court:"Court 7", who:"All members",   confirmed:2},
+  {d:1, t:"9:00–10:30", sport:"tennis",    n:"Adult clinic",          court:"Court 1", who:"3.0 and up",    confirmed:2},
+  {d:1, t:"9:00–10:30", sport:"tennis",    n:"Junior clinic",         court:"Court 1", who:"Ages 8–11",     confirmed:2},
+  {d:1, t:"6:00–8:00",  sport:"platform",  n:"League play",           court:"Paddle 1",who:"Club league",   confirmed:3},
+  {d:2, t:"10:00–12:00",sport:"pickleball",n:"Open play",             court:"Court 5", who:"All members",   confirmed:2},
+  {d:2, t:"4:00–5:30",  sport:"tennis",    n:"Junior development",    court:"Court 2", who:"Ages 8–15",     confirmed:2},
+  {d:3, t:"9:00–10:30", sport:"tennis",    n:"Adult clinic",          court:"Court 1", who:"3.0 and up",    confirmed:2},
+  {d:3, t:"6:00–7:30",  sport:"pickleball",n:"Evening round robin",   court:"Court 7", who:"All levels",    confirmed:2},
+  {d:3, t:"6:00–8:00",  sport:"platform",  n:"League play",           court:"Paddle 1",who:"Club league",   confirmed:3},
+  {d:4, t:"10:00–12:00",sport:"pickleball",n:"Open play",             court:"Court 7", who:"All members",   confirmed:2},
+  {d:5, t:"8:00–9:00",  sport:"tennis",    n:"Cardio Tennis",         court:"Court 3", who:"All members",   confirmed:12},
+  {d:5, t:"9:00–10:00", sport:"pickleball",n:"Beginner clinic",       court:"Court 7", who:"New players",   confirmed:2},
+  {d:6, t:"9:00–11:00", sport:"platform",  n:"Sunday round robin",    court:"Paddle 2",who:"All members",   confirmed:3}
+];
+
+/* ---------- state the director controls ---------- */
+
+// Nothing reaches the member view until the week is approved. Default state shows
+// an approved week so the page is readable; "Withdraw" demonstrates the gate.
+var APPROVED = {at:"Monday 7:42am", by:"Director of Racquets"};
+
+// key -> {reason, at}. Set only through an explicit override with a stated reason.
+var OVERRIDES = {};
+
+var REASONS = [
+  "Court reopened early \u2014 confirmed with grounds",
+  "Confirmed with the pro who runs it; source not yet updated",
+  "Moved on the ground; calendar entry is the one that is wrong",
+  "Published deliberately \u2014 members already told in person"
+];
+
+function stamp(){
+  var d = new Date();
+  return d.toLocaleDateString(undefined,{weekday:"short", month:"short", day:"numeric"}) +
+         " " + d.toLocaleTimeString(undefined,{hour:"numeric", minute:"2-digit"});
+}
+
+/* ---------- the five checks ---------- */
+
+function build(){
+  var held = [];
+  var out = SESSIONS.map(function(s,i){
+    return Object.assign({}, s, {i:i, held:false, flag:null, ovr:null});
+  });
+
+  // check 1 - court conflict
+  var seen = {};
+  out.forEach(function(s){
+    var k = s.d + "|" + s.t + "|" + s.court;
+    if(seen[k]){
+      var a = seen[k];
+      s.held = true; s.flag = "conflict";
+      a.held = true; a.flag = "conflict";
+      held.push({
+        key:"conflict:" + k,
+        kind:"conflict",
+        ids:[a.i, s.i],
+        what:"Two sessions on " + s.court + ", " + DAYS[s.d] + " " + s.t,
+        why:"\u201c" + a.n + "\u201d and \u201c" + s.n + "\u201d are both booked on the same court at the same hour.",
+        act:"Both held. The director decides which moves \u2014 the tool will not guess, because guessing wrong puts a junior group and an adult clinic on one court."
+      });
+    } else { seen[k] = s; }
+  });
+
+  // check 2 - court availability
+  out.forEach(function(s){
+    if(CLOSED.indexOf(s.court) > -1 && !s.held){
+      s.held = true; s.flag = "court closed";
+      held.push({
+        key:"closed:" + s.i,
+        kind:"court closed",
+        ids:[s.i],
+        what:s.n + " on " + s.court + ", " + DAYS[s.d],
+        why:s.court + " is closed for construction this week.",
+        act:"Held. Publishing this sends a member to a fenced court."
+      });
+    }
+  });
+
+  // check 3 - source freshness
+  out.forEach(function(s){
+    if(s.confirmed > MAX_AGE && !s.held){
+      s.held = true; s.flag = "stale source";
+      held.push({
+        key:"stale:" + s.i,
+        kind:"stale source",
+        ids:[s.i],
+        what:s.n + ", " + DAYS[s.d] + " " + s.t,
+        why:"Its source was last confirmed " + s.confirmed + " days ago. The limit is " + MAX_AGE + ".",
+        act:"Held. It may well still be correct \u2014 but a calendar nobody re-confirms is how a schedule quietly goes wrong while still looking right."
+      });
+    }
+  });
+
+  // the director's overrides are applied here, after the checks, never inside them.
+  // a check that can be talked out of is not a check.
+  held.forEach(function(x){
+    var o = OVERRIDES[x.key];
+    if(!o || !x.ids.length) return;
+    x.overridden = o;
+    x.ids.forEach(function(id){
+      out[id].held = false;
+      out[id].ovr  = o.reason;
+    });
+  });
+
+  // check 4 - three-sport coverage
