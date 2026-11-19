@@ -1,0 +1,3037 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Racquets Calendar — BUS 583 Prototype</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #15201a;
+        --ink-2: #44524a;
+        --ink-3: #73817a;
+        --line: #dfe3e0;
+        --line-2: #eceeec;
+        --paper: #fbfaf7;
+        --card: #fff;
+        --green: #1f4d36;
+        --green-2: #2f6b4c;
+        --green-wash: #eef4f0;
+        --green-line: #cfe0d6;
+        --amber: #8a5a12;
+        --amber-wash: #fdf4e3;
+        --amber-line: #e7cf9f;
+        --red: #8a2f2f;
+        --red-wash: #fbefef;
+        --red-line: #e8d4d4;
+        --blue: #2a4a7a;
+        --blue-wash: #eef2f8;
+        --blue-line: #d5dfee;
+        --plum: #5b3a6e;
+        --plum-wash: #f3eef7;
+        --plum-line: #ddd0e6;
+        --r: 10px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family:
+          Inter,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        font-size: 15px;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .proto {
+        background: var(--amber-wash);
+        border-bottom: 1px solid var(--amber-line);
+        color: var(--amber);
+        font-size: 13px;
+        line-height: 1.5;
+        padding: 11px 0;
+      }
+      .proto .wrap {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+      }
+      .proto-dot {
+        flex: none;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--amber);
+        margin-top: 7px;
+      }
+      .proto strong {
+        font-weight: 600;
+      }
+
+      header {
+        padding: 36px 0 24px;
+        border-bottom: 1px solid var(--line);
+      }
+      .eyebrow {
+        font-size: 11px;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+        font-weight: 600;
+        margin: 0 0 10px;
+      }
+      h1 {
+        font-family: Fraunces, Georgia, serif;
+        font-weight: 600;
+        font-size: 39px;
+        line-height: 1.08;
+        margin: 0 0 12px;
+        letter-spacing: -0.015em;
+      }
+      .lede {
+        font-size: 16px;
+        color: var(--ink-2);
+        margin: 0;
+        max-width: 64ch;
+      }
+
+      section {
+        padding: 32px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      section:last-of-type {
+        border-bottom: 0;
+      }
+      h2 {
+        font-family: Fraunces, Georgia, serif;
+        font-weight: 600;
+        font-size: 21px;
+        margin: 0 0 6px;
+        letter-spacing: -0.01em;
+      }
+      .sub {
+        color: var(--ink-3);
+        font-size: 13.5px;
+        margin: 0 0 18px;
+        max-width: 66ch;
+      }
+
+      /* controls */
+      .bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+      .seg {
+        display: inline-flex;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 3px;
+      }
+      .seg button {
+        font: inherit;
+        font-size: 13px;
+        font-weight: 500;
+        border: 0;
+        background: none;
+        color: var(--ink-3);
+        padding: 6px 14px;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+      .seg button.on {
+        background: var(--green);
+        color: #fff;
+      }
+      .filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .f {
+        font: inherit;
+        font-size: 12.5px;
+        padding: 5px 11px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: var(--card);
+        color: var(--ink-2);
+        cursor: pointer;
+      }
+      .f.on {
+        border-color: var(--green-2);
+        background: var(--green-wash);
+        color: var(--green);
+        font-weight: 500;
+      }
+
+      .weekline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: baseline;
+        margin-bottom: 14px;
+      }
+      .weekline .wk {
+        font-family: Fraunces, Georgia, serif;
+        font-size: 17px;
+        font-weight: 600;
+      }
+      .weekline .st {
+        font-size: 12.5px;
+        color: var(--ink-3);
+      }
+
+      /* calendar */
+      .cal {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
+      }
+      .day {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--r);
+        padding: 9px;
+        min-height: 118px;
+      }
+      .day.today {
+        border-color: var(--green-2);
+      }
+      .dh {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+      .dh .dn {
+        color: var(--ink);
+      }
+      .ev {
+        border-radius: 7px;
+        padding: 7px 8px;
+        margin-bottom: 6px;
+        border: 1px solid;
+        font-size: 11.5px;
+        line-height: 1.35;
+      }
+      .ev:last-child {
+        margin-bottom: 0;
+      }
+      .ev .t {
+        font-weight: 600;
+        font-size: 11px;
+        opacity: 0.85;
+        margin-bottom: 1px;
+      }
+      .ev .n {
+        font-weight: 500;
+      }
+      .ev .c {
+        opacity: 0.75;
+        font-size: 10.5px;
+        margin-top: 2px;
+      }
+      .ev.tennis {
+        background: var(--green-wash);
+        border-color: var(--green-line);
+        color: var(--green);
+      }
+      .ev.pickleball {
+        background: var(--blue-wash);
+        border-color: var(--blue-line);
+        color: var(--blue);
+      }
+      .ev.platform {
+        background: var(--plum-wash);
+        border-color: var(--plum-line);
+        color: var(--plum);
+      }
+      .ev.held {
+        background: repeating-linear-gradient(
+          45deg,
+          var(--red-wash),
+          var(--red-wash) 6px,
+          #fff 6px,
+          #fff 12px
+        );
+        border-color: var(--red);
+        border-style: dashed;
+        color: var(--red);
+      }
+      .ev .flag {
+        display: block;
+        margin-top: 3px;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+      }
+      .none {
+        color: var(--ink-3);
+        font-size: 11px;
+        font-style: italic;
+        padding: 4px 0;
+      }
+
+      /* held panel */
+      .held-box {
+        background: var(--card);
+        border: 1px solid var(--red-line);
+        border-radius: var(--r);
+        overflow: hidden;
+      }
+      .held-h {
+        background: var(--red-wash);
+        padding: 11px 15px;
+        border-bottom: 1px solid var(--red-line);
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--red);
+      }
+      .hrow {
+        padding: 13px 15px;
+        border-bottom: 1px solid var(--line-2);
+        font-size: 13.5px;
+      }
+      .hrow:last-child {
+        border-bottom: 0;
+      }
+      .hrow .what {
+        font-weight: 600;
+        margin-bottom: 3px;
+      }
+      .hrow .why {
+        color: var(--ink-2);
+        font-size: 13px;
+      }
+      .hrow .act {
+        color: var(--ink-3);
+        font-size: 12.5px;
+        margin-top: 5px;
+      }
+
+      .ok-box {
+        background: var(--green-wash);
+        border: 1px solid var(--green-line);
+        border-radius: var(--r);
+        padding: 14px 16px;
+        font-size: 13.5px;
+        color: var(--green);
+      }
+
+      /* checks */
+      .checks {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+        gap: 11px;
+      }
+      .chk {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        padding: 13px 15px;
+      }
+      .chk .n {
+        font-size: 9.5px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .chk .t {
+        font-weight: 600;
+        font-size: 13.5px;
+        margin-bottom: 4px;
+      }
+      .chk .d {
+        font-size: 12.5px;
+        color: var(--ink-2);
+        line-height: 1.5;
+      }
+
+      /* courts */
+      .courts {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 11px;
+      }
+      .court {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--r);
+        padding: 13px;
+      }
+      .court svg {
+        display: block;
+        width: 100%;
+        height: auto;
+        margin-bottom: 9px;
+      }
+      .court .cn {
+        font-weight: 600;
+        font-size: 13px;
+        margin-bottom: 2px;
+      }
+      .court .cd {
+        font-size: 12px;
+        color: var(--ink-3);
+        line-height: 1.45;
+      }
+      .closed {
+        margin-top: 14px;
+        background: var(--amber-wash);
+        border: 1px solid var(--amber-line);
+        border-radius: 9px;
+        padding: 12px 15px;
+        font-size: 13px;
+        color: var(--ink-2);
+      }
+      .closed b {
+        color: var(--amber);
+      }
+
+      .q {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-left: 3px solid var(--green);
+        border-radius: 0 var(--r) var(--r) 0;
+        padding: 16px 18px;
+      }
+      .q .qt {
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .q p {
+        margin: 0 0 9px;
+        font-size: 14px;
+        color: var(--ink-2);
+      }
+      .q p:last-child {
+        margin-bottom: 0;
+      }
+      .q a {
+        color: var(--green);
+      }
+
+      footer {
+        padding: 28px 0 48px;
+        color: var(--ink-3);
+        font-size: 13px;
+      }
+      footer p {
+        margin: 0 0 9px;
+        max-width: 70ch;
+      }
+      .rule {
+        height: 1px;
+        background: var(--line);
+      }
+
+      @media (max-width: 860px) {
+        .cal {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        h1 {
+          font-size: 31px;
+        }
+      }
+      @media (max-width: 520px) {
+        .cal {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* approval gate + override log */
+      .gate {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        justify-content: space-between;
+        border: 1px solid #cfdcd4;
+        background: #f4f8f6;
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin: 0 0 16px;
+      }
+      .gate.off {
+        border-color: #d9c7a6;
+        background: #fdf8ef;
+      }
+      .gate .gl {
+        font-size: 14px;
+        line-height: 1.45;
+      }
+      .gate .gl b {
+        display: block;
+        font-size: 13px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #55665d;
+        margin-bottom: 2px;
+      }
+      .btn {
+        font: inherit;
+        font-size: 13px;
+        padding: 7px 12px;
+        border-radius: 7px;
+        border: 1px solid #2f6b4c;
+        background: #2f6b4c;
+        color: #fff;
+        cursor: pointer;
+      }
+      .btn:hover {
+        background: #27583f;
+      }
+      .btn.ghost {
+        background: #fff;
+        color: #2f6b4c;
+      }
+      .btn.ghost:hover {
+        background: #eef4f0;
+      }
+      .btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .notpub {
+        border: 1px dashed #c9b690;
+        background: #fdf8ef;
+        border-radius: 10px;
+        padding: 28px 20px;
+        text-align: center;
+        font-size: 15px;
+        color: #5c4f36;
+        line-height: 1.55;
+      }
+      .ovrctl {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        margin-top: 10px;
+      }
+      .ovrctl select {
+        font: inherit;
+        font-size: 13px;
+        padding: 6px 8px;
+        border: 1px solid #cfdcd4;
+        border-radius: 6px;
+        background: #fff;
+        max-width: 100%;
+      }
+      .ovrmark {
+        display: inline-block;
+        font-size: 11px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        background: #fdf8ef;
+        border: 1px solid #d9c7a6;
+        color: #7a6434;
+        border-radius: 4px;
+        padding: 1px 5px;
+        margin-top: 4px;
+      }
+      .logrow {
+        border-top: 1px solid #e6ece9;
+        padding: 11px 0;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      .logrow:first-child {
+        border-top: 0;
+      }
+      .logrow .lw {
+        font-weight: 600;
+      }
+      .logrow .lr {
+        color: #3d4b43;
+      }
+      .logrow .lm {
+        font-size: 12.5px;
+        color: #6b7a71;
+        margin-top: 2px;
+      }
+      .logempty {
+        font-size: 14px;
+        color: #5c6b62;
+        line-height: 1.55;
+      }
+
+      /* ===== build 6 — visual pass, illustrations, automation, booking spec ===== */
+
+      :root {
+        --shadow-1:
+          0 1px 2px rgba(21, 32, 26, 0.04), 0 2px 8px rgba(21, 32, 26, 0.04);
+        --shadow-2:
+          0 2px 4px rgba(21, 32, 26, 0.05), 0 8px 24px rgba(21, 32, 26, 0.07);
+      }
+
+      /* hero */
+      .hero {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(170deg, #f4f8f6 0%, var(--paper) 62%);
+        border-bottom: 1px solid var(--line);
+      }
+      .hero .wrap {
+        position: relative;
+        z-index: 2;
+      }
+      .hero-art {
+        position: absolute;
+        right: -40px;
+        top: -10px;
+        width: 340px;
+        opacity: 0.5;
+        z-index: 1;
+        pointer-events: none;
+      }
+      .hero-art svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      .hero-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 16px 0 0;
+      }
+      .pill {
+        font-size: 12px;
+        font-weight: 500;
+        padding: 5px 11px;
+        border-radius: 999px;
+        border: 1px solid var(--green-line);
+        background: #fff;
+        color: var(--green);
+      }
+      .pill.n {
+        border-color: var(--line);
+        color: var(--ink-3);
+      }
+      @media (max-width: 760px) {
+        .hero-art {
+          display: none;
+        }
+      }
+
+      /* legend */
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        align-items: center;
+        margin: 0 0 14px;
+        font-size: 12.5px;
+        color: var(--ink-2);
+      }
+      .legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .sw {
+        width: 11px;
+        height: 11px;
+        border-radius: 3px;
+        border: 1px solid;
+        flex: none;
+      }
+      .sw.tennis {
+        background: var(--green-wash);
+        border-color: var(--green-line);
+      }
+      .sw.pickleball {
+        background: var(--blue-wash);
+        border-color: var(--blue-line);
+      }
+      .sw.platform {
+        background: var(--plum-wash);
+        border-color: var(--plum-line);
+      }
+      .sw.held {
+        background: repeating-linear-gradient(
+          45deg,
+          var(--red-wash),
+          var(--red-wash) 4px,
+          #fff 4px,
+          #fff 8px
+        );
+        border-color: var(--red);
+        border-style: dashed;
+      }
+
+      /* softer cards + motion */
+      .day,
+      .chk,
+      .court,
+      .held-box,
+      .q,
+      .ops,
+      .bk {
+        box-shadow: var(--shadow-1);
+      }
+      .chk,
+      .court,
+      .ev {
+        transition:
+          transform 0.14s ease,
+          box-shadow 0.14s ease,
+          border-color 0.14s ease;
+      }
+      .chk:hover,
+      .court:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-2);
+      }
+      .ev:hover {
+        transform: translateX(1px);
+      }
+      .btn {
+        transition:
+          background 0.13s ease,
+          border-color 0.13s ease;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .chk,
+        .court,
+        .ev,
+        .btn {
+          transition: none;
+        }
+        .chk:hover,
+        .court:hover,
+        .ev:hover {
+          transform: none;
+        }
+      }
+
+      /* illustration band */
+      .band {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: 14px;
+      }
+      .ill {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--r);
+        padding: 16px;
+        box-shadow: var(--shadow-1);
+      }
+      .ill svg {
+        display: block;
+        width: 100%;
+        height: auto;
+        margin-bottom: 10px;
+      }
+      .ill .it {
+        font-weight: 600;
+        font-size: 13.5px;
+        margin-bottom: 3px;
+      }
+      .ill .id {
+        font-size: 12.5px;
+        color: var(--ink-2);
+        line-height: 1.5;
+      }
+
+      /* tennis program table */
+      .prog {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--r);
+        overflow: hidden;
+        box-shadow: var(--shadow-1);
+      }
+      .prog-h {
+        background: var(--green-wash);
+        border-bottom: 1px solid var(--green-line);
+        padding: 11px 15px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--green);
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .ptab {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13.5px;
+      }
+      .ptab th {
+        text-align: left;
+        font-size: 10.5px;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+        font-weight: 600;
+        padding: 9px 15px;
+        border-bottom: 1px solid var(--line-2);
+        background: #fcfdfc;
+      }
+      .ptab td {
+        padding: 10px 15px;
+        border-bottom: 1px solid var(--line-2);
+        vertical-align: top;
+      }
+      .ptab tr:last-child td {
+        border-bottom: 0;
+      }
+      .ptab .nm {
+        font-weight: 600;
+      }
+      .ptab .mut {
+        color: var(--ink-3);
+        font-size: 12.5px;
+      }
+      .ptab .hld {
+        color: var(--red);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+      }
+      @media (max-width: 680px) {
+        .ptab th:nth-child(4),
+        .ptab td:nth-child(4) {
+          display: none;
+        }
+      }
+
+      /* automation panel */
+      .ops {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--r);
+        overflow: hidden;
+      }
+      .ops-h {
+        padding: 13px 16px;
+        border-bottom: 1px solid var(--line-2);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        justify-content: space-between;
+        background: #fcfdfc;
+      }
+      .ops-h .ttl {
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .ops-h .clk {
+        font-size: 12.5px;
+        color: var(--ink-3);
+      }
+      .pipe {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 0;
+      }
+      .stg {
+        padding: 14px 16px;
+        border-right: 1px solid var(--line-2);
+        border-bottom: 1px solid var(--line-2);
+      }
+      .stg:last-child {
+        border-right: 0;
+      }
+      .stg .sn {
+        font-size: 9.5px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+        font-weight: 600;
+        margin-bottom: 5px;
+      }
+      .stg .sv {
+        font-family: Fraunces, Georgia, serif;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 1.1;
+        margin-bottom: 3px;
+      }
+      .stg .sd {
+        font-size: 12px;
+        color: var(--ink-2);
+        line-height: 1.45;
+      }
+      .stg.on .sv {
+        color: var(--green);
+      }
+      .stg.warn .sv {
+        color: var(--amber);
+      }
+      .stg.bad .sv {
+        color: var(--red);
+      }
+      .srcs {
+        padding: 13px 16px;
+        border-bottom: 1px solid var(--line-2);
+      }
+      .srow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: baseline;
+        font-size: 13px;
+        padding: 5px 0;
+      }
+      .srow .sname {
+        font-weight: 500;
+        min-width: 150px;
+      }
+      .srow .sage {
+        color: var(--ink-3);
+        font-size: 12.5px;
+      }
+      .tag {
+        font-size: 10px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-weight: 600;
+        padding: 2px 6px;
+        border-radius: 4px;
+        border: 1px solid;
+      }
+      .tag.ok {
+        background: var(--green-wash);
+        border-color: var(--green-line);
+        color: var(--green);
+      }
+      .tag.old {
+        background: var(--red-wash);
+        border-color: var(--red-line);
+        color: var(--red);
+      }
+      .runs {
+        padding: 6px 16px 14px;
+      }
+      .run {
+        border-top: 1px solid var(--line-2);
+        padding: 10px 0;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      .run:first-child {
+        border-top: 0;
+      }
+      .run .rt {
+        font-size: 11.5px;
+        color: var(--ink-3);
+        font-variant-numeric: tabular-nums;
+      }
+      .run .rr {
+        color: var(--ink-2);
+      }
+      .ops-f {
+        padding: 12px 16px;
+        background: #fcfdfc;
+        border-top: 1px solid var(--line-2);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+      .ops-f .note {
+        font-size: 12.5px;
+        color: var(--ink-3);
+        flex: 1 1 240px;
+      }
+
+      /* booking spec */
+      .bk {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--r);
+        overflow: hidden;
+      }
+      .bk-h {
+        background: var(--blue-wash);
+        border-bottom: 1px solid var(--blue-line);
+        padding: 12px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--blue);
+      }
+      .bk-b {
+        padding: 16px;
+      }
+      .inert {
+        border: 1px dashed var(--line);
+        border-radius: 9px;
+        padding: 14px;
+        background: #fcfcfb;
+        margin-bottom: 14px;
+      }
+      .inert .lbl {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+        font-weight: 600;
+        margin: 0 0 4px;
+      }
+      .inert .fake {
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: #fff;
+        color: var(--ink-3);
+        padding: 9px 11px;
+        font-size: 13px;
+        margin-bottom: 11px;
+      }
+      .inert .fake:last-of-type {
+        margin-bottom: 12px;
+      }
+      .inert .stamp {
+        font-size: 12px;
+        color: var(--amber);
+        background: var(--amber-wash);
+        border: 1px solid var(--amber-line);
+        border-radius: 6px;
+        padding: 8px 11px;
+        line-height: 1.5;
+      }
+      .hand {
+        display: grid;
+        gap: 10px;
+      }
+      .step {
+        display: flex;
+        gap: 11px;
+        font-size: 13.5px;
+        line-height: 1.5;
+      }
+      .step .num {
+        flex: none;
+        width: 21px;
+        height: 21px;
+        border-radius: 50%;
+        background: var(--green-wash);
+        border: 1px solid var(--green-line);
+        color: var(--green);
+        font-size: 11.5px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1px;
+      }
+      .step .sx b {
+        font-weight: 600;
+      }
+      .step .sx {
+        color: var(--ink-2);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="proto">
+      <div class="wrap">
+        <div class="proto-dot"></div>
+        <div>
+          <strong>Student coursework prototype — not a real club page.</strong>
+          Built by Vadym Rogynskyi for BUS 583 (AI Applications in Business),
+          Lenoir-Rhyne University. Modeled on the kind of racquets program
+          Rumson Country Club runs, but
+          <strong
+            >not affiliated with, endorsed by, or connected to that club or any
+            other</strong
+          >. No club supplied any of this.
+          <strong
+            >Every session, court, time and date below is invented sample
+            data.</strong
+          >
+        </div>
+      </div>
+    </div>
+
+    <header class="hero">
+      <div class="hero-art" aria-hidden="true">
+        <svg viewBox="0 0 200 160">
+          <ellipse
+            cx="104"
+            cy="58"
+            rx="46"
+            ry="43"
+            fill="none"
+            stroke="#1f4d36"
+            stroke-width="2"
+          />
+          <g stroke="#cfe0d6" stroke-width="1">
+            <line x1="74" y1="22" x2="74" y2="94" />
+            <line x1="89" y1="17" x2="89" y2="99" />
+            <line x1="104" y1="15" x2="104" y2="101" />
+            <line x1="119" y1="17" x2="119" y2="99" />
+            <line x1="134" y1="22" x2="134" y2="94" />
+            <line x1="62" y1="38" x2="146" y2="38" />
+            <line x1="59" y1="48" x2="149" y2="48" />
+            <line x1="58" y1="58" x2="150" y2="58" />
+            <line x1="59" y1="68" x2="149" y2="68" />
+            <line x1="62" y1="78" x2="146" y2="78" />
+          </g>
+          <path
+            d="M90 98 L98 126 M118 98 L110 126"
+            stroke="#1f4d36"
+            stroke-width="2"
+            fill="none"
+          />
+          <rect
+            x="96"
+            y="124"
+            width="14"
+            height="30"
+            rx="4"
+            fill="none"
+            stroke="#1f4d36"
+            stroke-width="2"
+          />
+          <circle
+            cx="36"
+            cy="118"
+            r="17"
+            fill="none"
+            stroke="#2f6b4c"
+            stroke-width="1.8"
+          />
+          <path
+            d="M22 107 Q32 118 22 129"
+            fill="none"
+            stroke="#2f6b4c"
+            stroke-width="1.4"
+          />
+          <path
+            d="M50 107 Q40 118 50 129"
+            fill="none"
+            stroke="#2f6b4c"
+            stroke-width="1.4"
+          />
+        </svg>
+      </div>
+      <div class="wrap">
+        <p class="eyebrow">Build 6 · Published and automated</p>
+        <h1>Racquets Calendar</h1>
+        <p class="lede">
+          One view of the whole racquets week — tennis, pickleball and platform
+          — assembled from the club's own inputs, checked for conflicts and
+          stale entries, and held for the Director of Racquets' approval before
+          anything reaches a member.
+        </p>
+        <div class="hero-meta">
+          <span class="pill">Three sports, one week</span>
+          <span class="pill">Five checks before publication</span>
+          <span class="pill">Rebuilt on a schedule</span>
+          <span class="pill n">Sample data · no club systems</span>
+        </div>
+      </div>
+    </header>
+
+    <section>
+      <div class="wrap">
+        <div class="bar">
+          <div class="seg" id="viewseg">
+            <button data-v="member" class="on">Member view</button>
+            <button data-v="director">Director view</button>
+          </div>
+          <div class="filters" id="filters">
+            <button class="f on" data-s="all">All sports</button>
+            <button class="f" data-s="tennis">Tennis</button>
+            <button class="f" data-s="pickleball">Pickleball</button>
+            <button class="f" data-s="platform">Platform</button>
+          </div>
+        </div>
+
+        <div class="weekline">
+          <span class="wk" id="wklabel">This week</span>
+          <span class="st" id="wkstatus"></span>
+        </div>
+
+        <div class="legend">
+          <span><i class="sw tennis"></i>Tennis</span>
+          <span><i class="sw pickleball"></i>Pickleball</span>
+          <span><i class="sw platform"></i>Platform</span>
+          <span><i class="sw held"></i>Held — not published</span>
+        </div>
+
+        <div class="cal" id="cal"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Held for review</h2>
+        <p class="sub">
+          What the build caught before publication. These are not on the member
+          calendar above — that is the whole point of the gate.
+        </p>
+        <div id="held"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Approvals and overrides</h2>
+        <p class="sub">
+          Every override is recorded here with the reason given at the moment it
+          was made, not reconstructed afterwards. A gate that can be opened
+          without leaving a trace is not a control.
+        </p>
+        <div id="log"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>How the calendar is kept current</h2>
+        <p class="sub">
+          Five checks run every time the week is rebuilt. Each one exists
+          because of a specific way a shared calendar goes wrong.
+        </p>
+        <div class="checks">
+          <div class="chk">
+            <div class="n">Check 1</div>
+            <div class="t">Court conflict</div>
+            <div class="d">
+              No two sessions on the same court at the same hour. The classic
+              failure of a schedule kept in several places at once.
+            </div>
+          </div>
+          <div class="chk">
+            <div class="n">Check 2</div>
+            <div class="t">Court availability</div>
+            <div class="d">
+              Nothing scheduled on a court construction has closed that week.
+              Through 2026 this changes constantly.
+            </div>
+          </div>
+          <div class="chk">
+            <div class="n">Check 3</div>
+            <div class="t">Source freshness</div>
+            <div class="d">
+              Every entry carries the day its source was last confirmed. Past
+              seven days it is held rather than republished on faith.
+            </div>
+          </div>
+          <div class="chk">
+            <div class="n">Check 4</div>
+            <div class="t">Three-sport coverage</div>
+            <div class="d">
+              All three sports appear, or the gap is named. A quiet sport should
+              show as an absence, not go unnoticed.
+            </div>
+          </div>
+          <div class="chk">
+            <div class="n">Check 5</div>
+            <div class="t">Approval</div>
+            <div class="d">
+              Nothing publishes without the director's yes. Building the week is
+              nearly free, which is why the yes is the product.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Courts this week</h2>
+        <p class="sub">
+          Drawn to relative scale — a member asking "what is platform?" is a
+          question the desk gets.
+        </p>
+        <div class="courts" id="courts"></div>
+        <div class="closed" id="closedbox"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>The tennis week in detail</h2>
+        <p class="sub">
+          Tennis carries the most sessions, so it gets its own list: every
+          tennis entry in the sample week, in order, with the staff role running
+          it and what the source freshness check made of it. Held rows appear
+          here with the reason, which the member grid does not show.
+        </p>
+        <div class="prog">
+          <div class="prog-h">
+            <span>Tennis program — sample week</span>
+            <span id="progcount"></span>
+          </div>
+          <table class="ptab">
+            <thead>
+              <tr>
+                <th>Day</th>
+                <th>Time</th>
+                <th>Session</th>
+                <th>Court</th>
+                <th>Run by</th>
+                <th>Source</th>
+              </tr>
+            </thead>
+            <tbody id="progbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>What a member is actually looking at</h2>
+        <p class="sub">
+          Three sports share one desk and one calendar, and they are not the
+          same game. Drawn here rather than described, because "44 by 20 feet"
+          means nothing until you see it next to a tennis court. All diagrams
+          are original drawings built from the published court dimensions — no
+          club imagery, photography or branding appears anywhere on this page.
+        </p>
+        <div class="band">
+          <div class="ill">
+            <svg
+              viewBox="0 0 200 128"
+              role="img"
+              aria-label="Drawing of a tennis racquet"
+            >
+              <ellipse
+                cx="100"
+                cy="46"
+                rx="40"
+                ry="38"
+                fill="#eef4f0"
+                stroke="#1f4d36"
+                stroke-width="2.4"
+              />
+              <ellipse
+                cx="100"
+                cy="46"
+                rx="33"
+                ry="31"
+                fill="none"
+                stroke="#cfe0d6"
+                stroke-width="1"
+              />
+              <g stroke="#9bb8a8" stroke-width="0.9">
+                <line x1="76" y1="18" x2="76" y2="74" />
+                <line x1="88" y1="14" x2="88" y2="78" />
+                <line x1="100" y1="13" x2="100" y2="79" />
+                <line x1="112" y1="14" x2="112" y2="78" />
+                <line x1="124" y1="18" x2="124" y2="74" />
+                <line x1="66" y1="30" x2="134" y2="30" />
+                <line x1="62" y1="38" x2="138" y2="38" />
+                <line x1="61" y1="46" x2="139" y2="46" />
+                <line x1="62" y1="54" x2="138" y2="54" />
+                <line x1="66" y1="62" x2="134" y2="62" />
+              </g>
+              <path
+                d="M88 80 L96 102 M112 80 L104 102"
+                stroke="#1f4d36"
+                stroke-width="2.4"
+                fill="none"
+              />
+              <rect
+                x="94"
+                y="100"
+                width="12"
+                height="24"
+                rx="3"
+                fill="#1f4d36"
+              />
+              <g stroke="#eef4f0" stroke-width="1.1">
+                <line x1="94" y1="106" x2="106" y2="108" />
+                <line x1="94" y1="112" x2="106" y2="114" />
+                <line x1="94" y1="118" x2="106" y2="120" />
+              </g>
+            </svg>
+            <div class="it">One desk, three racquets</div>
+            <div class="id">
+              Tennis, pickleball and platform are run by the same staff out of
+              the same shop. That is why they belong on one calendar and not
+              three.
+            </div>
+          </div>
+
+          <div class="ill">
+            <svg
+              viewBox="0 0 200 128"
+              role="img"
+              aria-label="Drawing of a tennis ball"
+            >
+              <circle
+                cx="100"
+                cy="64"
+                r="44"
+                fill="#eef4f0"
+                stroke="#1f4d36"
+                stroke-width="2.4"
+              />
+              <path
+                d="M62 42 Q86 64 62 86"
+                fill="none"
+                stroke="#1f4d36"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M138 42 Q114 64 138 86"
+                fill="none"
+                stroke="#1f4d36"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M62 42 Q86 64 62 86"
+                fill="none"
+                stroke="#9bb8a8"
+                stroke-width="0.9"
+                stroke-dasharray="3 4"
+                transform="translate(5,0)"
+              />
+              <path
+                d="M138 42 Q114 64 138 86"
+                fill="none"
+                stroke="#9bb8a8"
+                stroke-width="0.9"
+                stroke-dasharray="3 4"
+                transform="translate(-5,0)"
+              />
+            </svg>
+            <div class="it">Seven days, one answer</div>
+            <div class="id">
+              The question this answers is small and constant: what is on this
+              week? Today it takes a phone call, a bulletin board, or knowing
+              who to ask.
+            </div>
+          </div>
+
+          <div class="ill">
+            <svg
+              viewBox="0 0 200 128"
+              role="img"
+              aria-label="Court sizes drawn to relative scale"
+            >
+              <rect
+                x="18"
+                y="26"
+                width="164"
+                height="76"
+                fill="#eef4f0"
+                stroke="#1f4d36"
+                stroke-width="1.8"
+              />
+              <line
+                x1="100"
+                y1="22"
+                x2="100"
+                y2="106"
+                stroke="#15201a"
+                stroke-width="1.3"
+                stroke-dasharray="3 3"
+              />
+              <rect
+                x="59"
+                y="48"
+                width="82"
+                height="32"
+                fill="#eef2f8"
+                stroke="#2a4a7a"
+                stroke-width="1.6"
+              />
+              <rect
+                x="59"
+                y="48"
+                width="82"
+                height="32"
+                fill="#f3eef7"
+                fill-opacity="0.45"
+                stroke="#5b3a6e"
+                stroke-width="1.2"
+                stroke-dasharray="3 2"
+              />
+              <text
+                x="20"
+                y="20"
+                font-size="8"
+                fill="#1f4d36"
+                font-family="Inter,sans-serif"
+                font-weight="600"
+              >
+                tennis 78 × 36 ft
+              </text>
+              <text
+                x="61"
+                y="44"
+                font-size="7.5"
+                fill="#2a4a7a"
+                font-family="Inter,sans-serif"
+                font-weight="600"
+              >
+                pickleball / platform 44 × 20
+              </text>
+              <text
+                x="20"
+                y="116"
+                font-size="7"
+                fill="#73817a"
+                font-family="Inter,sans-serif"
+              >
+                drawn to relative scale
+              </text>
+            </svg>
+            <div class="it">Why one court is not one slot</div>
+            <div class="id">
+              Court size drives how many sessions fit and which overlap, which
+              is what makes the conflict check worth running rather than
+              assuming.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>What runs without anyone touching it</h2>
+        <p class="sub">
+          Week 6 of this project is about automation, so this is the part that
+          runs on its own: sources are pulled on a schedule, the five checks run
+          against whatever came back, and the result is staged for the one step
+          that stays human. Below is the pipeline, the age of each source, and
+          the log of every rebuild in this session.
+        </p>
+        <div class="ops">
+          <div class="ops-h">
+            <span class="ttl">Scheduled rebuild</span>
+            <span class="clk" id="opsclk"></span>
+          </div>
+          <div class="pipe" id="opspipe"></div>
+          <div class="srcs" id="opssrcs"></div>
+          <div class="runs" id="opsruns"></div>
+          <div class="ops-f">
+            <span class="note" id="opsnote"></span>
+            <button class="btn ghost" onclick="rdRebuild()">
+              Run rebuild now
+            </button>
+          </div>
+        </div>
+        <p class="sub" style="margin: 14px 0 0">
+          What is automated is the assembling and the checking. What is not, and
+          should not be, is the approval — check 5 exists because the cheap part
+          of this is building the week and the expensive part is being
+          responsible for it. In this prototype every source is invented sample
+          data and the schedule is simulated in the browser; nothing is fetched
+          from anyone.
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>How a lesson booking would reach the club</h2>
+        <p class="sub">
+          This page publishes a schedule. It deliberately does not take
+          bookings, and the reason is the whole design: a prototype that
+          collects real lesson requests would be routing real members to a club
+          that has not agreed to any of this.
+        </p>
+
+        <div class="bk">
+          <div class="bk-h">
+            Specified, not built — the form below is inert by design
+          </div>
+          <div class="bk-b">
+            <div class="inert" aria-hidden="true">
+              <span class="lbl">Request a lesson — non-functional mockup</span>
+              <div class="fake">Member name</div>
+              <div class="fake">
+                Sport &nbsp;·&nbsp; tennis / pickleball / platform
+              </div>
+              <div class="fake">Preferred day and time</div>
+              <div class="fake">Notes for the pro</div>
+              <div class="stamp">
+                These fields are drawn, not wired. They submit nothing, store
+                nothing and send nothing. There is no form handler behind this
+                page and no address on it to write to.
+              </div>
+            </div>
+
+            <div class="hand">
+              <div class="step">
+                <div class="num">1</div>
+                <div class="sx">
+                  <b>The request never lands here.</b> A member clicks through
+                  to the club's existing member portal — whatever platform
+                  already holds tee times and billing — and books inside it,
+                  where their account and payment method already live.
+                </div>
+              </div>
+              <div class="step">
+                <div class="num">2</div>
+                <div class="sx">
+                  <b>This calendar reads, it does not write.</b> Confirmed
+                  lessons come back as one more source feeding the week, with a
+                  confirmation date attached like every other entry, so check 3
+                  applies to them too.
+                </div>
+              </div>
+              <div class="step">
+                <div class="num">3</div>
+                <div class="sx">
+                  <b>No member data crosses the line.</b> The calendar stores a
+                  session, a court and a time. It has no field for who is
+                  enrolled and should not be given one — that boundary is in the
+                  project scope and it is the reason this stays safe to publish.
+                </div>
+              </div>
+              <div class="step">
+                <div class="num">4</div>
+                <div class="sx">
+                  <b>Who to contact is the club's to publish, not mine.</b> The
+                  racquets staff contact belongs on the club's own site, under
+                  the club's own name. Putting a booking address on a student
+                  prototype would send real lesson requests somewhere nobody is
+                  expecting them.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="q" style="margin-top: 16px">
+          <div class="qt">
+            About this project — Vadym Rogynskyi, Lenoir-Rhyne University
+          </div>
+          <p>
+            This is coursework for BUS 583, not a service. For questions about
+            the build, the checks, or the scope decisions behind it, reach me
+            through the university or through the repository this page is
+            published from. I am not scheduling lessons, and this page cannot.
+          </p>
+        </div>
+      </div>
+    </section>
+    <section>
+      <div class="wrap">
+        <h2>What the club publishes today</h2>
+        <p class="sub">
+          Checked against the club's public website on November 18, 2026. Facts
+          only — no club content is reproduced here.
+        </p>
+        <div class="q">
+          <p>
+            Golf has its own page, reached from the top-level navigation.
+            Racquets appears as a heading in the lifestyle section with nothing
+            behind it: no court counts, no surfaces, no program or clinic names,
+            no season dates, no staff listing, and no subpage of its own.
+          </p>
+          <p>
+            That asymmetry is the problem this calendar is built for, stated in
+            the club's own publishing rather than inferred. A member, a new
+            professional, or the director on a day off has no published place to
+            see what the racquets operation is doing this week. Golf does.
+          </p>
+          <p class="src">
+            Source: the club's public website, structure observed November 18,
+            2026. Court counts and session data on this page remain invented
+            sample data — nothing above was taken from the club, and no figure
+            below it comes from them either.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>What the public record shows that the club's site does not</h2>
+        <p class="sub">
+          Five findings from public sources, gathered November 18, 2026. Each
+          one changes something in this build. Facts and source credit only — no
+          club content, copy, photography or styling is reproduced here, and
+          none of the sample session data below comes from the club.
+        </p>
+
+        <div class="q">
+          <div class="qt">
+            1. The club publishes its racquets scope in hiring, not to members.
+          </div>
+          <p>
+            The club's own job posting for an Assistant Tennis Professional
+            describes the role as supporting the Director of Racquets across
+            lessons, clinics, pro shop, tournaments and exhibitions for a
+            tennis, paddle and pickleball program, and routes applicants to a
+            dedicated racquets address at the club. So the three-sport scope
+            this calendar is built around is confirmed by the club itself — in a
+            recruiting channel, not in the place a member would look. The
+            address itself is not reproduced here, for the same reason this page
+            takes no bookings.
+          </p>
+          <p>
+            That sharpens the thesis. The problem is not that the club lacks a
+            racquets operation to publish, or lacks language for it. It has
+            both, and routes them to candidates rather than to members.
+          </p>
+          <p class="src">
+            Sources: Rumson Country Club job posting, Assistant Tennis
+            Professional, via Indeed and Salary.com listings observed November
+            18, 2026.
+          </p>
+        </div>
+
+        <div class="q">
+          <div class="qt">2. Public court counts disagree with each other.</div>
+          <p>
+            Global Tennis Network lists the club with three outdoor hard courts.
+            Gladiator Tennis lists two. The midterm scope document for this
+            project says two tennis courts alongside four pickleball courts and
+            platform. Three sources, three answers, and no way to settle it from
+            the outside.
+          </p>
+          <p>
+            This is the strongest external evidence for check 3 in the engine.
+            The freshness check was designed on the assumption that stale court
+            data circulates and gets acted on. It does — in public directories a
+            member or a visiting player could reasonably find first. A calendar
+            that states its own source date and refuses to publish past the
+            seven-day limit is answering a real failure, not a hypothetical one.
+          </p>
+          <p class="src">
+            Sources: Global Tennis Network and Gladiator Tennis court
+            directories, observed November 18, 2026. Neither is the club, and
+            neither states when its figure was last confirmed — which is the
+            point.
+          </p>
+        </div>
+
+        <div class="q">
+          <div class="qt">
+            3. Platform play crosses club boundaries by arrangement.
+          </div>
+          <p>
+            Seabright Lawn Tennis &amp; Cricket Club, roughly two miles away,
+            publishes that it extends reciprocal platform tennis privileges to
+            Rumson Country Club and Navesink Country Club. Reciprocity is a
+            published, standing arrangement between neighbouring clubs, not an
+            occasional favour.
+          </p>
+          <p>
+            That is a boundary this calendar does not model, and should say so
+            rather than quietly assume otherwise. Every session in this engine
+            is held on a court the club controls. A member's platform game may
+            legitimately be on another club's deck, invisible to a
+            court-conflict check that only knows about three home courts. Week 7
+            should test what the engine does with a session it cannot see, and
+            the member view should not imply that what it shows is all the
+            racquets play available that week.
+          </p>
+          <p class="src">
+            Source: Seabright Lawn Tennis &amp; Cricket Club public platform
+            tennis page, observed November 18, 2026.
+          </p>
+        </div>
+
+        <div class="q">
+          <div class="qt">
+            4. A neighbour publishes the season dates this one does not.
+          </div>
+          <p>
+            The same neighbouring club publishes a platform season of October 1
+            through March 31, with courts available year-round from 8am to 10pm.
+            Those are real published dates from a club on the same peninsula, in
+            the same climate, for the same sport.
+          </p>
+          <p>
+            The season boundaries in this prototype were invented. A local
+            comparable does not make them correct, but it gives the Week 8
+            defense something better than an assumption: a published benchmark
+            to state the sample data against, and a reason to ask the director
+            for the club's actual dates rather than guess at them.
+          </p>
+          <p class="src">
+            Source: Seabright Lawn Tennis &amp; Cricket Club public platform
+            tennis page, observed November 18, 2026. The season dates in this
+            prototype's sample data remain invented and are not the club's.
+          </p>
+        </div>
+
+        <div class="q">
+          <div class="qt">
+            5. The expansion claim is checkable in municipal records.
+          </div>
+          <p>
+            The scope document for this project cites four additional tennis
+            courts and a new racquets shop planned for 2026 — sourced from a
+            podcast, not from the club. But the club has taken facility work
+            through the Rumson Borough Planning Board before: a 2021 proposal to
+            expand the main clubhouse on its 210-acre site was heard by that
+            board and covered in the local press.
+          </p>
+          <p>
+            So a racquets expansion of that size would generate public municipal
+            records — agendas, applications, minutes. That converts the weakest
+            citation in the scope document from unverifiable hearsay into
+            something a reviewer could check, and gives a specific place to look
+            before Week 8 rather than a claim to defend as-is.
+          </p>
+          <p class="src">
+            Sources: Two River Times coverage of a Rumson Country Club clubhouse
+            proposal before the Rumson Borough Planning Board, February 2021.
+            The 2026 racquets expansion itself has not been verified in
+            municipal records and is still a podcast-sourced claim.
+          </p>
+        </div>
+
+        <div class="q">
+          <p class="src">
+            On method: everything above is a fact about the club or its
+            neighbours taken from public sources, each credited at the point of
+            use. No club copy, photography, logo or styling appears anywhere on
+            this page. The calendar's court counts, session names, enrollment
+            numbers and season dates are invented sample data and are not the
+            club's figures.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>The question that comes before any of this</h2>
+        <div class="q">
+          <div class="qt">
+            How does the club schedule golf tee times today — and does that
+            system already hold court bookings?
+          </div>
+          <p>
+            Private clubs this size generally already run a club-management
+            platform, and court booking is a shipped module in those platforms
+            rather than a gap in them. Jonas Club Software reports serving more
+            than 2,300 clubs across 20+ countries and sells court and class
+            booking alongside tee times, with booking rules by member status and
+            slots by court type and day of week. Clubessential, Northstar and
+            Club Caddie cover similar ground.
+          </p>
+          <p>
+            The club's public site carries a Clubessential credit, which makes
+            this question sharper than it was. A website vendor is not proof of
+            a booking module, but it narrows what to ask: does the club's
+            Clubessential instance already hold court bookings alongside tee
+            times? That is a question the golf shop can answer in one reply, and
+            the answer decides whether Week 6 automates this calendar or reports
+            that the club already owns the thing it would automate.
+          </p>
+          <p>
+            So this project does not build a booking engine. If the club already
+            has one, rebuilding it would be spending a term re-creating
+            something they already pay for. What those systems do not appear to
+            produce is the thing above: one published view of the whole racquets
+            week across three sports.
+          </p>
+          <p>
+            And if it turns out the incumbent platform does produce that view —
+            then this project has no problem left to solve, and the right answer
+            is to say so rather than build a second version of it.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <div class="rule"></div>
+
+    <footer>
+      <div class="wrap">
+        <p>
+          <strong>What this is.</strong> The Week 5 deliverable for the BUS 583
+          capstone: a published single source of truth for a racquets program,
+          with sample data, so a director can look at one week in one view and
+          say whether it is right.
+        </p>
+        <p>
+          <strong>What it is not.</strong> Not connected to any club's systems.
+          Holds no member data. Books nothing, sends nothing, charges nothing.
+          Every session on it is invented.
+        </p>
+        <p>
+          <strong>Still open.</strong> No racquets professional has yet agreed
+          to hold the approval gate, and the tee-time question above has not
+          been asked. Both are named in the scope rather than hidden.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      (function () {
+        "use strict";
+
+        var DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+        var MAX_AGE = 7;
+
+        // courts closed this week by construction (sample)
+        var CLOSED = ["Court 5", "Court 6"];
+
+        // sample week. confirmed = days since the source was last confirmed.
+        var SESSIONS = [
+          // Monday
+          {
+            d: 0,
+            t: "7:00–8:30",
+            sport: "tennis",
+            n: "Early bird drill",
+            court: "Court 1",
+            who: "3.0 and up",
+            coach: "Staff pro",
+            confirmed: 2,
+          },
+          {
+            d: 0,
+            t: "10:00–12:00",
+            sport: "pickleball",
+            n: "Open play",
+            court: "Court 7",
+            who: "All members",
+            coach: "Unstaffed",
+            confirmed: 2,
+          },
+          {
+            d: 0,
+            t: "4:00–5:30",
+            sport: "tennis",
+            n: "Junior development",
+            court: "Court 2",
+            who: "Ages 8–15",
+            coach: "Staff pro",
+            confirmed: 2,
+          },
+          {
+            d: 0,
+            t: "6:30–8:00",
+            sport: "tennis",
+            n: "Men's doubles ladder",
+            court: "Court 3",
+            who: "Ladder field",
+            coach: "Unstaffed",
+            confirmed: 2,
+          },
+          // Tuesday
+          {
+            d: 1,
+            t: "9:00–10:30",
+            sport: "tennis",
+            n: "Adult clinic",
+            court: "Court 1",
+            who: "3.0 and up",
+            coach: "Director of Racquets",
+            confirmed: 2,
+          },
+          {
+            d: 1,
+            t: "9:00–10:30",
+            sport: "tennis",
+            n: "Junior clinic",
+            court: "Court 1",
+            who: "Ages 8–11",
+            coach: "Staff pro",
+            confirmed: 2,
+          },
+          {
+            d: 1,
+            t: "4:00–5:30",
+            sport: "tennis",
+            n: "Junior development",
+            court: "Court 2",
+            who: "Ages 8–15",
+            coach: "Staff pro",
+            confirmed: 2,
+          },
+          {
+            d: 1,
+            t: "5:30–7:00",
+            sport: "tennis",
+            n: "High school prep",
+            court: "Court 3",
+            who: "Ages 14–18",
+            coach: "Staff pro",
+            confirmed: 3,
+          },
+          {
+            d: 1,
+            t: "6:00–8:00",
+            sport: "platform",
+            n: "League play",
+            court: "Paddle 1",
+            who: "Club league",
+            coach: "Unstaffed",
+            confirmed: 3,
+          },
+          // Wednesday
+          {
+            d: 2,
+            t: "9:00–10:30",
+            sport: "tennis",
+            n: "Adult clinic 2.5–3.0",
+            court: "Court 1",
+            who: "Developing",
+            coach: "Staff pro",
+            confirmed: 2,
+          },
+          {
+            d: 2,
+            t: "10:00–12:00",
+            sport: "pickleball",
+            n: "Open play",
+            court: "Court 5",
+            who: "All members",
+            coach: "Unstaffed",
+            confirmed: 2,
+          },
+          {
+            d: 2,
+            t: "4:00–5:30",
+            sport: "tennis",
+            n: "Junior development",
+            court: "Court 2",
+            who: "Ages 8–15",
+            coach: "Staff pro",
+            confirmed: 2,
+          },
+          {
+            d: 2,
+            t: "6:30–8:00",
+            sport: "tennis",
+            n: "Women's doubles ladder",
+            court: "Court 3",
+            who: "Ladder field",
+            coach: "Unstaffed",
+            confirmed: 2,
+          },
+          // Thursday
+          {
+            d: 3,
+            t: "9:00–10:30",
+            sport: "tennis",
+            n: "Adult clinic",
+            court: "Court 1",
+            who: "3.0 and up",
+            coach: "Director of Racquets",
+            confirmed: 2,
+          },
+          {
+            d: 3,
+            t: "4:00–5:30",
+            sport: "tennis",
+            n: "Junior development",
+            court: "Court 2",
+            who: "Ages 8–15",
+            coach: "Staff pro",
+            confirmed: 2,
+          },
+          {
+            d: 3,
+            t: "6:00–7:30",
+            sport: "pickleball",
+            n: "Evening round robin",
+            court: "Court 7",
+            who: "All levels",
+            coach: "Staff pro",
+            confirmed: 2,
+          },
+          {
+            d: 3,
+            t: "6:00–8:00",
+            sport: "platform",
+            n: "League play",
+            court: "Paddle 1",
+            who: "Club league",
+            coach: "Unstaffed",
+            confirmed: 3,
+          },
+          {
+            d: 3,
+            t: "7:00–8:30",
+            sport: "tennis",
+            n: "Mixed doubles social",
+            court: "Court 4",
+            who: "All members",
+            coach: "Unstaffed",
+            confirmed: 3,
+          },
+          // Friday
+          {
+            d: 4,
+            t: "9:00–10:30",
+            sport: "tennis",
+            n: "Adult clinic",
+            court: "Court 1",
+            who: "3.0 and up",
+            coach: "Staff pro",
+            confirmed: 2,
+          },
+          {
+            d: 4,
+            t: "10:00–12:00",
+            sport: "pickleball",
+            n: "Open play",
+            court: "Court 7",
+            who: "All members",
+            coach: "Unstaffed",
+            confirmed: 2,
+          },
+          {
+            d: 4,
+            t: "4:00–5:30",
+            sport: "tennis",
+            n: "Junior development",
+            court: "Court 2",
+            who: "Ages 8–15",
+            coach: "Staff pro",
+            confirmed: 2,
+          },
+          // Saturday
+          {
+            d: 5,
+            t: "8:00–9:00",
+            sport: "tennis",
+            n: "Cardio Tennis",
+            court: "Court 3",
+            who: "All members",
+            coach: "Staff pro",
+            confirmed: 12,
+          },
+          {
+            d: 5,
+            t: "9:00–10:00",
+            sport: "pickleball",
+            n: "Beginner clinic",
+            court: "Court 7",
+            who: "New players",
+            coach: "Staff pro",
+            confirmed: 2,
+          },
+          {
+            d: 5,
+            t: "9:30–11:30",
+            sport: "tennis",
+            n: "Saturday match play",
+            court: "Court 1",
+            who: "3.5 and up",
+            coach: "Director of Racquets",
+            confirmed: 2,
+          },
+          {
+            d: 5,
+            t: "11:00–12:30",
+            sport: "tennis",
+            n: "Junior match play",
+            court: "Court 2",
+            who: "Ages 10–16",
+            coach: "Staff pro",
+            confirmed: 2,
+          },
+          // Sunday
+          {
+            d: 6,
+            t: "9:00–11:00",
+            sport: "platform",
+            n: "Sunday round robin",
+            court: "Paddle 2",
+            who: "All members",
+            coach: "Unstaffed",
+            confirmed: 3,
+          },
+          {
+            d: 6,
+            t: "10:00–11:30",
+            sport: "tennis",
+            n: "Adult drill and play",
+            court: "Court 3",
+            who: "3.0 and up",
+            coach: "Staff pro",
+            confirmed: 3,
+          },
+        ];
+
+        /* ---------- state the director controls ---------- */
+
+        // Nothing reaches the member view until the week is approved. Default state shows
+        // an approved week so the page is readable; "Withdraw" demonstrates the gate.
+        var APPROVED = { at: "Monday 7:42am", by: "Director of Racquets" };
+
+        // key -> {reason, at}. Set only through an explicit override with a stated reason.
+        var OVERRIDES = {};
+
+        var REASONS = [
+          "Court reopened early \u2014 confirmed with grounds",
+          "Confirmed with the pro who runs it; source not yet updated",
+          "Moved on the ground; calendar entry is the one that is wrong",
+          "Published deliberately \u2014 members already told in person",
+        ];
+
+        function stamp() {
+          var d = new Date();
+          return (
+            d.toLocaleDateString(undefined, {
+              weekday: "short",
+              month: "short",
+              day: "numeric",
+            }) +
+            " " +
+            d.toLocaleTimeString(undefined, {
+              hour: "numeric",
+              minute: "2-digit",
+            })
+          );
+        }
+
+        /* ---------- the five checks ---------- */
+
+        function build() {
+          var held = [];
+          var out = SESSIONS.map(function (s, i) {
+            return Object.assign({}, s, {
+              i: i,
+              held: false,
+              flag: null,
+              ovr: null,
+            });
+          });
+
+          // check 1 - court conflict
+          var seen = {};
+          out.forEach(function (s) {
+            var k = s.d + "|" + s.t + "|" + s.court;
+            if (seen[k]) {
+              var a = seen[k];
+              s.held = true;
+              s.flag = "conflict";
+              a.held = true;
+              a.flag = "conflict";
+              held.push({
+                key: "conflict:" + k,
+                kind: "conflict",
+                ids: [a.i, s.i],
+                what:
+                  "Two sessions on " + s.court + ", " + DAYS[s.d] + " " + s.t,
+                why:
+                  "\u201c" +
+                  a.n +
+                  "\u201d and \u201c" +
+                  s.n +
+                  "\u201d are both booked on the same court at the same hour.",
+                act: "Both held. The director decides which moves \u2014 the tool will not guess, because guessing wrong puts a junior group and an adult clinic on one court.",
+              });
+            } else {
+              seen[k] = s;
+            }
+          });
+
+          // check 2 - court availability
+          out.forEach(function (s) {
+            if (CLOSED.indexOf(s.court) > -1 && !s.held) {
+              s.held = true;
+              s.flag = "court closed";
+              held.push({
+                key: "closed:" + s.i,
+                kind: "court closed",
+                ids: [s.i],
+                what: s.n + " on " + s.court + ", " + DAYS[s.d],
+                why: s.court + " is closed for construction this week.",
+                act: "Held. Publishing this sends a member to a fenced court.",
+              });
+            }
+          });
+
+          // check 3 - source freshness
+          out.forEach(function (s) {
+            if (s.confirmed > MAX_AGE && !s.held) {
+              s.held = true;
+              s.flag = "stale source";
+              held.push({
+                key: "stale:" + s.i,
+                kind: "stale source",
+                ids: [s.i],
+                what: s.n + ", " + DAYS[s.d] + " " + s.t,
+                why:
+                  "Its source was last confirmed " +
+                  s.confirmed +
+                  " days ago. The limit is " +
+                  MAX_AGE +
+                  ".",
+                act: "Held. It may well still be correct \u2014 but a calendar nobody re-confirms is how a schedule quietly goes wrong while still looking right.",
+              });
+            }
+          });
+
+          // the director's overrides are applied here, after the checks, never inside them.
+          // a check that can be talked out of is not a check.
+          held.forEach(function (x) {
+            var o = OVERRIDES[x.key];
+            if (!o || !x.ids.length) return;
+            x.overridden = o;
+            x.ids.forEach(function (id) {
+              out[id].held = false;
+              out[id].ovr = o.reason;
+            });
+          });
+
+          // check 4 - three-sport coverage (runs on what would actually publish)
+          var pub = out.filter(function (s) {
+            return !s.held;
+          });
+          ["tennis", "pickleball", "platform"].forEach(function (sp) {
+            if (
+              !pub.some(function (s) {
+                return s.sport === sp;
+              })
+            ) {
+              held.push({
+                key: "coverage:" + sp,
+                kind: "coverage",
+                ids: [],
+                what: "No " + sp + " on the published week",
+                why: "Every session in this sport was held, or none was scheduled.",
+                act: "Named rather than left blank. A sport disappearing from the calendar is a finding, not a formatting problem.",
+              });
+            }
+          });
+
+          return { sessions: out, held: held };
+        }
+
+        var RESULT = build();
+        var view = "member";
+        var filter = "all";
+
+        function recompute() {
+          RESULT = build();
+          render();
+        }
+
+        /* ---------- director actions ---------- */
+
+        window.rdApprove = function () {
+          APPROVED = { at: stamp(), by: "Director of Racquets" };
+          render();
+        };
+        window.rdWithdraw = function () {
+          APPROVED = null;
+          render();
+        };
+        window.rdOverride = function (key) {
+          var sel = document.getElementById(
+            "r_" + key.replace(/[^a-z0-9]/gi, "_"),
+          );
+          var reason = sel ? sel.value : "";
+          if (!reason) return; // no reason, no override
+          OVERRIDES[key] = { reason: reason, at: stamp() };
+          recompute();
+        };
+        window.rdUndo = function (key) {
+          delete OVERRIDES[key];
+          recompute();
+        };
+
+        /* ---------- render ---------- */
+
+        function esc(s) {
+          return String(s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+        }
+        function idfor(k) {
+          return "r_" + k.replace(/[^a-z0-9]/gi, "_");
+        }
+
+        function monday() {
+          var d = new Date();
+          var diff = (d.getDay() + 6) % 7;
+          d.setDate(d.getDate() - diff);
+          return d;
+        }
+        function dayNum(i) {
+          var d = monday();
+          d.setDate(d.getDate() + i);
+          return d.getDate();
+        }
+        function fmtWeek() {
+          var a = monday(),
+            b = monday();
+          b.setDate(b.getDate() + 6);
+          var o = { month: "short", day: "numeric" };
+          return (
+            "Week of " +
+            a.toLocaleDateString(undefined, o) +
+            " \u2013 " +
+            b.toLocaleDateString(undefined, o)
+          );
+        }
+
+        function gateBar() {
+          var n = Object.keys(OVERRIDES).length;
+          if (APPROVED) {
+            return (
+              '<div class="gate">' +
+              '<div class="gl"><b>Approved for publication</b>' +
+              esc(APPROVED.by) +
+              " \u00b7 " +
+              esc(APPROVED.at) +
+              (n
+                ? " \u00b7 " +
+                  n +
+                  " override" +
+                  (n > 1 ? "s" : "") +
+                  " on the record"
+                : " \u00b7 no overrides") +
+              "</div>" +
+              (view === "director"
+                ? '<button class="btn ghost" onclick="rdWithdraw()">Withdraw approval</button>'
+                : "") +
+              "</div>"
+            );
+          }
+          return (
+            '<div class="gate off">' +
+            '<div class="gl"><b>Not approved</b>The week has been built but the director has not said yes. ' +
+            "Nothing is on the member calendar.</div>" +
+            (view === "director"
+              ? '<button class="btn" onclick="rdApprove()">Approve this week</button>'
+              : "") +
+            "</div>"
+          );
+        }
+
+        function render() {
+          var cal = document.getElementById("cal");
+          var todayIdx = (new Date().getDay() + 6) % 7;
+
+          // check 5 - approval. the member view is empty until the director says yes.
+          if (view === "member" && !APPROVED) {
+            cal.innerHTML =
+              '<div class="notpub">' +
+              "This week\u2019s calendar has not been approved yet, so nothing is published.<br>" +
+              "An unapproved week shows as empty rather than as last week\u2019s schedule \u2014 " +
+              "a stale calendar that looks current is worse than none." +
+              "</div>";
+          } else {
+            cal.innerHTML = DAYS.map(function (dn, i) {
+              var list = RESULT.sessions.filter(function (s) {
+                if (s.d !== i) return false;
+                if (filter !== "all" && s.sport !== filter) return false;
+                if (view === "member" && s.held) return false;
+                return true;
+              });
+
+              var evs = list.length
+                ? list
+                    .map(function (s) {
+                      var cls = s.held ? "ev held" : "ev " + s.sport;
+                      return (
+                        '<div class="' +
+                        cls +
+                        '">' +
+                        '<div class="t">' +
+                        esc(s.t) +
+                        "</div>" +
+                        '<div class="n">' +
+                        esc(s.n) +
+                        "</div>" +
+                        '<div class="c">' +
+                        esc(s.court) +
+                        " \u00b7 " +
+                        esc(s.who) +
+                        "</div>" +
+                        (s.held
+                          ? '<span class="flag">held \u2014 ' +
+                            esc(s.flag) +
+                            "</span>"
+                          : "") +
+                        (s.ovr && view === "director"
+                          ? '<span class="ovrmark">published by override</span>'
+                          : "") +
+                        "</div>"
+                      );
+                    })
+                    .join("")
+                : '<div class="none">Nothing scheduled</div>';
+
+              return (
+                '<div class="day' +
+                (i === todayIdx ? " today" : "") +
+                '">' +
+                '<div class="dh"><span class="dn">' +
+                dn +
+                "</span><span>" +
+                dayNum(i) +
+                "</span></div>" +
+                evs +
+                "</div>"
+              );
+            }).join("");
+          }
+
+          // gate bar sits above the grid
+          var host = cal.parentNode;
+          var old = host.querySelector(".gate, .gate.off");
+          if (old) old.parentNode.removeChild(old);
+          var bar = document.createElement("div");
+          bar.innerHTML = gateBar();
+          host.insertBefore(bar.firstChild, cal);
+
+          document.getElementById("wklabel").textContent = fmtWeek();
+
+          var pub = RESULT.sessions.filter(function (s) {
+            return !s.held;
+          }).length;
+          var h = RESULT.sessions.filter(function (s) {
+            return s.held;
+          }).length;
+          document.getElementById("wkstatus").textContent = !APPROVED
+            ? "not approved \u2014 nothing published"
+            : view === "member"
+              ? pub + " sessions published"
+              : pub + " published \u00b7 " + h + " held for review";
+
+          /* held panel */
+          var box = document.getElementById("held");
+          var open = RESULT.held.filter(function (x) {
+            return !x.overridden;
+          });
+
+          if (!open.length) {
+            box.innerHTML =
+              '<div class="ok-box">Nothing held this week. Every entry passed all five checks.</div>';
+          } else {
+            box.innerHTML =
+              '<div class="held-box">' +
+              '<div class="held-h">' +
+              open.length +
+              " item" +
+              (open.length > 1 ? "s" : "") +
+              " held \u2014 not published</div>" +
+              open
+                .map(function (x) {
+                  var ctl = "";
+                  if (view === "director" && x.ids.length) {
+                    ctl =
+                      '<div class="ovrctl">' +
+                      '<select id="' +
+                      idfor(x.key) +
+                      '" aria-label="Reason for override">' +
+                      '<option value="">Reason for override\u2026</option>' +
+                      REASONS.map(function (r) {
+                        return (
+                          '<option value="' +
+                          esc(r) +
+                          '">' +
+                          esc(r) +
+                          "</option>"
+                        );
+                      }).join("") +
+                      "</select>" +
+                      '<button class="btn ghost" onclick="rdOverride(\'' +
+                      x.key +
+                      "')\">Override and publish</button>" +
+                      "</div>";
+                  } else if (x.ids.length && view === "member") {
+                    ctl =
+                      '<div class="act" style="margin-top:8px">Only the director can release a held item, and only with a reason on the record.</div>';
+                  }
+                  return (
+                    '<div class="hrow"><div class="what">' +
+                    esc(x.what) +
+                    "</div>" +
+                    '<div class="why">' +
+                    esc(x.why) +
+                    "</div>" +
+                    '<div class="act">' +
+                    esc(x.act) +
+                    "</div>" +
+                    ctl +
+                    "</div>"
+                  );
+                })
+                .join("") +
+              "</div>";
+          }
+
+          /* override log */
+          var log = document.getElementById("log");
+          var done = RESULT.held.filter(function (x) {
+            return x.overridden;
+          });
+          if (!done.length) {
+            log.innerHTML =
+              '<div class="logempty">Approved ' +
+              (APPROVED ? esc(APPROVED.at) : "\u2014 not yet approved") +
+              ". No overrides on this week. In director view, releasing a held item requires choosing a reason, " +
+              "and the release is written here the moment it happens.</div>";
+          } else {
+            log.innerHTML = done
+              .map(function (x) {
+                return (
+                  '<div class="logrow">' +
+                  '<div class="lw">' +
+                  esc(x.what) +
+                  "</div>" +
+                  '<div class="lr">Released over a \u201c' +
+                  esc(x.kind) +
+                  "\u201d hold \u2014 " +
+                  esc(x.overridden.reason) +
+                  "</div>" +
+                  '<div class="lm">Director of Racquets \u00b7 ' +
+                  esc(x.overridden.at) +
+                  (view === "director"
+                    ? ' \u00b7 <button class="btn ghost" style="padding:3px 8px;font-size:12px" onclick="rdUndo(\'' +
+                      x.key +
+                      "')\">undo</button>"
+                    : "") +
+                  "</div></div>"
+                );
+              })
+              .join("");
+          }
+        }
+
+        /* ---------- build 6: the automated half ---------- */
+
+        /* Sources the scheduled job pulls. Ages are the sample data's own
+           confirmation ages, which is what check 3 reads. */
+        var SOURCES = [
+          { name: "Pro shop clinic sheet", feeds: "tennis", age: 2 },
+          { name: "Junior program roster", feeds: "tennis", age: 2 },
+          { name: "Cardio Tennis sign-up", feeds: "tennis", age: 12 },
+          { name: "Pickleball open-play board", feeds: "pickleball", age: 2 },
+          { name: "Platform league sheet", feeds: "platform", age: 3 },
+          { name: "Grounds closure notice", feeds: "all courts", age: 1 },
+        ];
+
+        /* Seeded so the page shows a system that already ran this morning rather
+   than an empty log. That 6:00am run is simulated, like the data. */
+        var OPS = {
+          last: Date.now() - 1000 * 60 * 47,
+          runs: [],
+          seeded: false,
+        };
+
+        function nowStr() {
+          return new Date().toLocaleTimeString(undefined, {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+          });
+        }
+
+        function ago(from) {
+          if (!from) return "never run in this session";
+          var s = Math.max(0, Math.round((Date.now() - from) / 1000));
+          if (s < 60) return s + "s ago";
+          var m = Math.floor(s / 60);
+          if (m < 60) return m + "m " + (s % 60) + "s ago";
+          return Math.floor(m / 60) + "h " + (m % 60) + "m ago";
+        }
+
+        /* A rebuild re-runs assembly and the five checks. It cannot approve,
+           and it deliberately does not clear an existing approval: withdrawing
+           is the director's action, not the scheduler's. */
+        function doRebuild(trigger) {
+          recompute();
+          var held = RESULT.held.filter(function (x) {
+            return !x.overridden;
+          }).length;
+          var pub = RESULT.sessions.filter(function (s) {
+            return !s.held;
+          }).length;
+          var stale = SOURCES.filter(function (s) {
+            return s.age > MAX_AGE;
+          }).length;
+          OPS.last = Date.now();
+          OPS.runs.unshift({
+            at: nowStr(),
+            trigger: trigger,
+            line:
+              SOURCES.length +
+              " sources pulled · " +
+              SESSIONS.length +
+              " entries assembled · 5 checks run · " +
+              held +
+              " held · " +
+              pub +
+              " staged" +
+              (stale
+                ? " · " + stale + " source past the " + MAX_AGE + "-day limit"
+                : ""),
+          });
+          if (OPS.runs.length > 6) OPS.runs.length = 6;
+          render();
+        }
+
+        window.rdRebuild = function () {
+          doRebuild("manual — run now");
+        };
+
+        function renderOps() {
+          /* One-time backfill of the simulated 6:00am run, computed from the
+     build the page is actually showing so the log never contradicts it. */
+          if (!OPS.seeded) {
+            OPS.seeded = true;
+            var h0 = RESULT.held.filter(function (x) {
+              return !x.overridden;
+            }).length;
+            var p0 = RESULT.sessions.filter(function (s) {
+              return !s.held;
+            }).length;
+            var s0 = SOURCES.filter(function (s) {
+              return s.age > MAX_AGE;
+            }).length;
+            OPS.runs.push({
+              at: "6:00:04 AM",
+              trigger: "scheduled — daily 6:00am",
+              line:
+                SOURCES.length +
+                " sources pulled · " +
+                SESSIONS.length +
+                " entries assembled · 5 checks run · " +
+                h0 +
+                " held · " +
+                p0 +
+                " staged" +
+                (s0
+                  ? " · " + s0 + " source past the " + MAX_AGE + "-day limit"
+                  : ""),
+            });
+          }
+          var pipe = document.getElementById("opspipe");
+          if (!pipe) return;
+
+          var heldOpen = RESULT.held.filter(function (x) {
+            return !x.overridden;
+          }).length;
+          var pub = RESULT.sessions.filter(function (s) {
+            return !s.held;
+          }).length;
+
+          pipe.innerHTML = [
+            {
+              n: "Stage 1",
+              v: SOURCES.length,
+              d: "sources pulled on schedule",
+              c: "on",
+            },
+            {
+              n: "Stage 2",
+              v: SESSIONS.length,
+              d: "entries assembled into one week",
+              c: "on",
+            },
+            { n: "Stage 3", v: 5, d: "checks run against the result", c: "on" },
+            {
+              n: "Stage 4",
+              v: heldOpen,
+              d: heldOpen
+                ? "held back from the member view"
+                : "nothing held this run",
+              c: heldOpen ? "bad" : "on",
+            },
+            {
+              n: "Stage 5",
+              v: APPROVED ? pub : 0,
+              d: APPROVED
+                ? "published after the director's yes"
+                : "staged — waiting on approval",
+              c: APPROVED ? "on" : "warn",
+            },
+          ]
+            .map(function (s) {
+              return (
+                '<div class="stg ' +
+                s.c +
+                '"><div class="sn">' +
+                s.n +
+                '</div><div class="sv">' +
+                s.v +
+                '</div><div class="sd">' +
+                esc(s.d) +
+                "</div></div>"
+              );
+            })
+            .join("");
+
+          document.getElementById("opssrcs").innerHTML =
+            '<div class="srow" style="padding-bottom:8px"><span class="sname" style="font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);font-weight:600">Source</span><span class="sage" style="font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;font-weight:600">Last confirmed</span></div>' +
+            SOURCES.map(function (s) {
+              var old = s.age > MAX_AGE;
+              return (
+                '<div class="srow"><span class="sname">' +
+                esc(s.name) +
+                '</span><span class="sage">' +
+                s.age +
+                " day" +
+                (s.age === 1 ? "" : "s") +
+                " ago · feeds " +
+                esc(s.feeds) +
+                '</span><span class="tag ' +
+                (old ? "old" : "ok") +
+                '">' +
+                (old ? "past limit" : "fresh") +
+                "</span></div>"
+              );
+            }).join("");
+
+          var runs = document.getElementById("opsruns");
+          runs.innerHTML = OPS.runs.length
+            ? OPS.runs
+                .map(function (r) {
+                  return (
+                    '<div class="run"><div class="rt">' +
+                    esc(r.at) +
+                    " · " +
+                    esc(r.trigger) +
+                    '</div><div class="rr">' +
+                    esc(r.line) +
+                    "</div></div>"
+                  );
+                })
+                .join("")
+            : '<div class="run"><div class="rr" style="color:var(--ink-3)">No rebuild has run yet in this session. The scheduled job would have run at 6:00am; press <b>Run rebuild now</b> to watch the pipeline execute and log itself.</div></div>';
+
+          document.getElementById("opsnote").innerHTML =
+            "Scheduled daily at 6:00am before the shop opens · last run " +
+            esc(ago(OPS.last)) +
+            (APPROVED
+              ? ""
+              : " · <b>staged but not approved, so the member view is empty</b>");
+
+          var clk = document.getElementById("opsclk");
+          if (clk)
+            clk.textContent = OPS.last
+              ? "last run " + ago(OPS.last)
+              : "awaiting first run";
+        }
+
+        /* ---------- build 6: tennis program table ---------- */
+
+        function renderProg() {
+          var body = document.getElementById("progbody");
+          if (!body) return;
+
+          var rows = RESULT.sessions
+            .filter(function (s) {
+              return s.sport === "tennis";
+            })
+            .sort(function (a, b) {
+              return a.d - b.d || a.t.localeCompare(b.t);
+            });
+
+          body.innerHTML = rows
+            .map(function (s) {
+              var src = s.held
+                ? '<span class="hld">held — ' + esc(s.flag) + "</span>"
+                : s.ovr
+                  ? '<span class="mut">published by override</span>'
+                  : '<span class="mut">confirmed ' +
+                    s.confirmed +
+                    "d ago</span>";
+              return (
+                "<tr><td>" +
+                DAYS[s.d] +
+                '</td><td class="mut">' +
+                esc(s.t) +
+                '</td><td class="nm">' +
+                esc(s.n) +
+                '<div class="mut">' +
+                esc(s.who) +
+                "</div></td><td>" +
+                esc(s.court) +
+                '</td><td class="mut">' +
+                esc(s.coach || "—") +
+                "</td><td>" +
+                src +
+                "</td></tr>"
+              );
+            })
+            .join("");
+
+          var held = rows.filter(function (s) {
+            return s.held;
+          }).length;
+          document.getElementById("progcount").textContent =
+            rows.length +
+            " tennis sessions · " +
+            (rows.length - held) +
+            " publishable" +
+            (held ? " · " + held + " held" : "");
+        }
+
+        /* Extend the existing render rather than duplicating it, so the new
+           panels always reflect the same build the calendar is showing. */
+        var __renderCore = render;
+        render = function () {
+          __renderCore();
+          renderProg();
+          renderOps();
+        };
+
+        /* The clock is the only thing that moves on its own. */
+        setInterval(function () {
+          if (!OPS.last) return;
+          var clk = document.getElementById("opsclk");
+          if (clk) clk.textContent = "last run " + ago(OPS.last);
+        }, 1000);
+        /* ---------- courts ---------- */
+
+        function courtSVG(kind) {
+          var o = 'stroke="#2f6b4c" stroke-width="1.6" fill="none"';
+          if (kind === "tennis") {
+            return (
+              '<svg viewBox="0 0 200 104" aria-label="Tennis court diagram">' +
+              '<rect x="12" y="10" width="176" height="84" fill="#eef4f0" stroke="#2f6b4c" stroke-width="1.8"/>' +
+              '<line x1="100" y1="6" x2="100" y2="98" stroke="#15201a" stroke-width="1.6" stroke-dasharray="3 3"/>' +
+              '<rect x="12" y="22" width="176" height="60" ' +
+              o +
+              "/>" +
+              '<line x1="44" y1="22" x2="44" y2="82" ' +
+              o +
+              '/><line x1="156" y1="22" x2="156" y2="82" ' +
+              o +
+              "/>" +
+              '<line x1="44" y1="52" x2="156" y2="52" ' +
+              o +
+              "/></svg>"
+            );
+          }
+          if (kind === "pickleball") {
+            return (
+              '<svg viewBox="0 0 200 104" aria-label="Pickleball court diagram">' +
+              '<rect x="34" y="18" width="132" height="68" fill="#eef2f8" stroke="#2a4a7a" stroke-width="1.8"/>' +
+              '<line x1="100" y1="12" x2="100" y2="92" stroke="#15201a" stroke-width="1.6" stroke-dasharray="3 3"/>' +
+              '<line x1="79" y1="18" x2="79" y2="86" stroke="#2a4a7a" stroke-width="1.6" fill="none"/>' +
+              '<line x1="121" y1="18" x2="121" y2="86" stroke="#2a4a7a" stroke-width="1.6" fill="none"/>' +
+              '<line x1="34" y1="52" x2="79" y2="52" stroke="#2a4a7a" stroke-width="1.6"/>' +
+              '<line x1="121" y1="52" x2="166" y2="52" stroke="#2a4a7a" stroke-width="1.6"/>' +
+              '<text x="54" y="15" font-size="7" fill="#73817a" font-family="Inter,sans-serif">kitchen</text></svg>'
+            );
+          }
+          return (
+            '<svg viewBox="0 0 200 104" aria-label="Platform tennis court diagram">' +
+            '<rect x="22" y="6" width="156" height="92" fill="none" stroke="#73817a" stroke-width="1.2" stroke-dasharray="2 2"/>' +
+            '<rect x="40" y="20" width="120" height="64" fill="#f3eef7" stroke="#5b3a6e" stroke-width="1.8"/>' +
+            '<line x1="100" y1="14" x2="100" y2="90" stroke="#15201a" stroke-width="1.6" stroke-dasharray="3 3"/>' +
+            '<line x1="40" y1="52" x2="160" y2="52" stroke="#5b3a6e" stroke-width="1.6"/>' +
+            '<line x1="70" y1="20" x2="70" y2="84" stroke="#5b3a6e" stroke-width="1.6"/>' +
+            '<line x1="130" y1="20" x2="130" y2="84" stroke="#5b3a6e" stroke-width="1.6"/>' +
+            '<text x="24" y="102" font-size="7" fill="#73817a" font-family="Inter,sans-serif">screens in play</text></svg>'
+          );
+        }
+
+        document.getElementById("courts").innerHTML = [
+          {
+            k: "tennis",
+            n: "Tennis",
+            d: "78 × 36 ft doubles. Courts 1–4 in the sample week.",
+          },
+          {
+            k: "pickleball",
+            n: "Pickleball",
+            d: "44 × 20 ft. The non-volley zone is why a tennis player's first game goes badly.",
+          },
+          {
+            k: "platform",
+            n: "Platform",
+            d: "44 × 20 ft, heated, screens in play. The winter sport.",
+          },
+        ]
+          .map(function (c) {
+            return (
+              '<div class="court">' +
+              courtSVG(c.k) +
+              '<div class="cn">' +
+              c.n +
+              '</div><div class="cd">' +
+              c.d +
+              "</div></div>"
+            );
+          })
+          .join("");
+
+        document.getElementById("closedbox").innerHTML =
+          "<b>Closed this week:</b> " +
+          CLOSED.join(", ") +
+          " — construction. Anything scheduled on a closed court is held rather than published, which is check 2.";
+
+        /* ---------- wiring ---------- */
+
+        Array.prototype.forEach.call(
+          document.querySelectorAll("#viewseg button"),
+          function (b) {
+            b.addEventListener("click", function () {
+              Array.prototype.forEach.call(
+                document.querySelectorAll("#viewseg button"),
+                function (x) {
+                  x.classList.remove("on");
+                },
+              );
+              b.classList.add("on");
+              view = b.getAttribute("data-v");
+              render();
+            });
+          },
+        );
+        Array.prototype.forEach.call(
+          document.querySelectorAll("#filters .f"),
+          function (b) {
+            b.addEventListener("click", function () {
+              Array.prototype.forEach.call(
+                document.querySelectorAll("#filters .f"),
+                function (x) {
+                  x.classList.remove("on");
+                },
+              );
+              b.classList.add("on");
+              filter = b.getAttribute("data-s");
+              render();
+            });
+          },
+        );
+
+        render();
+      })();
+    </script>
+  </body>
+</html>
