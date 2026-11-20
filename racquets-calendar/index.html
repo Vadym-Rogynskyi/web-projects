@@ -1818,6 +1818,3028 @@
       .b7-court.platform .b7-name {
         transform: translateZ(9px);
       }
+/* ---------- build 8: horizontal club layout ---------- */
+section[hidden],
+header[hidden] {
+  display: none !important;
+}
+
+/* sticky horizontal tab bar */
+.b8-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(21, 32, 26, 0.96);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+.b8-nav .wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.b8-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font-weight: 800;
+  font-size: 14px;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+.b8-brand svg {
+  width: 22px;
+  height: 22px;
+}
+.b8-tabs {
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex: 1;
+}
+.b8-tabs::-webkit-scrollbar {
+  display: none;
+}
+.b8-tab {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #d8eadf;
+  background: none;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  padding: 15px 14px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+.b8-tab:hover {
+  color: #fff;
+}
+.b8-tab[aria-selected="true"] {
+  color: #fff;
+  border-bottom-color: #f5d27a;
+}
+.b8-tab:focus-visible {
+  outline: 3px solid #f5d27a;
+  outline-offset: -3px;
+}
+
+/* panels slide in sideways */
+.b8-in {
+  animation: b8-slide 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.b8-in.b8-back {
+  animation-name: b8-slide-back;
+}
+@keyframes b8-slide {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+}
+@keyframes b8-slide-back {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+}
+
+/* calendar: always seven days across, scroll sideways when narrow */
+.cal {
+  grid-template-columns: repeat(7, minmax(150px, 1fr)) !important;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  padding-bottom: 8px;
+}
+.cal > * {
+  scroll-snap-align: start;
+}
+.b8-swipe {
+  display: none;
+  font-size: 12px;
+  color: var(--ink-3);
+  margin: 6px 0 0;
+}
+@media (max-width: 1100px) {
+  .b8-swipe {
+    display: block;
+  }
+}
+
+/* generic horizontal rail */
+.b8-rail-wrap {
+  position: relative;
+}
+.b8-rail {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 4px 2px 14px;
+  scrollbar-width: thin;
+}
+.b8-rail > * {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+}
+.b8-arrows {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin: 6px 0 10px;
+}
+.b8-arrows button {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--card);
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--ink);
+}
+.b8-arrows button:hover {
+  background: var(--green-wash);
+}
+.b8-arrows button:focus-visible {
+  outline: 3px solid #f5d27a;
+  outline-offset: 2px;
+}
+
+/* home: animated panorama banner */
+.b8-pano {
+  position: relative;
+  border-radius: 22px;
+  overflow: hidden;
+  margin: 6px 0 22px;
+  box-shadow: 0 18px 40px rgba(21, 32, 26, 0.22);
+}
+.b8-pano svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.b8-pano-copy {
+  position: absolute;
+  left: 4%;
+  top: 9%;
+  max-width: 46%;
+  color: #fff;
+  text-shadow: 0 2px 14px rgba(20, 10, 40, 0.55);
+}
+.b8-pano-copy p {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.92;
+}
+.b8-pano-copy h2 {
+  margin: 0;
+  font-size: clamp(22px, 3.6vw, 44px);
+  line-height: 1.08;
+  color: #fff;
+}
+.b8-cloud {
+  animation: b8-drift 60s linear infinite;
+}
+.b8-cloud.slow {
+  animation-duration: 95s;
+}
+@keyframes b8-drift {
+  from {
+    transform: translateX(-260px);
+  }
+  to {
+    transform: translateX(1300px);
+  }
+}
+.b8-sunglow {
+  transform-origin: 930px 120px;
+  animation: b8-glow 6s ease-in-out infinite;
+}
+@keyframes b8-glow {
+  50% {
+    transform: scale(1.12);
+    opacity: 0.75;
+  }
+}
+.b8-water {
+  animation: b8-water 7s linear infinite;
+}
+@keyframes b8-water {
+  to {
+    transform: translateX(-120px);
+  }
+}
+.b8-pennant {
+  transform-origin: 0 0;
+  animation: b8-wave 2.4s ease-in-out infinite;
+}
+@keyframes b8-wave {
+  50% {
+    transform: skewY(7deg) scaleX(0.92);
+  }
+}
+.b8-bird {
+  animation: b8-fly 26s linear infinite;
+}
+.b8-bird.two {
+  animation-delay: -9s;
+  animation-duration: 31s;
+}
+@keyframes b8-fly {
+  from {
+    transform: translate(-80px, 0);
+  }
+  50% {
+    transform: translate(600px, -24px);
+  }
+  to {
+    transform: translate(1300px, 6px);
+  }
+}
+.b8-pball {
+  animation: b8-arc 2.2s ease-in-out infinite alternate;
+}
+@keyframes b8-arc {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(52px, -46px);
+  }
+  50% {
+    transform: translate(104px, -62px);
+  }
+  75% {
+    transform: translate(156px, -40px);
+  }
+  100% {
+    transform: translate(208px, 4px);
+  }
+}
+.b8-pshadow {
+  animation: b8-arc-s 2.2s ease-in-out infinite alternate;
+}
+@keyframes b8-arc-s {
+  to {
+    transform: translateX(208px);
+  }
+}
+.b8-swing {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: b8-swing 2.2s ease-in-out infinite alternate;
+}
+.b8-swing.r {
+  animation-direction: alternate-reverse;
+}
+@keyframes b8-swing {
+  from {
+    transform: rotate(-14deg);
+  }
+  to {
+    transform: rotate(16deg);
+  }
+}
+
+.b8-announce {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  background: linear-gradient(90deg, #fdf4e3, #fff);
+  border: 1px solid var(--amber-line);
+  border-left: 5px solid #e3a33b;
+  border-radius: 14px;
+  padding: 14px 18px;
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+.b8-announce b {
+  color: var(--ink);
+}
+.b8-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.b8-tile {
+  font: inherit;
+  text-align: left;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  cursor: pointer;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+.b8-tile:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 26px rgba(21, 32, 26, 0.12);
+}
+.b8-tile:focus-visible {
+  outline: 3px solid #f5d27a;
+  outline-offset: 2px;
+}
+.b8-tile svg {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+}
+.b8-tile b {
+  display: block;
+  font-size: 15px;
+  color: var(--ink);
+}
+.b8-tile small {
+  color: var(--ink-3);
+  font-size: 12px;
+}
+
+/* alternating picture | text rows, like the reference clubs */
+.b8-feature {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 28px;
+  align-items: center;
+  margin: 0 0 28px;
+}
+.b8-feature.flip > :first-child {
+  order: 2;
+}
+.b8-feature figure {
+  margin: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 12px 28px rgba(21, 32, 26, 0.14);
+}
+.b8-feature figure svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.b8-feature h3 {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+.b8-feature p {
+  margin: 0 0 8px;
+  color: var(--ink-2);
+}
+.b8-kpi {
+  display: inline-flex;
+  gap: 6px;
+  align-items: baseline;
+  background: var(--green-wash);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 13px;
+  color: var(--green);
+  font-weight: 700;
+}
+
+/* program cards */
+.b8-prog {
+  width: 280px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.b8-prog:hover {
+  transform: translateY(-6px) rotateX(2deg);
+  box-shadow: 0 18px 34px rgba(21, 32, 26, 0.16);
+}
+.b8-prog svg {
+  display: block;
+  width: 100%;
+  height: 150px;
+}
+.b8-prog-body {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+.b8-prog h3 {
+  margin: 0;
+  font-size: 17px;
+}
+.b8-prog p {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+.b8-tag {
+  align-self: flex-start;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 3px 9px;
+  background: var(--green-wash);
+  color: var(--green);
+}
+.b8-tag.pickleball {
+  background: var(--blue-wash);
+  color: var(--blue);
+}
+.b8-tag.platform {
+  background: var(--plum-wash);
+  color: var(--plum);
+}
+.b8-count {
+  margin-top: auto;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  border-top: 1px solid var(--line-2);
+  padding-top: 10px;
+}
+.b8-bob {
+  animation: b8-bob 1.6s ease-in-out infinite;
+}
+@keyframes b8-bob {
+  50% {
+    transform: translateY(-14px);
+  }
+}
+.b8-pulse {
+  stroke-dasharray: 260;
+  stroke-dashoffset: 260;
+  animation: b8-draw 2.4s ease-in-out infinite;
+}
+@keyframes b8-draw {
+  60%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+.b8-spin {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: b8-spin 6s linear infinite;
+}
+@keyframes b8-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.b8-twinkle {
+  animation: b8-twinkle 2s ease-in-out infinite;
+}
+@keyframes b8-twinkle {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.b8-staff {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 8px;
+}
+.b8-staff div {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px;
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+.b8-staff b {
+  display: block;
+  color: var(--ink);
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+/* leagues */
+.b8-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 12px 0 16px;
+}
+.b8-chips button {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.b8-chips button[aria-pressed="true"] {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+.b8-chips button:focus-visible {
+  outline: 3px solid #f5d27a;
+  outline-offset: 2px;
+}
+.b8-league {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+.b8-table {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.b8-table h3 {
+  margin: 0;
+  padding: 12px 16px;
+  font-size: 15px;
+  background: var(--green);
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.b8-table h3 small {
+  font-weight: 500;
+  color: #d8eadf;
+}
+.b8-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+.b8-table th,
+.b8-table td {
+  padding: 9px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--line-2);
+  font-variant-numeric: tabular-nums;
+}
+.b8-table th {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  background: var(--paper);
+}
+.b8-table tr.home td {
+  background: #f6fbf7;
+  font-weight: 700;
+}
+.b8-bar {
+  position: relative;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--line-2);
+  min-width: 70px;
+  overflow: hidden;
+}
+.b8-bar i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #2f6b4c, #6fb08a);
+  transition: width 1s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.b8-match {
+  width: 260px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.b8-match header,
+.b8-match .b8-mhead {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--ink-3);
+}
+.b8-teams {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 10px;
+  font-size: 14px;
+}
+.b8-teams .w {
+  font-weight: 800;
+  color: var(--ink);
+}
+.b8-teams .l {
+  color: var(--ink-3);
+}
+.b8-teams span:nth-child(even) {
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+}
+.b8-res {
+  align-self: flex-start;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  border-radius: 6px;
+  padding: 2px 8px;
+}
+.b8-res.win {
+  background: var(--green-wash);
+  color: var(--green);
+}
+.b8-res.loss {
+  background: var(--red-wash);
+  color: var(--red);
+}
+.b8-res.next {
+  background: var(--blue-wash);
+  color: var(--blue);
+}
+.b8-res.miss {
+  background: var(--amber-wash);
+  color: var(--amber);
+}
+.b8-lines {
+  font-size: 12px;
+  color: var(--ink-2);
+  border-top: 1px dashed var(--line);
+  padding-top: 6px;
+  line-height: 1.6;
+}
+.b8-note {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  margin-top: 10px;
+}
+.b8-trophy .b8-shine {
+  animation: b8-shine 3s ease-in-out infinite;
+}
+@keyframes b8-shine {
+  0%,
+  60% {
+    transform: translateX(-60px);
+  }
+  100% {
+    transform: translateX(80px);
+  }
+}
+
+/* club amenity cards scroll sideways */
+.b7-cards {
+  display: flex !important;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 12px;
+}
+.b7-cards .b7-card {
+  flex: 0 0 240px;
+  scroll-snap-align: start;
+}
+
+/* footer in three columns */
+footer .wrap {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+.b8-notes-intro {
+  background: var(--paper);
+  border: 1px dashed var(--line);
+  border-radius: 14px;
+  padding: 14px 18px;
+  color: var(--ink-2);
+  font-size: 14px;
+}
+
+@media (max-width: 900px) {
+  .b8-tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .b8-feature,
+  .b8-league {
+    grid-template-columns: 1fr;
+  }
+  .b8-feature.flip > :first-child {
+    order: 0;
+  }
+  .b8-staff,
+  footer .wrap {
+    grid-template-columns: 1fr;
+  }
+  .b8-pano-copy {
+    max-width: 70%;
+  }
+  .b8-brand span {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .b8-in,
+  .b8-cloud,
+  .b8-sunglow,
+  .b8-water,
+  .b8-pennant,
+  .b8-bird,
+  .b8-pball,
+  .b8-pshadow,
+  .b8-swing,
+  .b8-bob,
+  .b8-pulse,
+  .b8-spin,
+  .b8-twinkle,
+  .b8-trophy .b8-shine {
+    animation: none !important;
+  }
+  .b8-pulse {
+    stroke-dashoffset: 0;
+  }
+  .b8-bar i,
+  .b8-tile,
+  .b8-prog {
+    transition: none !important;
+  }
+  .b8-rail {
+    scroll-behavior: auto;
+  }
+}
+
+      .b8-res.final {
+        background: var(--line-2);
+        color: var(--ink-2);
+      }
+      .b8-pennant {
+        transform-box: fill-box;
+        transform-origin: 100% 50%;
+      }
+/* ---------- build 9: depth and time ---------- */
+
+/* header: extruded title and a spinning 3D ball */
+header.hero {
+  position: relative;
+  overflow: hidden;
+}
+header.hero .hero-art {
+  display: none;
+}
+header.hero h1 {
+  text-shadow:
+    1px 1px 0 #cfe0d6,
+    2px 2px 0 #bcd5c6,
+    3px 3px 0 #a8c9b5,
+    4px 4px 0 #94bca4,
+    5px 5px 0 #80ae93,
+    8px 10px 18px rgba(21, 32, 26, 0.28);
+}
+.b9-ball {
+  position: absolute;
+  right: 5%;
+  top: 50%;
+  width: 170px;
+  height: 210px;
+  margin-top: -105px;
+  pointer-events: none;
+}
+.b9-ball svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+@media (min-width: 761px) {
+  header.hero .wrap {
+    padding-right: 200px;
+  }
+}
+@media (max-width: 760px) {
+  .b9-ball {
+    width: 90px;
+    height: 120px;
+    margin-top: -60px;
+    right: 3%;
+    opacity: 0.55;
+  }
+}
+
+/* banner reacts to the pointer: layers move at different depths */
+.b8-pano {
+  transform-style: preserve-3d;
+  transition: transform 0.35s ease-out;
+  will-change: transform;
+}
+.b8-pano svg {
+  transform: scale(1.06);
+}
+.b8-pano-copy h2 {
+  text-shadow:
+    0 2px 0 rgba(60, 30, 80, 0.35),
+    0 6px 22px rgba(30, 10, 50, 0.55);
+}
+
+/* cards tilt toward the pointer, with a moving highlight */
+.b9-tilt {
+  position: relative;
+  transform-style: preserve-3d;
+  transition:
+    transform 0.25s ease-out,
+    box-shadow 0.25s ease-out;
+  will-change: transform;
+}
+.b9-tilt.b9-active {
+  box-shadow: 0 22px 40px rgba(21, 32, 26, 0.2);
+}
+.b9-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--gx, 50%) var(--gy, 50%),
+    rgba(255, 255, 255, 0.45),
+    rgba(255, 255, 255, 0) 55%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+.b9-tilt.b9-active .b9-glare {
+  opacity: 1;
+}
+
+/* sections rise in with a slight 3D tilt */
+.b7-reveal {
+  transform: perspective(1400px) rotateX(7deg) translateY(28px);
+  transform-origin: 50% 0;
+}
+.b7-reveal.b7-in {
+  transform: none;
+}
+
+/* programs: 3D coverflow */
+.b8-rail.b9-flow {
+  display: block;
+  position: relative;
+  height: 450px;
+  overflow: hidden;
+  perspective: 1400px;
+  perspective-origin: 50% 40%;
+  scroll-snap-type: none;
+  touch-action: pan-y;
+  cursor: grab;
+}
+.b9-flow > .b8-prog {
+  position: absolute;
+  left: 50%;
+  top: 12px;
+  margin-left: -140px;
+  transition:
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 0.7s ease,
+    filter 0.7s ease;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.b9-flow > .b8-prog:hover {
+  box-shadow: 0 18px 34px rgba(21, 32, 26, 0.16);
+}
+.b9-flow > .b8-prog[aria-current="true"] {
+  box-shadow: 0 26px 50px rgba(21, 32, 26, 0.28);
+}
+.b9-flow::after {
+  content: "";
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 6px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    rgba(21, 32, 26, 0.22),
+    rgba(21, 32, 26, 0) 70%
+  );
+  pointer-events: none;
+}
+.b9-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+.b9-dots button {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border-radius: 50%;
+  border: 0;
+  background: var(--line);
+  cursor: pointer;
+}
+.b9-dots button[aria-current="true"] {
+  background: var(--green);
+  width: 22px;
+  border-radius: 999px;
+}
+.b9-dots button:focus-visible {
+  outline: 3px solid #f5d27a;
+  outline-offset: 2px;
+}
+
+/* the season wheel: time as the fourth dimension */
+.b9-season {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+  gap: 26px;
+  align-items: center;
+  margin: 4px 0 30px;
+  padding: 22px;
+  border-radius: 22px;
+  background:
+    radial-gradient(
+      circle at 85% 20%,
+      rgba(245, 210, 122, 0.25),
+      rgba(245, 210, 122, 0) 45%
+    ),
+    linear-gradient(135deg, #15201a, #1f4d36 60%, #2f6b4c);
+  color: #eef4f0;
+  box-shadow: 0 20px 44px rgba(21, 32, 26, 0.25);
+}
+.b9-season h3 {
+  margin: 0 0 8px;
+  font-size: 24px;
+  color: #fff;
+}
+.b9-season p {
+  margin: 0 0 12px;
+  color: #cfe0d6;
+  font-size: 14px;
+}
+.b9-season .b9-now {
+  font-size: 13px;
+  color: #f5d27a;
+  font-weight: 700;
+  min-height: 1.4em;
+}
+.b9-ctrls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.b9-ctrls button {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 7px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  cursor: pointer;
+}
+.b9-ctrls button[aria-pressed="true"] {
+  background: #f5d27a;
+  border-color: #f5d27a;
+  color: #15201a;
+}
+.b9-ctrls button:focus-visible {
+  outline: 3px solid #f5d27a;
+  outline-offset: 2px;
+}
+.b9-stage {
+  position: relative;
+  height: 280px;
+  perspective: 1100px;
+  perspective-origin: 50% 30%;
+}
+.b9-ring {
+  position: absolute;
+  left: 50%;
+  top: 34px;
+  width: 150px;
+  height: 200px;
+  margin-left: -75px;
+  transform-style: preserve-3d;
+  transition: transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.b9-month {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--ink);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+  transition:
+    background 0.6s ease,
+    box-shadow 0.6s ease;
+}
+.b9-month b {
+  font-size: 18px;
+}
+.b9-month.cur {
+  background: #fffbe9;
+  box-shadow:
+    0 0 0 3px #f5d27a,
+    0 16px 34px rgba(0, 0, 0, 0.35);
+}
+.b9-sp {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--ink-2);
+}
+.b9-sp i {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--line-2);
+}
+.b9-sp.on i {
+  background: var(--c);
+}
+.b9-sp.off {
+  color: var(--ink-3);
+  text-decoration: line-through;
+}
+.b9-floor {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 6px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    rgba(0, 0, 0, 0.35),
+    rgba(0, 0, 0, 0) 70%
+  );
+}
+
+/* leagues: 3D podium */
+.b9-podium {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 26px;
+  height: 260px;
+  margin: 4px 0 22px;
+  perspective: 900px;
+  perspective-origin: 50% 10%;
+}
+.b9-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 130px;
+}
+.b9-col .b9-name {
+  font-weight: 800;
+  font-size: 13px;
+  text-align: center;
+  color: var(--ink);
+  line-height: 1.25;
+}
+.b9-col .b9-rec {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+.b9-medal {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 15px;
+  color: #3a2a06;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.18);
+}
+.b9-box {
+        position: relative;
+        width: 110px;
+        height: var(--h, 80px);
+        margin: 24px 24px 0 0;
+        transition: height 1s cubic-bezier(0.2, 0.7, 0.2, 1);
+      }
+      .b9-box.b9-low {
+        height: 0;
+      }
+      .b9-box > span {
+        position: absolute;
+        display: grid;
+        place-items: center;
+      }
+      .b9-front {
+        inset: 0;
+        background: linear-gradient(180deg, var(--a), var(--b));
+        color: #fff;
+        font-size: 32px;
+        font-weight: 900;
+        text-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+        border-radius: 2px 0 0 0;
+      }
+      .b9-top {
+        left: 0;
+        top: -24px;
+        width: 100%;
+        height: 24px;
+        background: var(--a);
+        filter: brightness(1.2);
+        transform-origin: 0 100%;
+        transform: skewX(-45deg);
+      }
+      .b9-side {
+        left: 100%;
+        top: 0;
+        width: 24px;
+        height: 100%;
+        background: var(--b);
+        filter: brightness(0.75);
+        transform-origin: 0 0;
+        transform: skewY(-45deg);
+      }
+      .b9-col.home .b9-name::after {
+  content: " ★";
+  color: #e3a33b;
+}
+
+@media (max-width: 900px) {
+  .b9-season {
+    grid-template-columns: 1fr;
+  }
+  .b9-podium {
+    gap: 10px;
+  }
+  .b9-col {
+    width: 100px;
+  }
+  .b9-box,
+  .b9-top {
+    width: 84px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .b8-pano,
+  .b9-tilt,
+  .b9-flow > .b8-prog,
+  .b9-ring,
+  .b9-box {
+    transition: none !important;
+  }
+  .b7-reveal {
+    transform: none;
+  }
+}
+/* ---------- build 10: accuracy, layouts, themes ---------- */
+html[data-theme="hard"] {
+  --green: #1d3f72;
+  --green-2: #2c5a9e;
+  --green-wash: #edf2fa;
+  --green-line: #cfdcef;
+  --paper: #f8fafc;
+}
+html[data-theme="clay"] {
+  --green: #8c3b22;
+  --green-2: #a8502f;
+  --green-wash: #fbf0ea;
+  --green-line: #ecd2c4;
+  --paper: #fcf8f4;
+}
+html {
+  transition: background-color 0.4s ease;
+}
+.b10-theme {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-left: auto;
+  padding-left: 12px;
+}
+.b10-theme span {
+  font-size: 11px;
+  color: var(--ink-3);
+  margin-right: 2px;
+}
+.b10-sw {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow:
+    0 0 0 1px var(--line),
+    0 2px 6px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  padding: 0;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.b10-sw:hover {
+  transform: translateY(-2px) scale(1.08);
+}
+.b10-sw[aria-pressed="true"] {
+  box-shadow:
+    0 0 0 2px var(--ink),
+    0 3px 10px rgba(0, 0, 0, 0.25);
+}
+.b10-sw.green {
+  background: linear-gradient(135deg, #2f6b4c, #1f4d36);
+}
+.b10-sw.hard {
+  background: linear-gradient(135deg, #2c5a9e, #1d3f72);
+}
+.b10-sw.clay {
+  background: linear-gradient(135deg, #c4673f, #8c3b22);
+}
+
+/* layout switcher */
+.b10-layouts {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  margin: 4px 0 14px;
+  border-radius: 999px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: 0 6px 18px -12px rgba(0, 0, 0, 0.35);
+}
+.b10-layouts button {
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  color: var(--ink-2);
+  cursor: pointer;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.b10-layouts button svg {
+  width: 14px;
+  height: 14px;
+}
+.b10-layouts button.on {
+  background: var(--green);
+  color: #fff;
+}
+
+/* week at a glance */
+.b10-glance {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 16px;
+}
+.b10-g {
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 12px;
+  padding: 10px 10px 8px;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.b10-g:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px -16px rgba(0, 0, 0, 0.45);
+}
+.b10-g.sel {
+  border-color: var(--green);
+  box-shadow: 0 0 0 1px var(--green);
+}
+.b10-g.today::after {
+  content: "Today";
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--green);
+}
+.b10-g b {
+  display: block;
+  font-size: 13px;
+}
+.b10-g small {
+  color: var(--ink-3);
+  font-size: 11px;
+}
+.b10-bars {
+  display: flex;
+  gap: 3px;
+  align-items: flex-end;
+  height: 34px;
+  margin-top: 8px;
+}
+.b10-bars i {
+  flex: 1;
+  border-radius: 3px 3px 0 0;
+  min-height: 2px;
+  transform-origin: bottom;
+  animation: b10grow 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.b10-bars i.tennis {
+  background: var(--green-2);
+}
+.b10-bars i.pickleball {
+  background: #3f7fb8;
+}
+.b10-bars i.platform {
+  background: var(--plum);
+}
+.b10-bars i.held {
+  background: repeating-linear-gradient(45deg, #e3a33b 0 3px, #f6dcae 3px 6px);
+}
+@keyframes b10grow {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+/* agenda */
+.b10-agenda {
+  display: grid;
+  gap: 14px;
+}
+.b10-aday {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 14px;
+  align-items: start;
+}
+.b10-aday h4 {
+  margin: 6px 0 0;
+  font-size: 15px;
+  position: sticky;
+  top: 70px;
+}
+.b10-aday h4 small {
+  display: block;
+  color: var(--ink-3);
+  font-weight: 400;
+  font-size: 12px;
+}
+.b10-aday.today h4 {
+  color: var(--green);
+}
+.b10-alist {
+  display: grid;
+  gap: 8px;
+}
+.b10-ai {
+  display: grid;
+  grid-template-columns: 104px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--green-2);
+  animation: b10in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.b10-ai.pickleball {
+  border-left-color: #3f7fb8;
+}
+.b10-ai.platform {
+  border-left-color: var(--plum);
+}
+.b10-ai.held {
+  border-left-color: #e3a33b;
+  background: var(--amber-wash);
+}
+.b10-ai .tm {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 14px;
+}
+.b10-ai .nm {
+  font-weight: 600;
+}
+.b10-ai .mt {
+  color: var(--ink-3);
+  font-size: 12.5px;
+}
+.b10-pill {
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--green-wash);
+  color: var(--green);
+  white-space: nowrap;
+}
+.b10-pill.held {
+  background: #f6dcae;
+  color: #6e470d;
+}
+.b10-empty {
+  color: var(--ink-3);
+  font-size: 13px;
+  padding: 10px 0;
+}
+@keyframes b10in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* court timeline */
+.b10-tl {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  overflow-x: auto;
+  box-shadow: 0 18px 40px -30px rgba(0, 0, 0, 0.5);
+}
+.b10-tlin {
+  min-width: 760px;
+  padding: 14px 16px 16px;
+}
+.b10-tlhead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.b10-tlhead b {
+  font-size: 15px;
+}
+.b10-tlhead span {
+  color: var(--ink-3);
+  font-size: 12px;
+}
+.b10-axis,
+.b10-row {
+  display: grid;
+  grid-template-columns: 112px 1fr;
+  align-items: center;
+}
+.b10-axis .ticks {
+  position: relative;
+  height: 18px;
+}
+.b10-axis .ticks span {
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: 10.5px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.b10-row {
+  min-height: 40px;
+  border-top: 1px solid var(--line-2);
+}
+.b10-row .lbl {
+  font-size: 12.5px;
+  font-weight: 600;
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+.b10-row .lbl i {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: var(--green-2);
+}
+.b10-row .lbl i.pickleball {
+  background: #3f7fb8;
+}
+.b10-row .lbl i.platform {
+  background: var(--plum);
+}
+.b10-lane {
+  position: relative;
+  height: 40px;
+  background-image: linear-gradient(90deg, var(--line-2) 1px, transparent 1px);
+  background-size: 6.25% 100%;
+}
+.b10-lane.closed {
+  background: repeating-linear-gradient(
+    135deg,
+    #efece6 0 6px,
+    #f8f6f2 6px 12px
+  );
+}
+.b10-lane.closed::after {
+  content: "Closed this week";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 11px;
+  color: #7a6f5f;
+  letter-spacing: 0.04em;
+}
+.b10-bar {
+  position: absolute;
+  top: 6px;
+  height: 28px;
+  border-radius: 7px;
+  padding: 0 8px;
+  font-size: 11.5px;
+  line-height: 28px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: linear-gradient(180deg, var(--green-2), var(--green));
+  box-shadow:
+    0 6px 14px -8px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transform-origin: left;
+  animation: b10bar 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  z-index: 1;
+}
+.b10-bar.pickleball {
+  background: linear-gradient(180deg, #3a76ad, #285a88);
+}
+.b10-bar.platform {
+  background: linear-gradient(180deg, #7a5490, #5b3a6e);
+}
+.b10-bar.held {
+  background: repeating-linear-gradient(45deg, #e3a33b 0 6px, #d18f25 6px 12px);
+  color: #3b2606;
+}
+@keyframes b10bar {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+}
+.b10-now {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #d64545;
+  z-index: 2;
+}
+.b10-now::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #d64545;
+}
+.b10-days {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.b10-days button {
+  font: inherit;
+  font-size: 12px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  border-radius: 999px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+.b10-days button.on {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+
+/* source note under the court map */
+.b10-src {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  border-left: 3px solid var(--amber-line);
+  padding: 4px 0 4px 10px;
+  margin: 6px 0 14px;
+  max-width: 820px;
+}
+
+/* facts ledger */
+.b10-ledger {
+  margin: 22px 0 26px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  overflow: hidden;
+}
+.b10-ledger h3 {
+  margin: 0;
+  padding: 14px 16px 4px;
+  font-size: 16px;
+}
+.b10-ledger > p {
+  margin: 0;
+  padding: 0 16px 10px;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.b10-lrow {
+  display: grid;
+  grid-template-columns: 1.3fr 1.1fr 120px 1.8fr;
+  gap: 12px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--line-2);
+  font-size: 13px;
+  align-items: center;
+}
+.b10-lrow.hd {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+  background: var(--paper);
+}
+.b10-lrow .v {
+  font-weight: 600;
+}
+.b10-badge {
+  justify-self: start;
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+.b10-badge.club {
+  background: var(--green-wash);
+  color: var(--green);
+}
+.b10-badge.third {
+  background: var(--blue-wash);
+  color: var(--blue);
+}
+.b10-badge.disputed {
+  background: var(--red-wash);
+  color: var(--red);
+}
+.b10-badge.assumed {
+  background: var(--amber-wash);
+  color: var(--amber);
+}
+.b10-badge.sample {
+  background: var(--plum-wash);
+  color: var(--plum);
+}
+.b10-lrow .s {
+  color: var(--ink-3);
+  font-size: 12px;
+}
+
+@media (max-width: 760px) {
+  .b10-glance {
+    grid-template-columns: repeat(7, 92px);
+    overflow-x: auto;
+  }
+  .b10-aday {
+    grid-template-columns: 1fr;
+  }
+  .b10-aday h4 {
+    position: static;
+  }
+  .b10-ai {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .b10-lrow {
+    grid-template-columns: 1fr 1fr;
+  }
+  .b10-lrow.hd {
+    display: none;
+  }
+  .b10-theme span {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .b10-bars i,
+  .b10-ai,
+  .b10-bar {
+    animation: none;
+  }
+  .b10-g,
+  .b10-sw {
+    transition: none;
+  }
+}
+
+/* ---------- build 11: history, heatmap, lanes, night, motion ---------- */
+html[data-theme="navy"] {
+  --green: #1b2f4e;
+  --green-2: #b08a2e;
+  --green-wash: #f6f1e4;
+  --green-line: #e4d6ae;
+  --paper: #fbf9f4;
+}
+html[data-theme="night"] {
+  --ink: #e8ece9;
+  --ink-2: #b9c3bd;
+  --ink-3: #8d9a93;
+  --line: #2c3631;
+  --line-2: #232b27;
+  --paper: #121816;
+  --card: #1a221e;
+  --green: #6fcf97;
+  --green-2: #4fae7b;
+  --green-wash: #1d2b24;
+  --green-line: #2f4a3c;
+  --amber-wash: #2b2416;
+  --blue-wash: #1a2333;
+  --red-wash: #2d1c1c;
+  --plum-wash: #251d2b;
+}
+html[data-theme="night"] body {
+  background: var(--paper);
+  color: var(--ink);
+}
+html[data-theme="night"] .b10-sw[aria-pressed="true"] {
+  box-shadow:
+    0 0 0 2px #fff,
+    0 3px 10px rgba(0, 0, 0, 0.5);
+}
+html[data-theme="night"] .b10-layouts button.on,
+html[data-theme="night"] .b10-days button.on {
+  color: #0d1411;
+}
+.b10-sw.navy {
+  background: linear-gradient(135deg, #b08a2e 0 45%, #1b2f4e 45%);
+}
+.b10-sw.night {
+  background: radial-gradient(circle at 65% 35%, #f5d27a 0 18%, #1a221e 20%);
+}
+
+/* scroll progress */
+.b11-progress {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 3px;
+  width: 100%;
+  transform-origin: left;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, var(--green-2), #d6e63a, var(--green-2));
+  background-size: 200% 100%;
+  animation: b11slide 3s linear infinite;
+  z-index: 100;
+  pointer-events: none;
+}
+@keyframes b11slide {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* floating balls in the hero */
+.hero {
+  position: relative;
+}
+.b11-float {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.b11-float i {
+  position: absolute;
+  bottom: -40px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f3ff8a, #c9d82a 60%, #9aa61c);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+  opacity: 0.55;
+  animation: b11rise linear infinite;
+}
+.b11-float i:nth-child(1) {
+  left: 8%;
+  animation-duration: 14s;
+}
+.b11-float i:nth-child(2) {
+  left: 26%;
+  animation-duration: 19s;
+  animation-delay: -6s;
+  width: 12px;
+  height: 12px;
+}
+.b11-float i:nth-child(3) {
+  left: 52%;
+  animation-duration: 16s;
+  animation-delay: -3s;
+}
+.b11-float i:nth-child(4) {
+  left: 71%;
+  animation-duration: 22s;
+  animation-delay: -11s;
+  width: 10px;
+  height: 10px;
+}
+.b11-float i:nth-child(5) {
+  left: 90%;
+  animation-duration: 17s;
+  animation-delay: -8s;
+  width: 14px;
+  height: 14px;
+}
+@keyframes b11rise {
+  0% {
+    transform: translate(0, 0) rotate(0);
+  }
+  50% {
+    transform: translate(24px, -260px) rotate(180deg);
+  }
+  100% {
+    transform: translate(-10px, -560px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* shimmering headings */
+.b11-shine {
+  background: linear-gradient(
+    100deg,
+    var(--ink) 40%,
+    var(--green-2) 50%,
+    var(--ink) 60%
+  );
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: b11shine 6s ease-in-out infinite;
+}
+@keyframes b11shine {
+  0%,
+  60% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -150% 0;
+  }
+}
+
+/* card spotlight */
+.b11-spot {
+  position: relative;
+  overflow: hidden;
+}
+.b11-spot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    220px circle at var(--mx, -200px) var(--my, -200px),
+    rgba(214, 230, 58, 0.22),
+    transparent 60%
+  );
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+/* tab entrance stagger */
+.b11-in > * {
+  animation: b11up 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.b11-in > *:nth-child(2) {
+  animation-delay: 60ms;
+}
+.b11-in > *:nth-child(3) {
+  animation-delay: 120ms;
+}
+.b11-in > *:nth-child(4) {
+  animation-delay: 180ms;
+}
+.b11-in > *:nth-child(n + 5) {
+  animation-delay: 240ms;
+}
+@keyframes b11up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+/* heatmap */
+.b11-heat {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  padding: 14px 16px 16px;
+  overflow-x: auto;
+}
+.b11-heat h4 {
+  margin: 0 0 4px;
+  font-size: 15px;
+}
+.b11-heat p {
+  margin: 0 0 12px;
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+.b11-hg {
+  display: grid;
+  grid-template-columns: 54px repeat(16, minmax(34px, 1fr));
+  gap: 4px;
+  min-width: 700px;
+}
+.b11-hg .hh {
+  font-size: 10.5px;
+  color: var(--ink-3);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.b11-hg .dl {
+  font-size: 12.5px;
+  font-weight: 600;
+  align-self: center;
+}
+.b11-c {
+  height: 34px;
+  border-radius: 7px;
+  border: 0;
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--ink);
+  background: var(--line-2);
+  transform: scale(0.6);
+  opacity: 0;
+  animation: b11pop 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.3) forwards;
+  transition: transform 0.15s;
+}
+.b11-c:hover,
+.b11-c:focus-visible {
+  transform: scale(1.12) !important;
+  outline: 2px solid var(--ink);
+  z-index: 1;
+}
+.b11-c.l1 {
+  background: #dbeee2;
+}
+.b11-c.l2 {
+  background: #a9d6b9;
+}
+.b11-c.l3 {
+  background: #3a7f58;
+  color: #fff;
+}
+.b11-c.l4 {
+  background: #2f6b4c;
+  color: #fff;
+}
+@keyframes b11pop {
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.b11-key {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 12px;
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+.b11-key i {
+  width: 18px;
+  height: 12px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+/* sport lanes */
+.b11-lanes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.b11-lane {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--card);
+  padding: 14px;
+  transform-style: preserve-3d;
+}
+.b11-lh {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+.b11-lh b {
+  font-size: 16px;
+}
+.b11-lh span {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+.b11-meter {
+  height: 6px;
+  border-radius: 99px;
+  background: var(--line-2);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.b11-meter i {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+  transform-origin: left;
+  animation: b11fill 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes b11fill {
+  from {
+    transform: scaleX(0);
+  }
+}
+.b11-lane.tennis .b11-meter i {
+  background: var(--green-2);
+}
+.b11-lane.pickleball .b11-meter i {
+  background: #3a76ad;
+}
+.b11-lane.platform .b11-meter i {
+  background: var(--plum);
+}
+.b11-it {
+  padding: 9px 11px;
+  border-radius: 10px;
+  background: var(--paper);
+  border: 1px solid var(--line-2);
+  margin-bottom: 7px;
+  font-size: 12.5px;
+  animation: b11up 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  transition: transform 0.2s;
+}
+.b11-it:hover {
+  transform: translateX(4px);
+}
+.b11-it b {
+  display: block;
+  font-size: 13px;
+}
+.b11-it small {
+  color: var(--ink-3);
+}
+.b11-it.held {
+  background: var(--amber-wash);
+  border-color: var(--amber-line);
+}
+
+/* history timeline */
+.b11-hist {
+  margin: 26px 0 8px;
+}
+.b11-hist h3 {
+  font-size: 18px;
+  margin: 0 0 4px;
+}
+.b11-hist > p {
+  margin: 0 0 16px;
+  color: var(--ink-2);
+  font-size: 13.5px;
+  max-width: 760px;
+}
+.b11-merge {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 0 0 22px;
+}
+.b11-orig {
+  display: flex;
+  gap: 8px;
+}
+.b11-orig span {
+  padding: 9px 13px;
+  border-radius: 999px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  font-size: 13px;
+  font-weight: 600;
+  animation: b11merge 4.5s ease-in-out infinite;
+}
+.b11-orig span:nth-child(2) {
+  animation-delay: 0.25s;
+}
+.b11-orig span:nth-child(3) {
+  animation-delay: 0.5s;
+}
+@keyframes b11merge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  45%,
+  55% {
+    transform: translateX(10px);
+  }
+}
+.b11-arrow {
+  font-size: 22px;
+  color: var(--green-2);
+  animation: b11pulse 1.6s ease-in-out infinite;
+}
+@keyframes b11pulse {
+  50% {
+    transform: translateX(6px);
+    opacity: 0.6;
+  }
+}
+.b11-one {
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: var(--green);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 10px 24px -14px var(--green);
+}
+html[data-theme="night"] .b11-one {
+  color: #0d1411;
+}
+.b11-track {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 6px 2px 14px;
+  scroll-snap-type: x mandatory;
+  position: relative;
+}
+.b11-ev {
+  flex: 0 0 240px;
+  scroll-snap-align: start;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  padding: 14px;
+  position: relative;
+  opacity: 0;
+  transform: translateY(18px) rotateX(18deg);
+  transition:
+    opacity 0.6s,
+    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.b11-ev.on {
+  opacity: 1;
+  transform: none;
+}
+.b11-ev .yr {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--green-2);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.b11-ev h4 {
+  margin: 8px 0 6px;
+  font-size: 14px;
+}
+.b11-ev p {
+  margin: 0 0 8px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+.b11-ev .src {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.b11-ev.ctx {
+  border-style: dashed;
+}
+.b11-ev.ctx .yr {
+  color: var(--plum);
+}
+.b11-course {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 8px 0 4px;
+}
+.b11-course div {
+  border-radius: 12px;
+  background: var(--green-wash);
+  padding: 12px;
+}
+.b11-course b {
+  display: block;
+  font-size: 20px;
+  color: var(--green);
+  font-variant-numeric: tabular-nums;
+}
+.b11-course span {
+  font-size: 11.5px;
+  color: var(--ink-2);
+}
+
+@media (max-width: 760px) {
+  .b11-lanes,
+  .b11-course {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .b11-progress,
+  .b11-float i,
+  .b11-shine,
+  .b11-in > *,
+  .b11-c,
+  .b11-meter i,
+  .b11-it,
+  .b11-orig span,
+  .b11-arrow {
+    animation: none !important;
+  }
+  .b11-c {
+    transform: none;
+    opacity: 1;
+  }
+  .b11-ev {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .b11-shine {
+    color: var(--ink);
+    background: none;
+  }
+}
+
+/* ---------- build 12: business case, presenter, handout ---------- */
+.b12-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--green-2);
+  margin: 0 0 6px;
+}
+.b12-h {
+  font-size: 16px;
+  margin: 28px 0 12px;
+}
+.b12-ba {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
+  gap: 12px;
+  align-items: stretch;
+  margin-top: 18px;
+}
+.b12-col {
+  border-radius: 16px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  background: var(--card);
+}
+.b12-col.before {
+  background: var(--red-wash);
+  border-color: var(--red-line);
+}
+.b12-col.after {
+  background: var(--green-wash);
+  border-color: var(--green-line);
+  box-shadow: 0 18px 40px -28px var(--green);
+}
+.b12-col h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+.b12-col ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+.b12-col li + li {
+  margin-top: 6px;
+}
+.b12-arrow {
+  align-self: center;
+  justify-self: center;
+  font-size: 26px;
+  color: var(--green-2);
+  animation: b11pulse 1.6s ease-in-out infinite;
+}
+.b12-checks {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+.b12-ck {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  padding: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.b12-ck .n {
+  font-size: 11px;
+  color: var(--ink-3);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.b12-ck b {
+  display: block;
+  margin: 4px 0 6px;
+  font-size: 14px;
+}
+.b12-ck p {
+  margin: 0 0 10px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+.b12-ck .v {
+  font-size: 26px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--green);
+  line-height: 1;
+}
+.b12-ck .v small {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink-3);
+  margin-left: 4px;
+}
+.b12-ck.hit .v {
+  color: #8a5a12;
+}
+.b12-ck::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--green-2);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.b12-ck.hit::after {
+  background: #e3a33b;
+}
+.b12-ck.on::after {
+  transform: scaleX(1);
+}
+.b12-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+.b12-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: s;
+}
+.b12-steps li {
+  position: relative;
+  padding: 0 0 14px 38px;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+.b12-steps li::before {
+  counter-increment: s;
+  content: counter(s);
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+html[data-theme="night"] .b12-steps li::before {
+  color: #0d1411;
+}
+.b12-steps li::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 28px;
+  bottom: 2px;
+  width: 2px;
+  background: var(--green-line);
+}
+.b12-steps li:last-child::after {
+  display: none;
+}
+.b12-measures {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.b12-measures li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  font-size: 13px;
+}
+.b12-measures em {
+  font-style: normal;
+  font-size: 11.5px;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.b12-risks {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+.b12-risks div {
+  padding: 13px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--amber-line);
+  background: var(--card);
+  font-size: 12.5px;
+}
+.b12-risks b {
+  display: block;
+  font-size: 13.5px;
+  margin-bottom: 4px;
+}
+.b12-risks span {
+  color: var(--ink-2);
+}
+.b12-qs {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.b12-actions {
+  display: flex;
+  gap: 10px;
+  margin: 24px 0 8px;
+  flex-wrap: wrap;
+}
+.b12-up {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.6s,
+    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.b12-up.on {
+  opacity: 1;
+  transform: none;
+}
+
+/* present button in the nav */
+.b12-present {
+  border: 0;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 7px 13px;
+  border-radius: 999px;
+  background: var(--green);
+  color: #fff;
+  cursor: pointer;
+  margin-left: 10px;
+  white-space: nowrap;
+  box-shadow: 0 6px 16px -8px var(--green);
+  transition: transform 0.2s;
+}
+.b12-present:hover {
+  transform: translateY(-1px);
+}
+html[data-theme="night"] .b12-present {
+  color: #0d1411;
+}
+
+/* presenter overlay */
+.b12-tour {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  width: min(640px, calc(100% - 28px));
+  z-index: 200;
+  background: #15201a;
+  color: #f3f6f4;
+  border-radius: 18px;
+  padding: 16px 18px 14px;
+  box-shadow: 0 30px 70px -20px rgba(0, 0, 0, 0.6);
+  animation: b11up 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.b12-tour[hidden] {
+  display: none;
+}
+.b12-tour .st {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #a9d6b9;
+  font-weight: 700;
+}
+.b12-tour h4 {
+  margin: 4px 0 4px;
+  font-size: 17px;
+}
+.b12-tour p {
+  margin: 0 0 12px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #cfd8d3;
+}
+.b12-tbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.b12-dots {
+  display: flex;
+  gap: 5px;
+  flex: 1;
+}
+.b12-dots i {
+  height: 5px;
+  flex: 1;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.18);
+  transition: background 0.3s;
+}
+.b12-dots i.on {
+  background: #d6e63a;
+}
+.b12-tbar button {
+  font: inherit;
+  font-size: 12.5px;
+  border-radius: 999px;
+  padding: 6px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+.b12-tbar button.go {
+  background: #d6e63a;
+  border-color: #d6e63a;
+  color: #15201a;
+  font-weight: 700;
+}
+.b12-spot {
+  outline: 3px solid #d6e63a !important;
+  outline-offset: 6px;
+  border-radius: 14px;
+  box-shadow: 0 0 0 9999px rgba(10, 16, 13, 0.28);
+  position: relative;
+  z-index: 150;
+  transition: outline-offset 0.3s;
+}
+
+@media (max-width: 860px) {
+  .b12-ba,
+  .b12-two {
+    grid-template-columns: 1fr;
+  }
+  .b12-arrow {
+    transform: rotate(90deg);
+  }
+  .b12-checks,
+  .b12-risks {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .b12-up {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .b12-arrow,
+  .b12-tour {
+    animation: none;
+  }
+  .b12-ck::after {
+    transition: none;
+  }
+}
+
+/* printable handout: every tab, plain ink, no motion */
+@media print {
+  .b8-nav,
+  .b11-progress,
+  .b11-float,
+  .b12-tour,
+  .b12-actions,
+  .b10-layouts,
+  .b10-theme,
+  .b7-stage,
+  .b9-ball,
+  button.b7-card {
+    display: none !important;
+  }
+  [data-tab][hidden] {
+    display: block !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    box-shadow: none !important;
+  }
+  .b11-shine {
+    color: #000 !important;
+    background: none !important;
+  }
+  .b11-ev,
+  .b12-up {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  section {
+    break-inside: avoid-page;
+  }
+  #b12case {
+    break-before: page;
+  }
+}
+
+/* ---------- build 13: live, clock, board, neighbours ---------- */
+.b10-sw.auto {
+  background: conic-gradient(#1a221e 0 50%, #2f6b4c 50% 100%);
+}
+.b13-live {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr auto;
+  gap: 14px;
+  align-items: center;
+  margin: 18px 0 6px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: 0 18px 40px -30px rgba(0, 0, 0, 0.5);
+}
+.b13-pulse {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #2fb36b;
+  box-shadow: 0 0 0 0 rgba(47, 179, 107, 0.6);
+  animation: b13pulse 1.8s ease-out infinite;
+}
+.b13-live.off .b13-pulse {
+  background: #b9b2a6;
+  animation: none;
+}
+@keyframes b13pulse {
+  to {
+    box-shadow: 0 0 0 12px rgba(47, 179, 107, 0);
+  }
+}
+.b13-live .lb {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 700;
+}
+.b13-live .vl {
+  font-size: 14.5px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+.b13-live .vl small {
+  font-weight: 400;
+  color: var(--ink-3);
+  font-size: 12.5px;
+}
+.b13-gauge {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.b13-gauge b {
+  font-size: 22px;
+  color: var(--green);
+}
+/* day clock */
+.b13-clock {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--card);
+  padding: 14px 16px;
+  display: grid;
+  grid-template-columns: minmax(260px, 380px) 1fr;
+  gap: 18px;
+  align-items: center;
+}
+.b13-clock svg {
+  width: 100%;
+  height: auto;
+}
+.b13-clock .arc {
+  fill: none;
+  stroke-linecap: round;
+  stroke-width: 15;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: b13draw 1s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+.b13-clock .arc.tennis {
+  stroke: var(--green-2);
+}
+.b13-clock .arc.pickleball {
+  stroke: #3a76ad;
+}
+.b13-clock .arc.platform {
+  stroke: var(--plum);
+}
+.b13-clock .arc.held {
+  stroke: #e3a33b;
+  stroke-dasharray: 6 5;
+  animation: none;
+  stroke-dashoffset: 0;
+}
+@keyframes b13draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.b13-clock .ring {
+  fill: none;
+  stroke: var(--line-2);
+  stroke-width: 15;
+}
+.b13-clock .hr {
+  font-size: 9px;
+  fill: var(--ink-3);
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+.b13-clock .hand {
+  stroke: #d64545;
+  stroke-width: 2;
+}
+.b13-clock .mid {
+  font-size: 13px;
+  font-weight: 700;
+  fill: var(--ink);
+  text-anchor: middle;
+}
+.b13-clock .mid2 {
+  font-size: 10px;
+  fill: var(--ink-3);
+  text-anchor: middle;
+}
+.b13-clist {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+}
+.b13-clist div {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--paper);
+  border-left: 4px solid var(--green-2);
+}
+.b13-clist div.pickleball {
+  border-left-color: #3a76ad;
+}
+.b13-clist div.platform {
+  border-left-color: var(--plum);
+}
+.b13-clist div.held {
+  border-left-color: #e3a33b;
+  background: var(--amber-wash);
+}
+.b13-clist small {
+  color: var(--ink-3);
+}
+/* board */
+.b13-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.b13-col {
+  border-radius: 16px;
+  padding: 12px;
+  background: var(--green-wash);
+  border: 1px solid var(--green-line);
+}
+.b13-col h4 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+}
+.b13-col h4 span {
+  font-weight: 400;
+  color: var(--ink-3);
+  font-size: 12px;
+}
+.b13-tk {
+  background: var(--card);
+  border-radius: 10px;
+  padding: 9px 11px;
+  margin-bottom: 7px;
+  font-size: 12.5px;
+  box-shadow: 0 6px 14px -12px rgba(0, 0, 0, 0.6);
+  border-top: 3px solid var(--green-2);
+  animation: b11up 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  transition: transform 0.2s;
+}
+.b13-tk:hover {
+  transform: translateY(-2px) rotate(-0.4deg);
+}
+.b13-tk.pickleball {
+  border-top-color: #3a76ad;
+}
+.b13-tk.platform {
+  border-top-color: var(--plum);
+}
+.b13-tk.held {
+  border-top-color: #e3a33b;
+  background: var(--amber-wash);
+}
+.b13-tk b {
+  display: block;
+  font-size: 13px;
+}
+.b13-tk small {
+  color: var(--ink-3);
+}
+/* neighbours */
+.b13-nb {
+  margin: 26px 0 8px;
+}
+.b13-nb h3 {
+  font-size: 18px;
+  margin: 0 0 4px;
+}
+.b13-nb > p {
+  margin: 0 0 14px;
+  color: var(--ink-2);
+  font-size: 13.5px;
+  max-width: 760px;
+}
+.b13-nbg {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.b13-club {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  padding: 14px;
+}
+.b13-club.us {
+  border-color: var(--green);
+  box-shadow: 0 0 0 1px var(--green);
+}
+.b13-club h4 {
+  margin: 0 0 10px;
+  font-size: 14.5px;
+}
+.b13-br {
+  display: grid;
+  grid-template-columns: 82px 1fr 52px;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  margin-bottom: 7px;
+}
+.b13-br .tr {
+  height: 10px;
+  border-radius: 99px;
+  background: var(--line-2);
+  overflow: hidden;
+}
+.b13-br .tr i {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+  transform-origin: left;
+  animation: b11fill 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.b13-br .tr i.tennis {
+  background: var(--green-2);
+}
+.b13-br .tr i.pickleball {
+  background: #3a76ad;
+}
+.b13-br .tr i.platform {
+  background: var(--plum);
+}
+.b13-br .n {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.b13-br .n.na {
+  font-weight: 400;
+  color: var(--ink-3);
+  font-size: 11px;
+}
+.b13-club .src {
+  font-size: 11px;
+  color: var(--ink-3);
+  margin-top: 8px;
+}
+.b13-auto.on {
+  background: #d6e63a !important;
+  color: #15201a !important;
+  font-weight: 700;
+}
+@media (max-width: 860px) {
+  .b13-live,
+  .b13-clock,
+  .b13-board,
+  .b13-nbg {
+    grid-template-columns: 1fr;
+  }
+  .b13-gauge {
+    text-align: left;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .b13-pulse,
+  .b13-clock .arc,
+  .b13-tk,
+  .b13-br .tr i {
+    animation: none !important;
+  }
+  .b13-clock .arc {
+    stroke-dashoffset: 0;
+  }
+}
+
     </style>
   </head>
   <body>
@@ -1841,7 +4863,37 @@
       </div>
     </div>
 
-    <header class="hero">
+<nav class="b8-nav" aria-label="Sections">
+  <div class="wrap">
+    <div class="b8-brand">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="10" fill="#d6e63a" />
+        <path
+          d="M4.5 7.5c4 1.5 4 7.5 0 9M19.5 7.5c-4 1.5-4 7.5 0 9"
+          fill="none"
+          stroke="#fff"
+          stroke-width="1.6"
+        />
+      </svg>
+      <span>Racquets</span>
+    </div>
+    <div class="b8-tabs" role="tablist" id="b8tabs"></div>
+    <button type="button" class="b12-present" id="b12present" title="Walk through the page step by step">&#9654; Present</button>
+    <div class="b10-theme" role="group" aria-label="Colour theme">
+      <span>Theme</span>
+      <button type="button" class="b10-sw green" data-theme="green" aria-pressed="true" aria-label="Club green" title="Club green"></button>
+      <button type="button" class="b10-sw hard" data-theme="hard" aria-pressed="false" aria-label="Hard-court blue" title="Hard-court blue"></button>
+      <button type="button" class="b10-sw clay" data-theme="clay" aria-pressed="false" aria-label="Clay" title="Clay"></button>
+      <button type="button" class="b10-sw navy" data-theme="navy" aria-pressed="false" aria-label="Navy and gold" title="Navy and gold"></button>
+      <button type="button" class="b10-sw night" data-theme="night" aria-pressed="false" aria-label="Night" title="Night"></button>
+      <button type="button" class="b10-sw auto" data-theme="auto" aria-pressed="false" aria-label="Automatic: night after 6pm" title="Auto: day by day, night after dark"></button>
+    </div>
+  </div>
+</nav>
+
+    <div class="b11-progress" aria-hidden="true"></div>
+    <header class="hero" data-tab="home">
+      <div class="b11-float" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
       <div class="hero-art" aria-hidden="true">
         <svg viewBox="0 0 200 160">
           <ellipse
@@ -1904,7 +4956,7 @@
         </svg>
       </div>
       <div class="wrap">
-        <p class="eyebrow">Build 7 · Interactive 3D court map</p>
+        <p class="eyebrow">Build 13 · Live now and next, seven layouts, auto-play presentation</p>
         <h1>Racquets Calendar</h1>
         <p class="lede">
           One view of the whole racquets week — tennis, pickleball and platform
@@ -1922,7 +4974,839 @@
       </div>
     </header>
 
-<section id="courtmap">
+<section id="home" data-tab="home">
+  <div class="wrap"><div class="b13-live" id="b13live" aria-live="polite"></div></div>
+  <div class="wrap">
+    <div class="b8-pano">
+      <svg
+        viewBox="0 0 1200 440"
+        role="img"
+        aria-label="Illustration: courts beside a river at sunset, with two players rallying"
+      >
+        <defs>
+          <linearGradient id="b8sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#5b5a93" />
+            <stop offset="0.45" stop-color="#c78aa6" />
+            <stop offset="0.8" stop-color="#f3c6a0" />
+          </linearGradient>
+          <radialGradient id="b8sun">
+            <stop offset="0" stop-color="#fff6d8" />
+            <stop offset="0.35" stop-color="#ffd9a0" stop-opacity="0.9" />
+            <stop offset="1" stop-color="#ffd9a0" stop-opacity="0" />
+          </radialGradient>
+          <linearGradient id="b8river" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#8f8fb8" />
+            <stop offset="1" stop-color="#3f5b86" />
+          </linearGradient>
+          <linearGradient id="b8court" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#2d63a6" />
+            <stop offset="1" stop-color="#1f4f8c" />
+          </linearGradient>
+        </defs>
+        <rect width="1200" height="440" fill="url(#b8sky)" />
+        <circle
+          class="b8-sunglow"
+          cx="930"
+          cy="120"
+          r="120"
+          fill="url(#b8sun)"
+        />
+        <circle cx="930" cy="120" r="30" fill="#fff3cf" />
+        <g class="b8-cloud" fill="#f7d9e4" opacity="0.7">
+          <ellipse cx="120" cy="70" rx="90" ry="14" />
+          <ellipse cx="170" cy="60" rx="50" ry="12" />
+        </g>
+        <g class="b8-cloud slow" fill="#e9c4d6" opacity="0.6">
+          <ellipse cx="420" cy="110" rx="120" ry="12" />
+          <ellipse cx="480" cy="100" rx="60" ry="10" />
+        </g>
+        <path
+          class="b8-bird"
+          d="M80 90 q8 -8 16 0 q8 -8 16 0"
+          fill="none"
+          stroke="#3a3350"
+          stroke-width="2"
+        />
+        <path
+          class="b8-bird two"
+          d="M40 130 q6 -6 12 0 q6 -6 12 0"
+          fill="none"
+          stroke="#3a3350"
+          stroke-width="2"
+        />
+        <path
+          d="M0 210 Q90 180 170 200 T340 192 T520 205 T700 188 T880 200 T1060 186 T1200 196 V250 H0 Z"
+          fill="#2d4a3a"
+        />
+        <path
+          d="M0 232 Q120 214 260 228 T560 224 T860 230 T1200 222 V262 H0 Z"
+          fill="#3e6248"
+        />
+        <rect y="250" width="1200" height="40" fill="#b9a46e" />
+        <rect y="262" width="1200" height="178" fill="url(#b8river)" />
+        <g class="b8-water" stroke="#d9c8e6" stroke-width="2" opacity="0.55">
+          <line x1="0" y1="300" x2="60" y2="300" />
+          <line x1="160" y1="322" x2="230" y2="322" />
+          <line x1="320" y1="350" x2="390" y2="350" />
+          <line x1="480" y1="312" x2="540" y2="312" />
+          <line x1="640" y1="380" x2="720" y2="380" />
+          <line x1="800" y1="330" x2="860" y2="330" />
+          <line x1="960" y1="365" x2="1030" y2="365" />
+          <line x1="1120" y1="305" x2="1190" y2="305" />
+          <line x1="1280" y1="345" x2="1340" y2="345" />
+        </g>
+        <!-- court pad on the shore -->
+        <polygon points="430,236 1150,236 1200,300 380,300" fill="#4f8f62" />
+        <polygon
+          points="460,240 690,240 680,294 420,294"
+          fill="url(#b8court)"
+        />
+        <polygon
+          points="705,240 935,240 945,294 690,294"
+          fill="url(#b8court)"
+        />
+        <polygon
+          points="950,240 1130,240 1170,294 960,294"
+          fill="url(#b8court)"
+        />
+        <g stroke="#fff" stroke-width="1.6" fill="none" opacity="0.9">
+          <polygon points="470,244 682,244 674,290 432,290" />
+          <line x1="576" y1="244" x2="553" y2="290" />
+          <polygon points="714,244 928,244 936,290 700,290" />
+          <line x1="821" y1="244" x2="818" y2="290" />
+          <polygon points="958,244 1124,244 1160,290 968,290" />
+          <line x1="1041" y1="244" x2="1064" y2="290" />
+        </g>
+        <g stroke="#f4f4f4" stroke-width="3" opacity="0.95">
+          <line x1="555" y1="236" x2="550" y2="294" />
+          <line x1="820" y1="236" x2="818" y2="294" />
+          <line x1="1050" y1="236" x2="1060" y2="294" />
+        </g>
+        <!-- two players on the middle court -->
+        <g>
+          <circle cx="738" cy="252" r="5" fill="#2b2433" />
+          <rect x="733" y="257" width="10" height="20" rx="4" fill="#f5f1e8" />
+          <line
+            class="b8-swing"
+            x1="745"
+            y1="262"
+            x2="756"
+            y2="252"
+            stroke="#2b2433"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+          <circle cx="912" cy="252" r="5" fill="#2b2433" />
+          <rect x="907" y="257" width="10" height="20" rx="4" fill="#f5f1e8" />
+          <line
+            class="b8-swing r"
+            x1="905"
+            y1="262"
+            x2="894"
+            y2="252"
+            stroke="#2b2433"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+          <ellipse
+            class="b8-pshadow"
+            cx="758"
+            cy="282"
+            rx="4"
+            ry="1.6"
+            fill="rgba(0,0,0,0.35)"
+          />
+          <circle class="b8-pball" cx="758" cy="250" r="4" fill="#e3f04a" />
+        </g>
+        <!-- flagpole with a plain pennant -->
+        <line
+          x1="1185"
+          y1="150"
+          x2="1185"
+          y2="262"
+          stroke="#f1ece0"
+          stroke-width="3"
+        />
+        <path class="b8-pennant" d="M1184 152 L1148 162 L1184 172 Z" fill="#f3f0e8"/>
+      </svg>
+      <div class="b8-pano-copy">
+        <p>Tennis · Pickleball · Platform</p>
+        <h2>Every court, every session, one view.</h2>
+      </div>
+    </div>
+
+    <div class="b8-announce" id="b8announce" role="status">
+      <strong>This week</strong>
+      <span>Loading the sample week…</span>
+    </div>
+
+    <div class="b8-tiles">
+      <button type="button" class="b8-tile" data-goto="schedule">
+        <svg viewBox="0 0 44 44" aria-hidden="true">
+          <rect
+            x="5"
+            y="8"
+            width="34"
+            height="30"
+            rx="5"
+            fill="#eef4f0"
+            stroke="#1f4d36"
+            stroke-width="2"
+          />
+          <path d="M5 17h34M14 5v7M30 5v7" stroke="#1f4d36" stroke-width="2" />
+          <rect x="11" y="22" width="6" height="5" rx="1" fill="#2f6b4c" />
+          <rect x="21" y="22" width="6" height="5" rx="1" fill="#e3a33b" />
+        </svg>
+        <span
+          ><b>Weekly schedule</b><small>Seven days, side by side</small></span
+        >
+      </button>
+      <button type="button" class="b8-tile" data-goto="courts">
+        <svg viewBox="0 0 44 44" aria-hidden="true">
+          <polygon points="10,12 34,12 40,34 4,34" fill="#2d63a6" />
+          <polygon
+            points="12,15 32,15 37,31 7,31"
+            fill="none"
+            stroke="#fff"
+            stroke-width="1.4"
+          />
+          <line
+            x1="22"
+            y1="11"
+            x2="22"
+            y2="35"
+            stroke="#fff"
+            stroke-width="2"
+          />
+          <circle class="b8-bob" cx="30" cy="9" r="3" fill="#e3f04a" />
+        </svg>
+        <span><b>Courts in 3D</b><small>Watch the day play out</small></span>
+      </button>
+      <button type="button" class="b8-tile" data-goto="programs">
+        <svg viewBox="0 0 44 44" aria-hidden="true">
+          <ellipse
+            cx="17"
+            cy="16"
+            rx="9"
+            ry="11"
+            fill="none"
+            stroke="#1f4d36"
+            stroke-width="2.4"
+            transform="rotate(-30 17 16)"
+          />
+          <line
+            x1="22"
+            y1="25"
+            x2="33"
+            y2="38"
+            stroke="#1f4d36"
+            stroke-width="3.4"
+            stroke-linecap="round"
+          />
+          <circle cx="33" cy="12" r="4.5" fill="#d6e63a" />
+        </svg>
+        <span><b>Programs</b><small>Clinics, juniors, lessons</small></span>
+      </button>
+      <button type="button" class="b8-tile" data-goto="leagues">
+        <svg viewBox="0 0 44 44" aria-hidden="true">
+          <path
+            d="M14 8h16v8a8 8 0 0 1-16 0z"
+            fill="#f5d27a"
+            stroke="#8a5a12"
+            stroke-width="2"
+          />
+          <path
+            d="M14 11H8a6 6 0 0 0 6 7M30 11h6a6 6 0 0 1-6 7"
+            fill="none"
+            stroke="#8a5a12"
+            stroke-width="2"
+          />
+          <path
+            d="M22 24v7M15 36h14l-2-5H17z"
+            fill="#8a5a12"
+            stroke="#8a5a12"
+            stroke-width="1.6"
+          />
+        </svg>
+        <span><b>League results</b><small>Standings and scores</small></span>
+      </button>
+    </div>
+
+<div class="b9-season" id="b9season">
+  <div>
+    <h3>The season, turning</h3>
+    <p>
+      Twelve months on a 3D wheel. It starts on today's month and turns by
+      itself, showing which sports are in season as the year goes round. Tennis
+      and pickleball have the warm months, and platform tennis takes the winter.
+    </p>
+    <div class="b9-now" id="b9now"></div>
+    <div class="b9-ctrls">
+      <button type="button" data-b9="prev" aria-label="Previous month">
+        ‹ Month
+      </button>
+      <button type="button" data-b9="now">Today</button>
+      <button type="button" data-b9="play" aria-pressed="true">Turning</button>
+      <button type="button" data-b9="next" aria-label="Next month">
+        Month ›
+      </button>
+    </div>
+  </div>
+  <div class="b9-stage" aria-hidden="true">
+    <div class="b9-ring" id="b9ring"></div>
+    <div class="b9-floor"></div>
+  </div>
+</div>
+    <div class="b8-feature">
+      <figure>
+        <svg
+          viewBox="0 0 560 300"
+          role="img"
+          aria-label="Illustration: a tennis court seen from above with a ball in play"
+        >
+          <rect width="560" height="300" fill="#4f8f62" />
+          <rect x="60" y="40" width="440" height="220" rx="4" fill="#2d63a6" />
+          <g fill="none" stroke="#fff" stroke-width="3">
+            <rect x="80" y="60" width="400" height="180" />
+            <line x1="80" y1="82" x2="480" y2="82" />
+            <line x1="80" y1="218" x2="480" y2="218" />
+            <line x1="180" y1="82" x2="180" y2="218" />
+            <line x1="380" y1="82" x2="380" y2="218" />
+            <line x1="180" y1="150" x2="380" y2="150" />
+          </g>
+          <line
+            x1="280"
+            y1="46"
+            x2="280"
+            y2="254"
+            stroke="#f4f4f4"
+            stroke-width="6"
+            stroke-dasharray="4 3"
+          />
+          <ellipse
+            class="b8-pshadow"
+            cx="200"
+            cy="200"
+            rx="7"
+            ry="3"
+            fill="rgba(0,0,0,0.3)"
+          />
+          <circle class="b8-pball" cx="200" cy="176" r="8" fill="#e3f04a" />
+        </svg>
+      </figure>
+      <div>
+        <span class="b8-tag">Tennis</span>
+        <h3>The anchor of the racquets program</h3>
+        <p>
+          Clinics for every level, junior development, match play and ladders.
+          Every session on the sample calendar shows the court it uses, the
+          staff role leading it, and whether it passed the five checks.
+        </p>
+        <span class="b8-kpi" id="b8k-tennis">— sessions this week</span>
+      </div>
+    </div>
+
+    <div class="b8-feature flip">
+      <figure>
+        <svg
+          viewBox="0 0 560 300"
+          role="img"
+          aria-label="Illustration: a pickleball court with a paddle and a perforated ball"
+        >
+          <rect width="560" height="300" fill="#5b9a6c" />
+          <rect x="110" y="60" width="340" height="180" rx="4" fill="#3a7fb8" />
+          <g fill="none" stroke="#fff" stroke-width="3">
+            <rect x="126" y="74" width="308" height="152" />
+            <line x1="232" y1="74" x2="232" y2="226" />
+            <line x1="328" y1="74" x2="328" y2="226" />
+            <line x1="126" y1="150" x2="232" y2="150" />
+            <line x1="328" y1="150" x2="434" y2="150" />
+          </g>
+          <line
+            x1="280"
+            y1="64"
+            x2="280"
+            y2="236"
+            stroke="#f4f4f4"
+            stroke-width="6"
+            stroke-dasharray="4 3"
+          />
+          <g class="b8-bob">
+            <circle cx="380" cy="110" r="14" fill="#f6d84a" />
+            <g fill="#d4b42c">
+              <circle cx="374" cy="105" r="2.4" />
+              <circle cx="386" cy="106" r="2.4" />
+              <circle cx="380" cy="116" r="2.4" />
+            </g>
+          </g>
+          <rect
+            x="170"
+            y="150"
+            width="54"
+            height="66"
+            rx="22"
+            fill="#1f2a44"
+            transform="rotate(-22 197 183)"
+          />
+          <rect
+            x="208"
+            y="200"
+            width="12"
+            height="40"
+            rx="5"
+            fill="#1f2a44"
+            transform="rotate(-22 214 220)"
+          />
+        </svg>
+      </figure>
+      <div>
+        <span class="b8-tag pickleball">Pickleball</span>
+        <h3>The fastest-growing game on the grounds</h3>
+        <p>
+          Open play, beginner clinics and socials. Because pickleball shares
+          space with tennis, its court time is checked against tennis bookings
+          so the two never land on the same court at once.
+        </p>
+        <span class="b8-kpi" id="b8k-pickleball">— sessions this week</span>
+      </div>
+    </div>
+
+    <div class="b8-feature">
+      <figure>
+        <svg
+          viewBox="0 0 560 300"
+          role="img"
+          aria-label="Illustration: a platform tennis court at night inside wire screens, lit by floodlights"
+        >
+          <rect width="560" height="300" fill="#1b2340" />
+          <g class="b8-twinkle" fill="#fff">
+            <circle cx="60" cy="40" r="1.6" />
+            <circle cx="140" cy="24" r="1.2" />
+            <circle cx="480" cy="34" r="1.6" />
+            <circle cx="520" cy="70" r="1.2" />
+          </g>
+          <g fill="#fff4c4">
+            <circle cx="110" cy="64" r="6" />
+            <circle cx="450" cy="64" r="6" />
+          </g>
+          <path
+            d="M110 64 L60 270 L250 270 Z M450 64 L310 270 L500 270 Z"
+            fill="#fff4c4"
+            opacity="0.13"
+            class="b8-twinkle"
+          />
+          <rect x="96" y="96" width="368" height="168" fill="#6d6a63" />
+          <rect x="110" y="108" width="340" height="144" fill="#4a4f5a" />
+          <g fill="none" stroke="#fff" stroke-width="2.6">
+            <rect x="124" y="120" width="312" height="120" />
+            <line x1="124" y1="140" x2="436" y2="140" />
+            <line x1="124" y1="220" x2="436" y2="220" />
+            <line x1="210" y1="140" x2="210" y2="220" />
+            <line x1="350" y1="140" x2="350" y2="220" />
+            <line x1="210" y1="180" x2="350" y2="180" />
+          </g>
+          <line
+            x1="280"
+            y1="110"
+            x2="280"
+            y2="250"
+            stroke="#f4f4f4"
+            stroke-width="5"
+            stroke-dasharray="4 3"
+          />
+          <g stroke="rgba(220,226,235,0.5)" stroke-width="1">
+            <path
+              d="M96 96 V60 M140 96 V60 M184 96 V60 M228 96 V60 M272 96 V60 M316 96 V60 M360 96 V60 M404 96 V60 M448 96 V60 M464 96 V60 M96 60 H464 M96 74 H464 M96 86 H464"
+            />
+          </g>
+        </svg>
+      </figure>
+      <div>
+        <span class="b8-tag platform">Platform tennis</span>
+        <h3>Outdoor play straight through winter</h3>
+        <p>
+          Raised courts inside wire screens, played under lights on cold
+          evenings. In the 3D court map the platform courts light up after dark
+          when a session is on.
+        </p>
+        <span class="b8-kpi" id="b8k-platform">— sessions this week</span>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="programs" data-tab="programs">
+  <div class="wrap">
+    <h2>Programs</h2>
+    <p class="sub">
+      The racquets program at a glance, laid out side by side. Swipe or use the
+      arrows. The session count on each card is calculated from the sample
+      calendar, so it changes when the calendar does.
+    </p>
+    <div class="b8-arrows" data-rail="b8prograil">
+      <button type="button" data-dir="-1" aria-label="Previous programs">
+        ‹
+      </button>
+      <button type="button" data-dir="1" aria-label="Next programs">›</button>
+    </div>
+    <div class="b8-rail" id="b8prograil" tabindex="0" aria-label="Programs">
+      <article
+        class="b8-prog"
+        data-match="clinic|drill"
+        data-sport="tennis"
+        data-exclude="junior"
+      >
+        <svg viewBox="0 0 280 150" aria-hidden="true">
+          <rect width="280" height="150" fill="#eef4f0" />
+          <rect x="20" y="96" width="240" height="40" rx="4" fill="#2d63a6" />
+          <g fill="#f08a2e">
+            <path d="M60 96 l8 -18 l8 18z" />
+            <path d="M130 96 l8 -18 l8 18z" />
+            <path d="M200 96 l8 -18 l8 18z" />
+          </g>
+          <g fill="#e3f04a">
+            <circle class="b8-bob" cx="100" cy="60" r="7" />
+            <circle
+              class="b8-bob"
+              cx="170"
+              cy="48"
+              r="7"
+              style="animation-delay: -0.5s"
+            />
+            <circle
+              class="b8-bob"
+              cx="236"
+              cy="64"
+              r="7"
+              style="animation-delay: -1s"
+            />
+          </g>
+        </svg>
+        <div class="b8-prog-body">
+          <span class="b8-tag">Tennis</span>
+          <h3>Adult clinics &amp; drills</h3>
+          <p>
+            Grouped by level, from beginner to 4.0+. Drills in the morning,
+            clinics in the evening.
+          </p>
+          <div class="b8-count"></div>
+        </div>
+      </article>
+      <article
+        class="b8-prog"
+        data-match="junior|high school"
+        data-sport="tennis"
+      >
+        <svg viewBox="0 0 280 150" aria-hidden="true">
+          <rect width="280" height="150" fill="#fdf4e3" />
+          <ellipse
+            cx="110"
+            cy="70"
+            rx="26"
+            ry="34"
+            fill="none"
+            stroke="#1f4d36"
+            stroke-width="5"
+            transform="rotate(-25 110 70)"
+          />
+          <line
+            x1="124"
+            y1="100"
+            x2="146"
+            y2="132"
+            stroke="#1f4d36"
+            stroke-width="8"
+            stroke-linecap="round"
+          />
+          <circle class="b8-bob" cx="190" cy="56" r="11" fill="#d6e63a" />
+          <path
+            d="M160 130 q30 -30 60 0"
+            fill="none"
+            stroke="#e3a33b"
+            stroke-width="3"
+            stroke-dasharray="5 5"
+          />
+        </svg>
+        <div class="b8-prog-body">
+          <span class="b8-tag">Tennis</span>
+          <h3>Junior academy</h3>
+          <p>
+            Development groups by age and stage, match play, and high school
+            prep in season.
+          </p>
+          <div class="b8-count"></div>
+        </div>
+      </article>
+      <article class="b8-prog" data-match="^$" data-sport="tennis">
+        <svg viewBox="0 0 280 150" aria-hidden="true">
+          <rect width="280" height="150" fill="#eef2f8" />
+          <rect x="40" y="82" width="64" height="50" rx="8" fill="#2a4a7a" />
+          <circle cx="72" cy="78" r="16" fill="#3d6aa8" />
+          <rect x="66" y="40" width="12" height="40" rx="5" fill="#2a4a7a" />
+          <circle class="b8-bob" cx="150" cy="50" r="8" fill="#e3f04a" />
+          <circle
+            class="b8-bob"
+            cx="196"
+            cy="70"
+            r="8"
+            fill="#e3f04a"
+            style="animation-delay: -0.6s"
+          />
+          <circle
+            class="b8-bob"
+            cx="240"
+            cy="54"
+            r="8"
+            fill="#e3f04a"
+            style="animation-delay: -1.1s"
+          />
+        </svg>
+        <div class="b8-prog-body">
+          <span class="b8-tag">Tennis</span>
+          <h3>Private lessons</h3>
+          <p>
+            One-on-one or semi-private with a staff pro, arranged through the
+            pro shop rather than posted on the group calendar.
+          </p>
+          <div
+            class="b8-count"
+            data-fixed="By request · not on the group calendar"
+          ></div>
+        </div>
+      </article>
+      <article class="b8-prog" data-match="cardio" data-sport="tennis">
+        <svg viewBox="0 0 280 150" aria-hidden="true">
+          <rect width="280" height="150" fill="#fbefef" />
+          <path
+            class="b8-pulse"
+            d="M10 82 H80 L96 50 L112 112 L128 30 L144 96 L158 82 H270"
+            fill="none"
+            stroke="#8a2f2f"
+            stroke-width="4"
+            stroke-linejoin="round"
+          />
+          <circle cx="220" cy="46" r="10" fill="#e3f04a" />
+        </svg>
+        <div class="b8-prog-body">
+          <span class="b8-tag">Tennis</span>
+          <h3>Cardio Tennis</h3>
+          <p>
+            A high-tempo group workout on court, with music and drills. No match
+            play.
+          </p>
+          <div class="b8-count"></div>
+        </div>
+      </article>
+      <article
+        class="b8-prog"
+        data-match="round robin|social|ladder|match play"
+        data-sport="tennis"
+        data-exclude="junior"
+      >
+        <svg viewBox="0 0 280 150" aria-hidden="true">
+          <rect width="280" height="150" fill="#eef4f0" />
+          <g
+            class="b8-spin"
+            fill="none"
+            stroke="#2f6b4c"
+            stroke-width="6"
+            stroke-linecap="round"
+          >
+            <path d="M100 75 a40 40 0 0 1 72 -24" />
+            <path d="M180 75 a40 40 0 0 1 -72 24" />
+          </g>
+          <path
+            d="M166 40 l10 12 l-15 3z M114 110 l-10 -12 l15 -3z"
+            fill="#2f6b4c"
+          />
+          <circle cx="140" cy="75" r="9" fill="#e3f04a" />
+        </svg>
+        <div class="b8-prog-body">
+          <span class="b8-tag">Tennis</span>
+          <h3>Round robins &amp; ladders</h3>
+          <p>
+            Social mixers, doubles ladders and weekend match play to get members
+            playing each other.
+          </p>
+          <div class="b8-count"></div>
+        </div>
+      </article>
+      <article class="b8-prog" data-match="." data-sport="pickleball">
+        <svg viewBox="0 0 280 150" aria-hidden="true">
+          <rect width="280" height="150" fill="#eef2f8" />
+          <rect
+            x="70"
+            y="40"
+            width="70"
+            height="80"
+            rx="28"
+            fill="#1f2a44"
+            transform="rotate(-18 105 80)"
+          />
+          <rect
+            x="118"
+            y="104"
+            width="14"
+            height="40"
+            rx="6"
+            fill="#1f2a44"
+            transform="rotate(-18 125 124)"
+          />
+          <g class="b8-bob">
+            <circle cx="196" cy="62" r="18" fill="#f6d84a" />
+            <g fill="#d4b42c">
+              <circle cx="189" cy="56" r="3" />
+              <circle cx="203" cy="57" r="3" />
+              <circle cx="196" cy="70" r="3" />
+            </g>
+          </g>
+        </svg>
+        <div class="b8-prog-body">
+          <span class="b8-tag pickleball">Pickleball</span>
+          <h3>Pickleball play</h3>
+          <p>
+            Open play, beginner clinics and socials, on courts shared with
+            tennis.
+          </p>
+          <div class="b8-count"></div>
+        </div>
+      </article>
+      <article class="b8-prog" data-match="." data-sport="platform">
+        <svg viewBox="0 0 280 150" aria-hidden="true">
+          <rect width="280" height="150" fill="#1b2340" />
+          <g class="b8-twinkle" fill="#fff4c4">
+            <circle cx="40" cy="30" r="6" />
+            <circle cx="240" cy="30" r="6" />
+          </g>
+          <rect x="50" y="62" width="180" height="70" fill="#6d6a63" />
+          <rect x="60" y="70" width="160" height="54" fill="#4a4f5a" />
+          <g stroke="#fff" stroke-width="2" fill="none">
+            <rect x="70" y="78" width="140" height="38" />
+            <line x1="140" y1="72" x2="140" y2="122" />
+          </g>
+          <g stroke="rgba(220,226,235,.5)">
+            <path
+              d="M50 62 V36 M80 62 V36 M110 62 V36 M140 62 V36 M170 62 V36 M200 62 V36 M230 62 V36 M50 36 H230 M50 48 H230"
+            />
+          </g>
+        </svg>
+        <div class="b8-prog-body">
+          <span class="b8-tag platform">Platform tennis</span>
+          <h3>Platform tennis</h3>
+          <p>
+            The cold-weather game: raised courts, wire screens, play under
+            lights.
+          </p>
+          <div class="b8-count"></div>
+        </div>
+      </article>
+      <article class="b8-prog" data-match="league" data-sport="">
+        <svg viewBox="0 0 280 150" aria-hidden="true" class="b8-trophy">
+          <rect width="280" height="150" fill="#fdf4e3" />
+          <defs>
+            <clipPath id="b8cup">
+              <path d="M110 30h60v34a30 30 0 0 1-60 0z" />
+            </clipPath>
+          </defs>
+          <path
+            d="M110 30h60v34a30 30 0 0 1-60 0z"
+            fill="#f5d27a"
+            stroke="#8a5a12"
+            stroke-width="3"
+          />
+          <rect
+            class="b8-shine"
+            x="110"
+            y="26"
+            width="16"
+            height="80"
+            fill="#fff"
+            opacity="0.55"
+            clip-path="url(#b8cup)"
+            transform="skewX(-15)"
+          />
+          <path
+            d="M110 38H92a18 18 0 0 0 18 22M170 38h18a18 18 0 0 1-18 22"
+            fill="none"
+            stroke="#8a5a12"
+            stroke-width="3"
+          />
+          <path
+            d="M140 94v18M118 126h44l-6-14h-32z"
+            fill="#8a5a12"
+            stroke="#8a5a12"
+            stroke-width="2"
+          />
+        </svg>
+        <div class="b8-prog-body">
+          <span class="b8-tag">All sports</span>
+          <h3>Leagues &amp; team play</h3>
+          <p>
+            Club teams in interclub leagues. Standings and results are on the
+            Leagues tab.
+          </p>
+          <div class="b8-count"></div>
+        </div>
+      </article>
+    </div>
+
+    <h2 style="margin-top: 26px">Who runs it</h2>
+    <p class="sub">Roles only. This prototype never names staff or members.</p>
+    <div class="b8-staff">
+      <div>
+        <b>Director of Racquets</b>Owns the program and the calendar, and
+        approves every session before members see it.
+      </div>
+      <div>
+        <b>Staff pros</b>Lead clinics, junior groups and private lessons, and
+        flag schedule changes to the director.
+      </div>
+      <div>
+        <b>Pro shop</b>Takes lesson requests and stringing, and is the one place
+        members go to ask about the schedule.
+      </div>
+    </div>
+  </div>
+</section>
+<section id="leagues" data-tab="leagues">
+  <div class="wrap">
+    <h2>League results</h2>
+    <p class="sub">
+      Standings are computed from the match results below. Nothing in the table
+      is typed by hand, so when a score comes in, the standings, records and
+      percentages all update together. A match that is past its date with no
+      score is flagged instead of quietly left blank, by the same freshness idea
+      the calendar uses.
+    </p>
+    <div class="b8-chips" id="b8divs" role="group" aria-label="Division"></div>
+        <div class="b9-podium" id="b9podium" aria-label="Top three teams"></div>
+    <div class="b8-league">
+      <div class="b8-table" id="b8standings"></div>
+      <div>
+        <div class="b8-arrows" data-rail="b8results">
+          <button type="button" data-dir="-1" aria-label="Earlier matches">
+            ‹
+          </button>
+          <button type="button" data-dir="1" aria-label="Later matches">
+            ›
+          </button>
+        </div>
+        <div
+          class="b8-rail"
+          id="b8results"
+          tabindex="0"
+          aria-label="Match results"
+        ></div>
+      </div>
+    </div>
+    <p class="b8-note">
+      Sample data: every team name, date and score here is invented, and no
+      player is named. In a live version, scores would come straight from the
+      league's own results system, not from manual entry.
+    </p>
+  </div>
+</section>
+
+<section data-tab="courts" id="courtmap">
   <div class="wrap">
     <h2>The courts, in 3D, through the day</h2>
     <p class="sub">
@@ -1932,6 +5816,14 @@
       a court to see its whole day. In the member view, sessions the checks are
       holding stay off the map. Switch to the director view above and they
       appear in amber.
+    </p>
+    <p class="b10-src">
+      Court counts on this map: 3 tennis courts, the figure Global Tennis
+      Network publishes (Gladiator Tennis and the project scope document say
+      2); 4 pickleball courts, from the project scope document; 2 platform
+      courts, assumed because no count is published. Positions are illustrative,
+      not a site plan. The Director of Racquets can correct any of these in one
+      line.
     </p>
     <div class="b7-map">
       <div>
@@ -1998,7 +5890,7 @@
   </div>
 </section>
 
-    <section>
+    <section data-tab="schedule">
       <div class="wrap">
         <div class="bar">
           <div class="seg" id="viewseg">
@@ -2025,11 +5917,183 @@
           <span><i class="sw held"></i>Held — not published</span>
         </div>
 
+        <div class="b10-layouts" role="group" aria-label="Calendar layout" id="b10lay">
+          <button type="button" data-l="grid" class="on" aria-pressed="true"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2h5v5H2zM9 2h5v5H9zM2 9h5v5H2zM9 9h5v5H9z" fill="currentColor"/></svg> Week grid</button>
+          <button type="button" data-l="agenda" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3h2v2H2zM6 3h8v2H6zM2 7h2v2H2zM6 7h8v2H6zM2 11h2v2H2zM6 11h8v2H6z" fill="currentColor"/></svg> Agenda</button>
+          <button type="button" data-l="timeline" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3h7v2H2zM5 7h9v2H5zM3 11h6v2H3z" fill="currentColor"/></svg> Court timeline</button>
+          <button type="button" data-l="heatmap" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2h3v3H2zM6.5 2h3v3h-3zM11 2h3v3h-3zM2 6.5h3v3H2zM6.5 6.5h3v3h-3zM2 11h3v3H2z" fill="currentColor"/></svg> Busy hours</button>
+          <button type="button" data-l="lanes" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2h3.5v12H2zM6.25 2h3.5v8h-3.5zM10.5 2H14v10h-3.5z" fill="currentColor"/></svg> By sport</button>
+          <button type="button" data-l="clock" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4.5V8l2.5 1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg> Day clock</button>
+          <button type="button" data-l="board" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2h3.5v12H2zM6.25 2h3.5v12h-3.5zM10.5 2H14v12h-3.5z" fill="none" stroke="currentColor" stroke-width="1.3"/></svg> Time of day</button>
+        </div>
+        <div class="b10-glance" id="b10glance" aria-label="Week at a glance"></div>
         <div class="cal" id="cal"></div>
+        <p class="b8-swipe">Swipe sideways to see all seven days →</p>
+        <div class="b10-agenda" id="b10agenda" style="display: none"></div>
+        <div class="b10-tl" id="b10tl" style="display: none"></div>
+        <div class="b11-heat" id="b11heat" style="display: none"></div>
+        <div class="b11-lanes" id="b11lanes" style="display: none"></div>
+        <div class="b13-clock" id="b13clock" style="display: none"></div>
+        <div class="b13-board" id="b13board" style="display: none"></div>
       </div>
     </section>
 
-    <section>
+<section data-tab="director" class="b12-case" id="b12case">
+  <div class="wrap">
+    <p class="b12-kicker">For the Director of Racquets</p>
+    <h2>The case for one published racquets week</h2>
+    <p class="sub">
+      A one-page proposal: the problem, what this prototype does about it, how a
+      pilot would run, and how we would know it worked. Live figures below come
+      from the sample week on this page, not from the club.
+    </p>
+
+    <div class="b12-ba">
+      <div class="b12-col before">
+        <h3>Today</h3>
+        <ul>
+          <li>
+            The three-sport scope is published in a job posting, not where
+            members look.
+          </li>
+          <li>
+            Public directories disagree on how many tennis courts the club has.
+          </li>
+          <li>
+            Platform tennis is played at neighbouring clubs by arrangement, and
+            nothing shows it in one place.
+          </li>
+          <li>
+            There is no rule that stops an out-of-date week from being shown as
+            current.
+          </li>
+        </ul>
+      </div>
+      <div class="b12-arrow" aria-hidden="true">&rarr;</div>
+      <div class="b12-col after">
+        <h3>With this calendar</h3>
+        <ul>
+          <li>
+            One week, three sports, in five layouts a member can read at a
+            glance.
+          </li>
+          <li>Every entry passes five checks before a member can see it.</li>
+          <li>
+            Nothing publishes until the Director approves the week, in one
+            click.
+          </li>
+          <li>
+            Every number on the page says where it came from and how sure it is.
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="b12-h">The five checks, running on this week</h3>
+    <div class="b12-checks" id="b12checks"></div>
+
+    <div class="b12-two">
+      <div>
+        <h3 class="b12-h">A four-week pilot (proposed)</h3>
+        <ol class="b12-steps">
+          <li>
+            <b>Week 1 · Shadow.</b> The Director enters one real week here while
+            the current process carries on. Nothing reaches members.
+          </li>
+          <li>
+            <b>Week 2 · Compare.</b> We compare what the checks held against
+            what actually went wrong on court.
+          </li>
+          <li>
+            <b>Week 3 · Staff.</b> Staff pros read the published week; the
+            Director approves it each Monday.
+          </li>
+          <li>
+            <b>Week 4 · Members.</b> A small group of members gets the link; we
+            collect their questions.
+          </li>
+        </ol>
+      </div>
+      <div>
+        <h3 class="b12-h">How we would know it worked</h3>
+        <ul class="b12-measures">
+          <li>
+            <span>Weeks approved by Monday morning</span
+            ><em>target set with the Director</em>
+          </li>
+          <li>
+            <span>Conflicts caught before members saw them</span
+            ><em>counted by check 1</em>
+          </li>
+          <li>
+            <span>"What's on this week?" calls and emails to the pro shop</span
+            ><em>baseline needed first</em>
+          </li>
+          <li>
+            <span>Members who open the week at least once</span
+            ><em>pilot group only</em>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="b12-h">Risks I have planned for</h3>
+    <div class="b12-risks">
+      <div>
+        <b>Stale data gets shown</b
+        ><span>Check 3 holds anything not confirmed in the last 7 days.</span>
+      </div>
+      <div>
+        <b>Member privacy</b
+        ><span
+          >No member names, rosters or contact details are stored or shown.
+          Leagues on this page are invented.</span
+        >
+      </div>
+      <div>
+        <b>Extra work for the Director</b
+        ><span>Approval is one button; the checks do the reviewing.</span>
+      </div>
+      <div>
+        <b>Play the club can't see</b
+        ><span
+          >Platform games at neighbouring clubs are named as a known gap, not
+          hidden.</span
+        >
+      </div>
+    </div>
+
+    <h3 class="b12-h">Questions for our first conversation</h3>
+    <ol class="b12-qs">
+      <li>
+        How many tennis, pickleball and platform courts does the club have
+        today?
+      </li>
+      <li>When does each season start and end?</li>
+      <li>Who enters the weekly sessions now, and in what tool?</li>
+      <li>
+        May the prototype use club photos and the club name, or should it stay
+        unbranded?
+      </li>
+    </ol>
+
+    <div class="b12-actions">
+      <button type="button" class="btn" id="b12present2">
+        &#9654; Present this page
+      </button>
+      <button type="button" class="btn ghost" id="b12print">
+        Print a handout
+      </button>
+    </div>
+  </div>
+</section>
+    <section data-tab="director">
+      <div class="wrap">
+        <div class="b8-notes-intro"><strong>Director view.</strong> Opening this tab switches the calendar to the director view: held sessions appear in amber, with the reason and the fix. Members never see this tab's contents on their calendar.</div>
+      </div>
+    </section>
+
+    <section data-tab="director">
       <div class="wrap">
         <h2>Held for review</h2>
         <p class="sub">
@@ -2040,7 +6104,7 @@
       </div>
     </section>
 
-    <section>
+    <section data-tab="director">
       <div class="wrap">
         <h2>Approvals and overrides</h2>
         <p class="sub">
@@ -2052,7 +6116,7 @@
       </div>
     </section>
 
-    <section>
+    <section data-tab="director">
       <div class="wrap">
         <h2>How the calendar is kept current</h2>
         <p class="sub">
@@ -2104,7 +6168,7 @@
       </div>
     </section>
 
-    <section>
+    <section data-tab="schedule">
       <div class="wrap">
         <h2>Courts this week</h2>
         <p class="sub">
@@ -2116,7 +6180,7 @@
       </div>
     </section>
 
-    <section>
+    <section data-tab="schedule">
       <div class="wrap">
         <h2>The tennis week in detail</h2>
         <p class="sub">
@@ -2147,7 +6211,13 @@
       </div>
     </section>
 
-    <section>
+    <section data-tab="notes">
+      <div class="wrap">
+        <div class="b8-notes-intro"><strong>Coursework notes (BUS 583).</strong> The research and design reasoning behind the prototype. It is kept here, out of the member-facing tabs, so a racquets director sees the product first and the analysis only if they want it.</div>
+      </div>
+    </section>
+
+    <section data-tab="notes">
       <div class="wrap">
         <h2>What a member is actually looking at</h2>
         <p class="sub">
@@ -2360,7 +6430,7 @@
       </div>
     </section>
 
-    <section>
+    <section data-tab="director">
       <div class="wrap">
         <h2>What runs without anyone touching it</h2>
         <p class="sub">
@@ -2396,7 +6466,7 @@
       </div>
     </section>
 
-    <section>
+    <section data-tab="notes">
       <div class="wrap">
         <h2>How a lesson booking would reach the club</h2>
         <p class="sub">
@@ -2481,7 +6551,7 @@
         </div>
       </div>
     </section>
-    <section>
+    <section data-tab="notes">
       <div class="wrap">
         <h2>What the club publishes today</h2>
         <p class="sub">
@@ -2511,7 +6581,7 @@
       </div>
     </section>
 
-    <section>
+    <section data-tab="notes">
       <div class="wrap">
         <h2>What the public record shows that the club's site does not</h2>
         <p class="sub">
@@ -2589,7 +6659,7 @@
             rather than quietly assume otherwise. Every session in this engine
             is held on a court the club controls. A member's platform game may
             legitimately be on another club's deck, invisible to a
-            court-conflict check that only knows about three home courts. Week 7
+            court-conflict check that only knows about the club's own courts. Week 7
             should test what the engine does with a session it cannot see, and
             the member view should not imply that what it shows is all the
             racquets play available that week.
@@ -2664,7 +6734,7 @@
       </div>
     </section>
 
-    <section>
+    <section data-tab="notes">
       <div class="wrap">
         <h2>The question that comes before any of this</h2>
         <div class="q">
@@ -2708,7 +6778,7 @@
 
     <div class="rule"></div>
 
-<section id="club">
+<section data-tab="club" id="club">
   <div class="wrap">
     <h2>The club around the courts</h2>
     <p class="sub">
@@ -2735,6 +6805,127 @@
         <div class="v">3</div>
         <div class="k">Racquet sports on this calendar</div>
       </div>
+    </div>
+
+<div class="b11-hist">
+  <h3>A club made of three clubs</h3>
+  <p>
+    Rumson Country Club was formed on November 23, 1908, when three existing
+    clubs combined into one: a golf club, a polo club and a yacht club. That mix
+    of sports is still how the club works today, and it is why the racquets
+    calendar has to share members, weekends and staff with everything else on
+    the grounds.
+  </p>
+  <div
+    class="b11-merge"
+    aria-label="Golf Club, Polo Club and Yacht Club combined into Rumson Country Club in 1908"
+  >
+    <div class="b11-orig">
+      <span>Golf Club</span><span>Polo Club</span><span>Yacht Club</span>
+    </div>
+    <span class="b11-arrow" aria-hidden="true">&rarr;</span>
+    <span class="b11-one">Rumson Country Club · 1908</span>
+  </div>
+  <div class="b11-course" aria-label="Golf course figures">
+    <div><b>18</b><span>holes</span></div>
+    <div><b>71</b><span>par</span></div>
+    <div><b>6617</b><span>yards from the longest tees</span></div>
+    <div><b>1910</b><span>year the original course opened</span></div>
+  </div>
+  <div class="b11-track" role="list" aria-label="Club timeline">
+        <div class="b11-ev ctx" role="listitem">
+          <div class="yr">1665</div>
+          <h4>The peninsula is settled</h4>
+          <p>Context: Rumson was settled after a land purchase from the Lenni-Lenape, who called the peninsula Navarumsunk.</p>
+          <div class="src">Source: Borough of Rumson, History of Rumson</div>
+        </div>
+    <div class="b11-ev" role="listitem">
+      <div class="yr">1908</div>
+      <h4>The club is founded</h4>
+      <p>Golf, polo and yacht clubs combine on November 23.</p>
+      <div class="src">Source: NJ State Golf Association course page</div>
+    </div>
+    <div class="b11-ev" role="listitem">
+      <div class="yr">1910</div>
+      <h4>The golf course opens</h4>
+      <p>The original course, designed by Herbert Barker, opens.</p>
+      <div class="src">
+        Source: Golf Course Architecture, on the Tripp Davis masterplan
+      </div>
+    </div>
+    <div class="b11-ev ctx" role="listitem">
+      <div class="yr">1928</div>
+      <h4>Platform tennis is invented</h4>
+      <p>
+        Context, not club history: the game began in Scarsdale, New York, and
+        spread across Northeast clubs.
+      </p>
+      <div class="src">
+        Source: Westchester Country Club and APTA history pages
+      </div>
+    </div>
+    <div class="b11-ev" role="listitem">
+      <div class="yr">1939</div>
+      <h4>A Hall of Fame professional</h4>
+      <p>
+        Vic Ghezzi, one of the club&rsquo;s professionals, won the New Jersey
+        PGA Championship in 1939 and again in 1949, and later entered the PGA of
+        America Hall of Fame.
+      </p>
+      <div class="src">Source: New Jersey PGA, June 2017</div>
+    </div>
+    <div class="b11-ev" role="listitem">
+      <div class="yr">Today</div>
+      <h4>Platform tennis across the shore</h4>
+      <p>
+        The club plays in the Women&rsquo;s Platform Tennis Shore League and in
+        the NARUMSEAL mixed doubles event with Seabright, Navesink and Deal.
+      </p>
+      <div class="src">
+        Source: Seabright Lawn Tennis &amp; Cricket Club platform pages
+      </div>
+    </div>
+    <div class="b11-ev" role="listitem">
+      <div class="yr">Next</div>
+      <h4>A course restoration plan</h4>
+      <p>
+        Architect Tripp Davis has completed a masterplan to restore the
+        course&rsquo;s original design.
+      </p>
+      <div class="src">Source: Golf Course Architecture</div>
+    </div>
+  </div>
+</div>
+    <div class="b13-nb" id="b13nb">
+      <h3>How Rumson compares with its neighbours</h3>
+      <p>
+        Published court counts at two nearby clubs, beside Rumson's. Where a
+        club does not publish a number, the chart says so instead of guessing.
+        Rumson fits three sports onto fewer courts than Navesink, which is
+        exactly where a shared, checked calendar pays off.
+      </p>
+      <div class="b13-nbg" id="b13nbg"></div>
+    </div>
+
+    <div class="b10-ledger">
+      <h3>How sure is each number?</h3>
+      <p>Every figure on this page, with where it came from. Disputed and assumed figures are the ones to confirm first.</p>
+      <div class="b10-lrow hd"><span>Fact</span><span>Shown as</span><span>Confidence</span><span>Source</span></div>
+      <div class="b10-lrow"><span>Founded</span><span class="v">23 Nov 1908</span><span class="b10-badge club">Club</span><span class="s">Club's public website and the NJ State Golf Association, which gives the date and the three founding clubs. The “years since” figure is computed from it each year.</span></div>
+      <div class="b10-lrow"><span>Golf</span><span class="v">18 holes</span><span class="b10-badge club">Club</span><span class="s">Club's public website.</span></div>
+      <div class="b10-lrow"><span>Marina</span><span class="v">30+ slips</span><span class="b10-badge club">Club</span><span class="s">Club's public website.</span></div>
+      <div class="b10-lrow"><span>Tennis courts</span><span class="v">2 or 3</span><span class="b10-badge disputed">Disputed</span><span class="s">Global Tennis Network says 3; Gladiator Tennis and the project scope document say 2. The map draws 3.</span></div>
+      <div class="b10-lrow"><span>Pickleball courts</span><span class="v">4</span><span class="b10-badge third">Scope doc</span><span class="s">Project scope document. Not yet confirmed by the club.</span></div>
+      <div class="b10-lrow"><span>Platform courts</span><span class="v">2</span><span class="b10-badge assumed">Assumed</span><span class="s">No count is published. Drawn as 2 until the Director confirms.</span></div>
+      <div class="b10-lrow"><span>Platform reciprocity</span><span class="v">With Seabright</span><span class="b10-badge third">Third party</span><span class="s">Seabright Lawn Tennis &amp; Cricket Club's public platform page.</span></div>
+      <div class="b10-lrow"><span>Golf course</span><span class="v">18 holes, par 71, 6,617 yd</span><span class="b10-badge third">Third party</span><span class="s">GolfLink and TeeOff course listings.</span></div>
+      <div class="b10-lrow"><span>Course opened</span><span class="v">1910, Herbert Barker</span><span class="b10-badge third">Third party</span><span class="s">Golf Course Architecture, quoting architect Tripp Davis.</span></div>
+      <div class="b10-lrow"><span>Platform leagues</span><span class="v">Shore League, NARUMSEAL</span><span class="b10-badge third">Third party</span><span class="s">Seabright Lawn Tennis &amp; Cricket Club platform pages.</span></div>
+      <div class="b10-lrow"><span>1926 U.S. Open host</span><span class="v">Left out</span><span class="b10-badge disputed">Rejected</span><span class="s">One directory claims it; the 1926 Open was played at Scioto, Ohio, so the claim is not used.</span></div>
+      <div class="b10-lrow"><span>Navesink courts</span><span class="v">7 tennis, 3 pickleball</span><span class="b10-badge third">Third party</span><span class="s">Club &amp; Resort Business, 2021 racquet listing.</span></div>
+      <div class="b10-lrow"><span>Seabright platform courts</span><span class="v">4</span><span class="b10-badge third">Third party</span><span class="s">Seabright Lawn Tennis &amp; Cricket Club platform page.</span></div>
+      <div class="b10-lrow"><span>Sessions, leagues, results</span><span class="v">All invented</span><span class="b10-badge sample">Sample</span><span class="s">No member, roster or result on this page is real.</span></div>
+      <div class="b10-lrow"><span>Season months</span><span class="v">Illustrative</span><span class="b10-badge assumed">Assumed</span><span class="s">Typical for the Jersey Shore. The club does not publish its season dates.</span></div>
     </div>
 
     <div class="b7-cards">
@@ -3035,7 +7226,7 @@
         var MAX_AGE = 7;
 
         // courts closed this week by construction (sample)
-        var CLOSED = ["Court 5", "Court 6"];
+        var CLOSED = ["Pickleball 3", "Pickleball 4"];
 
         // sample week. confirmed = days since the source was last confirmed.
         var SESSIONS = [
@@ -3045,7 +7236,7 @@
             t: "7:00–8:30",
             sport: "tennis",
             n: "Early bird drill",
-            court: "Court 1",
+            court: "Tennis 1",
             who: "3.0 and up",
             coach: "Staff pro",
             confirmed: 2,
@@ -3055,7 +7246,7 @@
             t: "10:00–12:00",
             sport: "pickleball",
             n: "Open play",
-            court: "Court 7",
+            court: "Pickleball 1",
             who: "All members",
             coach: "Unstaffed",
             confirmed: 2,
@@ -3065,7 +7256,7 @@
             t: "4:00–5:30",
             sport: "tennis",
             n: "Junior development",
-            court: "Court 2",
+            court: "Tennis 2",
             who: "Ages 8–15",
             coach: "Staff pro",
             confirmed: 2,
@@ -3075,7 +7266,7 @@
             t: "6:30–8:00",
             sport: "tennis",
             n: "Men's doubles ladder",
-            court: "Court 3",
+            court: "Tennis 3",
             who: "Ladder field",
             coach: "Unstaffed",
             confirmed: 2,
@@ -3086,7 +7277,7 @@
             t: "9:00–10:30",
             sport: "tennis",
             n: "Adult clinic",
-            court: "Court 1",
+            court: "Tennis 1",
             who: "3.0 and up",
             coach: "Director of Racquets",
             confirmed: 2,
@@ -3096,7 +7287,7 @@
             t: "9:00–10:30",
             sport: "tennis",
             n: "Junior clinic",
-            court: "Court 1",
+            court: "Tennis 1",
             who: "Ages 8–11",
             coach: "Staff pro",
             confirmed: 2,
@@ -3106,7 +7297,7 @@
             t: "4:00–5:30",
             sport: "tennis",
             n: "Junior development",
-            court: "Court 2",
+            court: "Tennis 2",
             who: "Ages 8–15",
             coach: "Staff pro",
             confirmed: 2,
@@ -3116,7 +7307,7 @@
             t: "5:30–7:00",
             sport: "tennis",
             n: "High school prep",
-            court: "Court 3",
+            court: "Tennis 3",
             who: "Ages 14–18",
             coach: "Staff pro",
             confirmed: 3,
@@ -3126,7 +7317,7 @@
             t: "6:00–8:00",
             sport: "platform",
             n: "League play",
-            court: "Paddle 1",
+            court: "Platform 1",
             who: "Club league",
             coach: "Unstaffed",
             confirmed: 3,
@@ -3137,7 +7328,7 @@
             t: "9:00–10:30",
             sport: "tennis",
             n: "Adult clinic 2.5–3.0",
-            court: "Court 1",
+            court: "Tennis 1",
             who: "Developing",
             coach: "Staff pro",
             confirmed: 2,
@@ -3147,7 +7338,7 @@
             t: "10:00–12:00",
             sport: "pickleball",
             n: "Open play",
-            court: "Court 5",
+            court: "Pickleball 3",
             who: "All members",
             coach: "Unstaffed",
             confirmed: 2,
@@ -3157,7 +7348,7 @@
             t: "4:00–5:30",
             sport: "tennis",
             n: "Junior development",
-            court: "Court 2",
+            court: "Tennis 2",
             who: "Ages 8–15",
             coach: "Staff pro",
             confirmed: 2,
@@ -3167,7 +7358,7 @@
             t: "6:30–8:00",
             sport: "tennis",
             n: "Women's doubles ladder",
-            court: "Court 3",
+            court: "Tennis 3",
             who: "Ladder field",
             coach: "Unstaffed",
             confirmed: 2,
@@ -3178,7 +7369,7 @@
             t: "9:00–10:30",
             sport: "tennis",
             n: "Adult clinic",
-            court: "Court 1",
+            court: "Tennis 1",
             who: "3.0 and up",
             coach: "Director of Racquets",
             confirmed: 2,
@@ -3188,7 +7379,7 @@
             t: "4:00–5:30",
             sport: "tennis",
             n: "Junior development",
-            court: "Court 2",
+            court: "Tennis 2",
             who: "Ages 8–15",
             coach: "Staff pro",
             confirmed: 2,
@@ -3198,7 +7389,7 @@
             t: "6:00–7:30",
             sport: "pickleball",
             n: "Evening round robin",
-            court: "Court 7",
+            court: "Pickleball 1",
             who: "All levels",
             coach: "Staff pro",
             confirmed: 2,
@@ -3208,7 +7399,7 @@
             t: "6:00–8:00",
             sport: "platform",
             n: "League play",
-            court: "Paddle 1",
+            court: "Platform 1",
             who: "Club league",
             coach: "Unstaffed",
             confirmed: 3,
@@ -3218,7 +7409,7 @@
             t: "7:00–8:30",
             sport: "tennis",
             n: "Mixed doubles social",
-            court: "Court 4",
+            court: "Tennis 3",
             who: "All members",
             coach: "Unstaffed",
             confirmed: 3,
@@ -3229,7 +7420,7 @@
             t: "9:00–10:30",
             sport: "tennis",
             n: "Adult clinic",
-            court: "Court 1",
+            court: "Tennis 1",
             who: "3.0 and up",
             coach: "Staff pro",
             confirmed: 2,
@@ -3239,7 +7430,7 @@
             t: "10:00–12:00",
             sport: "pickleball",
             n: "Open play",
-            court: "Court 7",
+            court: "Pickleball 1",
             who: "All members",
             coach: "Unstaffed",
             confirmed: 2,
@@ -3249,7 +7440,7 @@
             t: "4:00–5:30",
             sport: "tennis",
             n: "Junior development",
-            court: "Court 2",
+            court: "Tennis 2",
             who: "Ages 8–15",
             coach: "Staff pro",
             confirmed: 2,
@@ -3260,7 +7451,7 @@
             t: "8:00–9:00",
             sport: "tennis",
             n: "Cardio Tennis",
-            court: "Court 3",
+            court: "Tennis 3",
             who: "All members",
             coach: "Staff pro",
             confirmed: 12,
@@ -3270,7 +7461,7 @@
             t: "9:00–10:00",
             sport: "pickleball",
             n: "Beginner clinic",
-            court: "Court 7",
+            court: "Pickleball 1",
             who: "New players",
             coach: "Staff pro",
             confirmed: 2,
@@ -3280,7 +7471,7 @@
             t: "9:30–11:30",
             sport: "tennis",
             n: "Saturday match play",
-            court: "Court 1",
+            court: "Tennis 1",
             who: "3.5 and up",
             coach: "Director of Racquets",
             confirmed: 2,
@@ -3290,7 +7481,7 @@
             t: "11:00–12:30",
             sport: "tennis",
             n: "Junior match play",
-            court: "Court 2",
+            court: "Tennis 2",
             who: "Ages 10–16",
             coach: "Staff pro",
             confirmed: 2,
@@ -3301,7 +7492,7 @@
             t: "9:00–11:00",
             sport: "platform",
             n: "Sunday round robin",
-            court: "Paddle 2",
+            court: "Platform 2",
             who: "All members",
             coach: "Unstaffed",
             confirmed: 3,
@@ -3311,7 +7502,7 @@
             t: "10:00–11:30",
             sport: "tennis",
             n: "Adult drill and play",
-            court: "Court 3",
+            court: "Tennis 3",
             who: "3.0 and up",
             coach: "Staff pro",
             confirmed: 3,
@@ -4150,15 +8341,17 @@ var B7_VIEWS = {
 
 // ground layout in board pixels; the surface style follows the data
 var B7_LAYOUT = [
-  { c: "Court 1", k: "tennis", x: 20, y: 18, w: 180, h: 96 },
-  { c: "Court 2", k: "tennis", x: 212, y: 18, w: 180, h: 96 },
-  { c: "Court 3", k: "tennis", x: 404, y: 18, w: 180, h: 96 },
-  { c: "Court 4", k: "tennis", x: 20, y: 134, w: 180, h: 96 },
-  { c: "Court 5", k: "tennis", x: 212, y: 134, w: 180, h: 96 },
-  { c: "Court 6", k: "tennis", x: 404, y: 134, w: 180, h: 96 },
-  { c: "Court 7", k: "pickleball", x: 604, y: 22, w: 136, h: 62 },
-  { c: "Paddle 1", k: "platform", x: 610, y: 108, w: 124, h: 56 },
-  { c: "Paddle 2", k: "platform", x: 610, y: 182, w: 124, h: 56 },
+  // counts: 3 tennis (Global Tennis Network), 4 pickleball (project scope
+  // document), 2 platform (assumed). Positions are illustrative, not a site plan.
+  { c: "Tennis 1", k: "tennis", x: 20, y: 18, w: 180, h: 96 },
+  { c: "Tennis 2", k: "tennis", x: 212, y: 18, w: 180, h: 96 },
+  { c: "Tennis 3", k: "tennis", x: 404, y: 18, w: 180, h: 96 },
+  { c: "Pickleball 1", k: "pickleball", x: 20, y: 140, w: 136, h: 62 },
+  { c: "Pickleball 2", k: "pickleball", x: 168, y: 140, w: 136, h: 62 },
+  { c: "Pickleball 3", k: "pickleball", x: 316, y: 140, w: 136, h: 62 },
+  { c: "Pickleball 4", k: "pickleball", x: 464, y: 140, w: 136, h: 62 },
+  { c: "Platform 1", k: "platform", x: 616, y: 30, w: 124, h: 56 },
+  { c: "Platform 2", k: "platform", x: 616, y: 110, w: 124, h: 56 },
 ];
 
 // light across the day: [minute, sky top, sky bottom, darkness]
@@ -5055,6 +9248,1316 @@ window.rdBoard = {
   },
 };
 
+/* ---------- build 8: horizontal tabs, programs, leagues ---------- */
+
+var B8_TABS = [
+  ["home", "Home"],
+  ["schedule", "Schedule"],
+  ["courts", "Courts 3D"],
+  ["programs", "Programs"],
+  ["leagues", "Leagues"],
+  ["club", "The Club"],
+  ["director", "Director"],
+  ["notes", "Project notes"],
+];
+var b8cur = null;
+
+function b8tabIndex(t) {
+  for (var i = 0; i < B8_TABS.length; i++) if (B8_TABS[i][0] === t) return i;
+  return -1;
+}
+
+function b8show(tab) {
+  var idx = b8tabIndex(tab);
+  if (idx < 0) {
+    tab = "home";
+    idx = 0;
+  }
+  var prevIdx = b8cur ? b8tabIndex(b8cur) : idx;
+  Array.prototype.forEach.call(
+    document.querySelectorAll("[data-tab]"),
+    function (p) {
+      var on = p.getAttribute("data-tab") === tab;
+      p.hidden = !on;
+      if (on && b8cur !== tab) {
+        p.classList.remove("b8-in", "b8-back");
+        void p.offsetWidth;
+        p.classList.add("b8-in");
+        if (idx < prevIdx) p.classList.add("b8-back");
+      }
+    },
+  );
+  Array.prototype.forEach.call(
+    document.querySelectorAll("#b8tabs .b8-tab"),
+    function (b) {
+      var sel = b.getAttribute("data-t") === tab;
+      b.setAttribute("aria-selected", String(sel));
+      b.setAttribute("tabindex", sel ? "0" : "-1");
+    },
+  );
+  b8cur = tab;
+  if (tab === "director") {
+    var db = document.querySelector('#viewseg button[data-v="director"]');
+    if (db && !db.classList.contains("on")) db.click();
+  }
+  if (tab === "courts") b7fit();
+  if (tab === "leagues") b8bars();
+  var nav = document.querySelector(".b8-nav");
+  if (nav && window.pageYOffset > nav.offsetTop) {
+    try {
+      window.scrollTo(0, nav.offsetTop);
+    } catch (e) {
+      /* not every environment can scroll */
+    }
+  }
+  try {
+    if (location.hash !== "#" + tab) history.replaceState(null, "", "#" + tab);
+  } catch (e) {
+    /* history is optional */
+  }
+}
+
+function b8tabFor(id) {
+  if (b8tabIndex(id) >= 0) return id;
+  var el = id && document.getElementById(id);
+  var p = el && el.closest ? el.closest("[data-tab]") : null;
+  return p ? p.getAttribute("data-tab") : null;
+}
+
+function b8buildTabs() {
+  var bar = document.getElementById("b8tabs");
+  if (!bar) return;
+  bar.innerHTML = "";
+  B8_TABS.forEach(function (t) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "b8-tab";
+    b.setAttribute("role", "tab");
+    b.setAttribute("data-t", t[0]);
+    b.textContent = t[1];
+    bar.appendChild(b);
+  });
+  bar.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest(".b8-tab");
+    if (b) b8show(b.getAttribute("data-t"));
+  });
+  bar.addEventListener("keydown", function (e) {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    var i = b8tabIndex(b8cur) + (e.key === "ArrowRight" ? 1 : -1);
+    i = (i + B8_TABS.length) % B8_TABS.length;
+    b8show(B8_TABS[i][0]);
+    var nb = bar.querySelector('[data-t="' + B8_TABS[i][0] + '"]');
+    if (nb) nb.focus();
+  });
+}
+
+/* what members can see: held sessions stay off unless overridden */
+function b8memberVisible(s) {
+  return !s.held || !!s.ovr;
+}
+
+function b8home() {
+  var vis = RESULT.sessions.filter(b8memberVisible);
+  var bySport = { tennis: 0, pickleball: 0, platform: 0 };
+  vis.forEach(function (s) {
+    if (bySport[s.sport] != null) bySport[s.sport]++;
+  });
+  Object.keys(bySport).forEach(function (k) {
+    var el = document.getElementById("b8k-" + k);
+    if (el)
+      el.textContent =
+        bySport[k] +
+        " session" +
+        (bySport[k] === 1 ? "" : "s") +
+        " on this week's calendar";
+  });
+  var held = RESULT.sessions.length - vis.length;
+  var sports = Object.keys(bySport).filter(function (k) {
+    return bySport[k] > 0;
+  }).length;
+
+  var now = new Date();
+  var today = (now.getDay() + 6) % 7;
+  var mins = now.getHours() * 60 + now.getMinutes();
+  var next = null;
+  var best = Infinity;
+  vis.forEach(function (s) {
+    var start = b7span(s.t)[0];
+    var off = (((s.d - today) % 7) + 7) % 7;
+    var key = off * 1440 + start - mins;
+    if (key < 0) key += 7 * 1440;
+    if (key < best) {
+      best = key;
+      next = s;
+    }
+  });
+
+  var box = document.getElementById("b8announce");
+  if (!box) return;
+  box.innerHTML =
+    "<strong>This week</strong><span>" +
+    vis.length +
+    " sessions across " +
+    sports +
+    " sports" +
+    (view === "director" ? " · <b>" + held + " held for your review</b>" : "") +
+    (next
+      ? " · Next on court: <b>" +
+        b7esc(next.n) +
+        "</b>, " +
+        DAYS[next.d] +
+        " " +
+        b7esc(next.t) +
+        ", " +
+        b7esc(next.court)
+      : "") +
+    "</span>";
+}
+
+function b8programs() {
+  Array.prototype.forEach.call(
+    document.querySelectorAll(".b8-prog"),
+    function (card) {
+      var out = card.querySelector(".b8-count");
+      if (!out) return;
+      var fixed = out.getAttribute("data-fixed");
+      if (fixed) {
+        out.textContent = fixed;
+        return;
+      }
+      var sport = card.getAttribute("data-sport") || "";
+      var match = new RegExp(card.getAttribute("data-match") || ".", "i");
+      var ex = card.getAttribute("data-exclude");
+      var exRe = ex ? new RegExp(ex, "i") : null;
+      var n = RESULT.sessions.filter(function (s) {
+        if (!b8memberVisible(s)) return false;
+        if (sport && s.sport !== sport) return false;
+        if (exRe && exRe.test(s.n)) return false;
+        return match.test(s.n);
+      }).length;
+      out.textContent = n
+        ? n + " session" + (n === 1 ? "" : "s") + " on this week's calendar"
+        : "None on this week's calendar";
+    },
+  );
+}
+
+/* ---------- leagues: standings computed from results ---------- */
+
+var B8_HOME = "Home Club";
+var B8_DIVS = [
+  { id: "m35", name: "Men 3.5", season: "Fall 2026" },
+  { id: "w40", name: "Women 4.0", season: "Fall 2026" },
+  { id: "pmb", name: "Platform Men B", season: "Winter 2026–27" },
+];
+// lines: [line, score, winner "h" or "a"]. No lines = not played or not reported.
+var B8_MATCHES = [
+  {
+    div: "m35",
+    d: "2026-09-12",
+    h: "Home Club",
+    a: "Harbor Point TC",
+    lines: [
+      ["D1", "6-3 6-4", "h"],
+      ["D2", "4-6 6-3 1-0", "h"],
+      ["D3", "3-6 2-6", "a"],
+    ],
+  },
+  {
+    div: "m35",
+    d: "2026-09-19",
+    h: "Bayside Racquet Club",
+    a: "Home Club",
+    lines: [
+      ["D1", "6-2 6-4", "h"],
+      ["D2", "6-7 3-6", "a"],
+      ["D3", "6-4 6-4", "h"],
+    ],
+  },
+  {
+    div: "m35",
+    d: "2026-09-26",
+    h: "Home Club",
+    a: "Oak Hollow CC",
+    lines: [
+      ["D1", "6-1 6-2", "h"],
+      ["D2", "6-4 4-6 1-0", "h"],
+      ["D3", "7-5 6-3", "h"],
+    ],
+  },
+  {
+    div: "m35",
+    d: "2026-10-03",
+    h: "Shorecrest TC",
+    a: "Home Club",
+    lines: [
+      ["D1", "4-6 3-6", "a"],
+      ["D2", "6-3 6-2", "h"],
+      ["D3", "2-6 4-6", "a"],
+    ],
+  },
+  {
+    div: "m35",
+    d: "2026-10-03",
+    h: "Harbor Point TC",
+    a: "Bayside Racquet Club",
+    lines: [
+      ["D1", "6-4 6-4", "h"],
+      ["D2", "3-6 6-7", "a"],
+      ["D3", "6-2 6-1", "h"],
+    ],
+  },
+  {
+    div: "m35",
+    d: "2026-10-10",
+    h: "Oak Hollow CC",
+    a: "Shorecrest TC",
+    lines: [
+      ["D1", "6-3 6-3", "h"],
+      ["D2", "6-4 6-2", "h"],
+      ["D3", "1-6 4-6", "a"],
+    ],
+  },
+  {
+    div: "m35",
+    d: "2026-10-17",
+    h: "Home Club",
+    a: "Bayside Racquet Club",
+    lines: [
+      ["D1", "6-4 7-5", "h"],
+      ["D2", "6-2 6-3", "h"],
+      ["D3", "4-6 6-4 0-1", "a"],
+    ],
+  },
+  {
+    div: "m35",
+    d: "2026-11-14",
+    h: "Harbor Point TC",
+    a: "Home Club",
+    lines: [],
+  },
+  {
+    div: "m35",
+    d: "2026-11-21",
+    h: "Home Club",
+    a: "Shorecrest TC",
+    lines: [],
+  },
+
+  {
+    div: "w40",
+    d: "2026-09-15",
+    h: "Home Club",
+    a: "Pine Landing TC",
+    lines: [
+      ["S1", "6-4 6-2", "h"],
+      ["D1", "6-3 6-4", "h"],
+      ["D2", "2-6 6-4 0-1", "a"],
+    ],
+  },
+  {
+    div: "w40",
+    d: "2026-09-29",
+    h: "Harbor Point TC",
+    a: "Home Club",
+    lines: [
+      ["S1", "6-3 6-3", "h"],
+      ["D1", "6-7 4-6", "a"],
+      ["D2", "6-4 6-1", "h"],
+    ],
+  },
+  {
+    div: "w40",
+    d: "2026-10-06",
+    h: "Bayside Racquet Club",
+    a: "Pine Landing TC",
+    lines: [
+      ["S1", "6-1 6-0", "h"],
+      ["D1", "6-4 6-4", "h"],
+      ["D2", "3-6 6-3 1-0", "h"],
+    ],
+  },
+  {
+    div: "w40",
+    d: "2026-10-13",
+    h: "Home Club",
+    a: "Bayside Racquet Club",
+    lines: [
+      ["S1", "7-6 6-4", "h"],
+      ["D1", "6-2 6-3", "h"],
+      ["D2", "6-4 3-6 1-0", "h"],
+    ],
+  },
+  {
+    div: "w40",
+    d: "2026-10-20",
+    h: "Pine Landing TC",
+    a: "Harbor Point TC",
+    lines: [
+      ["S1", "4-6 6-3 1-0", "h"],
+      ["D1", "2-6 3-6", "a"],
+      ["D2", "6-4 6-4", "h"],
+    ],
+  },
+  {
+    div: "w40",
+    d: "2026-12-01",
+    h: "Pine Landing TC",
+    a: "Home Club",
+    lines: [],
+  },
+
+  {
+    div: "pmb",
+    d: "2026-11-05",
+    h: "Home Club",
+    a: "Shorecrest TC",
+    lines: [
+      ["P1", "6-3 6-4", "h"],
+      ["P2", "6-2 6-4", "h"],
+      ["P3", "4-6 6-7", "a"],
+    ],
+  },
+  {
+    div: "pmb",
+    d: "2026-11-12",
+    h: "Oak Hollow CC",
+    a: "Pine Landing TC",
+    lines: [
+      ["P1", "6-4 6-4", "h"],
+      ["P2", "6-3 2-6 6-4", "h"],
+      ["P3", "3-6 6-4 4-6", "a"],
+    ],
+  },
+  {
+    div: "pmb",
+    d: "2026-11-12",
+    h: "Pine Landing TC",
+    a: "Home Club",
+    lines: [],
+  },
+  {
+    div: "pmb",
+    d: "2026-12-03",
+    h: "Home Club",
+    a: "Oak Hollow CC",
+    lines: [],
+  },
+];
+var b8div = B8_DIVS[0].id;
+var B8_MON = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+var B8_WD = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+function b8date(s) {
+  var p = s.split("-");
+  return new Date(+p[0], +p[1] - 1, +p[2]);
+}
+function b8fmtDate(s) {
+  var dt = b8date(s);
+  return B8_WD[dt.getDay()] + ", " + B8_MON[dt.getMonth()] + " " + dt.getDate();
+}
+
+// status of a match: final, upcoming, or past-due with no score
+function b8status(m, now) {
+  if (m.lines.length) return "final";
+  var end = b8date(m.d);
+  end.setDate(end.getDate() + 1);
+  return end <= now ? "missing" : "upcoming";
+}
+
+function b8standings(div, now) {
+  var t = {};
+  function row(name) {
+    if (!t[name]) t[name] = { team: name, w: 0, l: 0, lw: 0, ll: 0, p: 0 };
+    return t[name];
+  }
+  B8_MATCHES.forEach(function (m) {
+    if (m.div !== div) return;
+    var H = row(m.h);
+    var A = row(m.a);
+    if (b8status(m, now) !== "final") return;
+    var hw = m.lines.filter(function (x) {
+      return x[2] === "h";
+    }).length;
+    var aw = m.lines.length - hw;
+    H.p++;
+    A.p++;
+    H.lw += hw;
+    H.ll += aw;
+    A.lw += aw;
+    A.ll += hw;
+    if (hw > aw) {
+      H.w++;
+      A.l++;
+    } else {
+      A.w++;
+      H.l++;
+    }
+  });
+  return Object.keys(t)
+    .map(function (k) {
+      var r = t[k];
+      r.pct = r.lw + r.ll ? r.lw / (r.lw + r.ll) : 0;
+      return r;
+    })
+    .sort(function (a, b) {
+      return (
+        b.w - a.w || a.l - b.l || b.pct - a.pct || (a.team < b.team ? -1 : 1)
+      );
+    });
+}
+
+function b8leagues() {
+  var chips = document.getElementById("b8divs");
+  var table = document.getElementById("b8standings");
+  var rail = document.getElementById("b8results");
+  if (!chips || !table || !rail) return;
+  var now = new Date();
+
+  chips.innerHTML = B8_DIVS.map(function (d) {
+    return (
+      '<button type="button" data-div="' +
+      d.id +
+      '" aria-pressed="' +
+      (d.id === b8div) +
+      '">' +
+      b7esc(d.name) +
+      " · " +
+      b7esc(d.season) +
+      "</button>"
+    );
+  }).join("");
+
+  var D = B8_DIVS.filter(function (d) {
+    return d.id === b8div;
+  })[0];
+  var rows = b8standings(b8div, now);
+  var played = B8_MATCHES.filter(function (m) {
+    return m.div === b8div && b8status(m, now) === "final";
+  }).length;
+  table.innerHTML =
+    "<h3><span>" +
+    b7esc(D.name) +
+    " standings</span><small>" +
+    b7esc(D.season) +
+    " · " +
+    played +
+    " matches scored</small></h3>" +
+    "<table><thead><tr><th>#</th><th>Team</th><th>W</th><th>L</th><th>Lines</th><th>Line win %</th></tr></thead><tbody>" +
+    rows
+      .map(function (r, i) {
+        var pct = Math.round(r.pct * 100);
+        return (
+          '<tr class="' +
+          (r.team === B8_HOME ? "home" : "") +
+          '"><td>' +
+          (i + 1) +
+          "</td><td>" +
+          b7esc(r.team) +
+          "</td><td>" +
+          r.w +
+          "</td><td>" +
+          r.l +
+          "</td><td>" +
+          r.lw +
+          "–" +
+          r.ll +
+          '</td><td><div class="b8-bar" title="' +
+          pct +
+          '%"><i data-w="' +
+          pct +
+          '"></i></div> ' +
+          pct +
+          "%</td></tr>"
+        );
+      })
+      .join("") +
+    "</tbody></table>";
+
+  var ms = B8_MATCHES.filter(function (m) {
+    return m.div === b8div;
+  }).map(function (m) {
+    return { m: m, s: b8status(m, now) };
+  });
+  var order = { upcoming: 0, missing: 1, final: 2 };
+  ms.sort(function (x, y) {
+    if (order[x.s] !== order[y.s]) return order[x.s] - order[y.s];
+    return x.s === "upcoming"
+      ? x.m.d < y.m.d
+        ? -1
+        : 1
+      : x.m.d < y.m.d
+        ? 1
+        : -1;
+  });
+
+  rail.innerHTML = ms
+    .map(function (o) {
+      var m = o.m;
+      var hw = m.lines.filter(function (x) {
+        return x[2] === "h";
+      }).length;
+      var aw = m.lines.length - hw;
+      var homeIn = m.h === B8_HOME || m.a === B8_HOME;
+      var chip;
+      if (o.s === "upcoming")
+        chip = '<span class="b8-res next">UPCOMING</span>';
+      else if (o.s === "missing")
+        chip = '<span class="b8-res miss">SCORE NOT REPORTED</span>';
+      else if (homeIn) {
+        var homeWon = (m.h === B8_HOME) === hw > aw;
+        chip =
+          '<span class="b8-res ' +
+          (homeWon ? "win" : "loss") +
+          '">' +
+          (homeWon ? "WIN" : "LOSS") +
+          "</span>";
+      } else chip = '<span class="b8-res final">FINAL</span>';
+      var hc = o.s === "final" ? (hw > aw ? "w" : "l") : "";
+      var ac = o.s === "final" ? (aw > hw ? "w" : "l") : "";
+      return (
+        '<article class="b8-match"><div class="b8-mhead"><span>' +
+        b8fmtDate(m.d) +
+        "</span><span>" +
+        b7esc(D.name) +
+        "</span></div>" +
+        chip +
+        '<div class="b8-teams"><span class="' +
+        hc +
+        '">' +
+        b7esc(m.h) +
+        "</span><span>" +
+        (o.s === "final" ? hw : "–") +
+        "</span>" +
+        '<span class="' +
+        ac +
+        '">' +
+        b7esc(m.a) +
+        "</span><span>" +
+        (o.s === "final" ? aw : "–") +
+        "</span></div>" +
+        (o.s === "final"
+          ? '<div class="b8-lines">' +
+            m.lines
+              .map(function (x) {
+                return (
+                  "<b>" +
+                  b7esc(x[0]) +
+                  "</b> " +
+                  b7esc(x[1]) +
+                  " · " +
+                  (x[2] === "h" ? b7esc(m.h) : b7esc(m.a))
+                );
+              })
+              .join("<br>") +
+            "</div>"
+          : o.s === "missing"
+            ? '<div class="b8-lines">Played date has passed with no score. Flagged rather than shown as blank.</div>'
+            : '<div class="b8-lines">' +
+              (m.h === B8_HOME ? "Home match" : "Away match") +
+              "</div>") +
+        "</article>"
+      );
+    })
+    .join("");
+
+  b8bars();
+}
+
+function b8bars() {
+  var bars = document.querySelectorAll("#b8standings .b8-bar i");
+  Array.prototype.forEach.call(bars, function (i) {
+    i.style.width = "0";
+  });
+  b7raf(function () {
+    Array.prototype.forEach.call(bars, function (i) {
+      i.style.width = i.getAttribute("data-w") + "%";
+    });
+  });
+}
+
+function b8wire() {
+  b8buildTabs();
+  document.addEventListener("click", function (e) {
+    var t = e.target;
+    var go = t.closest && t.closest("[data-goto]");
+    if (go) {
+      b8show(go.getAttribute("data-goto"));
+      return;
+    }
+    var chip = t.closest && t.closest("#b8divs button[data-div]");
+    if (chip) {
+      b8div = chip.getAttribute("data-div");
+      b8leagues();
+      return;
+    }
+    var arrow = t.closest && t.closest(".b8-arrows button");
+    if (arrow) {
+      var rail = document.getElementById(
+        arrow.parentNode.getAttribute("data-rail"),
+      );
+      if (rail)
+        rail.scrollLeft +=
+          (rail.clientWidth || 600) * 0.85 * +arrow.getAttribute("data-dir");
+      return;
+    }
+    var a = t.closest && t.closest('a[href^="#"]');
+    if (a) {
+      var id = a.getAttribute("href").slice(1);
+      var tab = b8tabFor(id);
+      if (tab) {
+        e.preventDefault();
+        b8show(tab);
+        var el = document.getElementById(id);
+        if (el && el.scrollIntoView && b8tabIndex(id) < 0) {
+          try {
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+          } catch (err) {
+            /* optional */
+          }
+        }
+      }
+    }
+  });
+  window.addEventListener("hashchange", function () {
+    var tab = b8tabFor(location.hash.slice(1));
+    if (tab && tab !== b8cur) b8show(tab);
+  });
+}
+
+b8wire();
+b8leagues();
+b8home();
+b8programs();
+b8show(b8tabFor((location.hash || "").slice(1)) || "home");
+
+var __renderB8 = render;
+render = function () {
+  __renderB8();
+  b8home();
+  b8programs();
+};
+
+window.rdTabs = {
+  show: b8show,
+  current: function () {
+    return b8cur;
+  },
+  standings: function (div) {
+    return b8standings(div || b8div, new Date());
+  },
+};
+
+/* ---------- build 9: depth and time ---------- */
+
+var B9_REDUCE = !!(
+  window.matchMedia &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches
+);
+
+/* 1. spinning 3D ball in the header, drawn as SVG every frame */
+var B9_NS = "http://www.w3.org/2000/svg";
+function b9svg(tag, attrs) {
+  var e = document.createElementNS(B9_NS, tag);
+  Object.keys(attrs || {}).forEach(function (k) {
+    e.setAttribute(k, attrs[k]);
+  });
+  return e;
+}
+var B9_BALL = {
+  ax: 0.5,
+  ay: 0,
+  t0: 0,
+  px: 0,
+  py: 0,
+  seam: null,
+  shadow: null,
+  group: null,
+};
+
+function b9ballBuild() {
+  var hdr = document.querySelector("header.hero");
+  if (!hdr || hdr.querySelector(".b9-ball")) return false;
+  var wrap = document.createElement("div");
+  wrap.className = "b9-ball";
+  wrap.setAttribute("aria-hidden", "true");
+  var s = b9svg("svg", { viewBox: "-60 -80 120 150" });
+  var defs = b9svg("defs");
+  var g = b9svg("radialGradient", {
+    id: "b9felt",
+    cx: "35%",
+    cy: "30%",
+    r: "75%",
+  });
+  g.appendChild(b9svg("stop", { offset: "0", "stop-color": "#f8ff9e" }));
+  g.appendChild(b9svg("stop", { offset: "0.55", "stop-color": "#d9ea38" }));
+  g.appendChild(b9svg("stop", { offset: "1", "stop-color": "#8e9d14" }));
+  defs.appendChild(g);
+  s.appendChild(defs);
+  B9_BALL.shadow = b9svg("ellipse", {
+    cx: "0",
+    cy: "58",
+    rx: "30",
+    ry: "6",
+    fill: "rgba(21,32,26,0.25)",
+  });
+  s.appendChild(B9_BALL.shadow);
+  B9_BALL.group = b9svg("g");
+  B9_BALL.group.appendChild(b9svg("circle", { r: "36", fill: "url(#b9felt)" }));
+  B9_BALL.seam = b9svg("path", {
+    fill: "none",
+    stroke: "#ffffff",
+    "stroke-width": "3.6",
+    "stroke-linecap": "round",
+    "stroke-linejoin": "round",
+  });
+  B9_BALL.group.appendChild(B9_BALL.seam);
+  B9_BALL.group.appendChild(
+    b9svg("circle", {
+      cx: "-12",
+      cy: "-14",
+      r: "10",
+      fill: "rgba(255,255,255,0.25)",
+    }),
+  );
+  s.appendChild(B9_BALL.group);
+  wrap.appendChild(s);
+  hdr.appendChild(wrap);
+  hdr.addEventListener("pointermove", function (e) {
+    var r = hdr.getBoundingClientRect();
+    if (!r.width) return;
+    B9_BALL.px = (e.clientX - r.left) / r.width - 0.5;
+    B9_BALL.py = (e.clientY - r.top) / r.height - 0.5;
+  });
+  return true;
+}
+
+// the curve on a tennis ball, rotated in 3D and projected; only the near side is drawn
+function b9seamPath(ax, ay) {
+  var a = 0.75,
+    b = 0.25,
+    c = Math.sqrt(3) / 2;
+  var R = 36;
+  var cx = Math.cos(ax),
+    sx = Math.sin(ax),
+    cy = Math.cos(ay),
+    sy = Math.sin(ay);
+  var d = "";
+  var pen = false;
+  for (var i = 0; i <= 160; i++) {
+    var t = (i / 160) * Math.PI * 2;
+    var x = a * Math.cos(t) + b * Math.cos(3 * t);
+    var y = a * Math.sin(t) - b * Math.sin(3 * t);
+    var z = c * Math.sin(2 * t);
+    var y1 = y * cx - z * sx;
+    var z1 = y * sx + z * cx;
+    var x2 = x * cy + z1 * sy;
+    var z2 = -x * sy + z1 * cy;
+    if (z2 > -0.02) {
+      d += (pen ? "L" : "M") + (x2 * R).toFixed(1) + " " + (y1 * R).toFixed(1);
+      pen = true;
+    } else pen = false;
+  }
+  return d;
+}
+
+function b9ballFrame(ts) {
+  if (!B9_BALL.group) return;
+  var hdr = document.querySelector("header.hero");
+  if (!B9_BALL.t0) B9_BALL.t0 = ts || 0;
+  var t = ((ts || 0) - B9_BALL.t0) / 1000;
+  if (hdr && !hdr.hidden) {
+    B9_BALL.ay = t * 1.1 + B9_BALL.px * 1.6;
+    B9_BALL.ax = 0.45 + B9_BALL.py * 1.2;
+    var bounce = B9_REDUCE ? 0 : Math.abs(Math.sin(t * 2.4));
+    var lift = bounce * 34;
+    B9_BALL.group.setAttribute(
+      "transform",
+      "translate(0 " + (16 - lift).toFixed(1) + ")",
+    );
+    B9_BALL.seam.setAttribute("d", b9seamPath(B9_BALL.ax, B9_BALL.ay));
+    var k = 1 - bounce * 0.45;
+    B9_BALL.shadow.setAttribute("rx", (30 * k).toFixed(1));
+    B9_BALL.shadow.setAttribute("opacity", (0.4 + 0.6 * k).toFixed(2));
+  }
+  if (!B9_REDUCE) b7raf(b9ballFrame);
+}
+
+/* 2. banner layers move at different depths with the pointer */
+function b9depth(el) {
+  var c = el.getAttribute("class") || "";
+  var f = el.getAttribute("fill") || "";
+  if (f === "url(#b8sky)") return 0;
+  if (c.indexOf("b8-sunglow") > -1 || f === "#fff3cf") return 0.12;
+  if (c.indexOf("b8-cloud") > -1) return 0.3;
+  if (c.indexOf("b8-bird") > -1) return 0.42;
+  if (f === "#2d4a3a") return 0.4;
+  if (f === "#3e6248") return 0.55;
+  if (f === "#b9a46e" || f === "url(#b8river)" || c.indexOf("b8-water") > -1)
+    return 0.72;
+  return 1;
+}
+
+function b9pano() {
+  var pano = document.querySelector(".b8-pano");
+  var svg = pano && pano.querySelector("svg");
+  if (!svg || svg.getAttribute("data-b9")) return;
+  svg.setAttribute("data-b9", "1");
+  var kids = Array.prototype.slice.call(svg.children).filter(function (k) {
+    return k.tagName.toLowerCase() !== "defs";
+  });
+  var groups = [];
+  var cur = null;
+  kids.forEach(function (k) {
+    var dp = b9depth(k);
+    if (!cur || cur.dp !== dp) {
+      cur = { dp: dp, g: b9svg("g", { "data-depth": String(dp) }) };
+      svg.insertBefore(cur.g, k);
+      groups.push(cur);
+    }
+    cur.g.appendChild(k);
+  });
+  if (B9_REDUCE) return;
+  function move(nx, ny) {
+    groups.forEach(function (gr) {
+      gr.g.setAttribute(
+        "transform",
+        "translate(" +
+          (-nx * 34 * gr.dp).toFixed(1) +
+          " " +
+          (-ny * 14 * gr.dp).toFixed(1) +
+          ")",
+      );
+    });
+    pano.style.transform =
+      "perspective(1400px) rotateY(" +
+      (nx * 5).toFixed(2) +
+      "deg) rotateX(" +
+      (-ny * 4).toFixed(2) +
+      "deg)";
+  }
+  pano.addEventListener("pointermove", function (e) {
+    var r = pano.getBoundingClientRect();
+    if (!r.width) return;
+    move(
+      (e.clientX - r.left) / r.width - 0.5,
+      (e.clientY - r.top) / r.height - 0.5,
+    );
+  });
+  pano.addEventListener("pointerleave", function () {
+    move(0, 0);
+  });
+}
+
+/* 3. cards tilt toward the pointer, with a light highlight */
+function b9tilt(root) {
+  var sel =
+    ".b8-tile, .b8-feature figure, .b8-match, .b8-staff > div, .b7-stat";
+  Array.prototype.forEach.call(
+    (root || document).querySelectorAll(sel),
+    function (el) {
+      if (el.getAttribute("data-b9tilt")) return;
+      el.setAttribute("data-b9tilt", "1");
+      el.classList.add("b9-tilt");
+      var glare = document.createElement("span");
+      glare.className = "b9-glare";
+      glare.setAttribute("aria-hidden", "true");
+      el.appendChild(glare);
+      if (B9_REDUCE) return;
+      el.addEventListener("pointermove", function (e) {
+        var r = el.getBoundingClientRect();
+        if (!r.width) return;
+        var x = (e.clientX - r.left) / r.width;
+        var y = (e.clientY - r.top) / r.height;
+        el.classList.add("b9-active");
+        el.style.transform =
+          "perspective(900px) rotateX(" +
+          ((0.5 - y) * 12).toFixed(2) +
+          "deg) rotateY(" +
+          ((x - 0.5) * 14).toFixed(2) +
+          "deg) translateZ(10px)";
+        el.style.setProperty("--gx", (x * 100).toFixed(1) + "%");
+        el.style.setProperty("--gy", (y * 100).toFixed(1) + "%");
+      });
+      el.addEventListener("pointerleave", function () {
+        el.classList.remove("b9-active");
+        el.style.transform = "";
+      });
+    },
+  );
+}
+
+/* 4. programs as a 3D coverflow that turns on its own until touched */
+var B9_FLOW = { cur: 0, auto: true, timer: 0 };
+
+function b9flowCards() {
+  var rail = document.getElementById("b8prograil");
+  return rail
+    ? Array.prototype.slice.call(rail.querySelectorAll(".b8-prog"))
+    : [];
+}
+
+function b9flowLayout() {
+  var rail = document.getElementById("b8prograil");
+  var cards = b9flowCards();
+  if (!rail || !cards.length) return;
+  var n = cards.length;
+  var step = Math.max(150, Math.min(240, (rail.clientWidth || 900) * 0.26));
+  cards.forEach(function (c, i) {
+    var off = i - B9_FLOW.cur;
+    if (off > n / 2) off -= n;
+    if (off < -n / 2) off += n;
+    var a = Math.abs(off);
+    c.style.transform =
+      "translateX(" +
+      (off * step).toFixed(0) +
+      "px) translateZ(" +
+      -a * 170 +
+      "px) rotateY(" +
+      -off * 36 +
+      "deg)";
+    c.style.opacity = a > 3 ? "0" : String(1 - a * 0.2);
+    c.style.zIndex = String(100 - a);
+    c.style.filter = a ? "saturate(" + (1 - a * 0.25).toFixed(2) + ")" : "none";
+    c.style.pointerEvents = a > 3 ? "none" : "";
+    c.setAttribute("aria-current", String(off === 0));
+    c.setAttribute("aria-hidden", String(a > 3));
+  });
+  var dots = document.getElementById("b9dots");
+  if (dots)
+    Array.prototype.forEach.call(dots.children, function (d, i) {
+      d.setAttribute("aria-current", String(i === B9_FLOW.cur));
+    });
+}
+
+function b9flowGo(i, byUser) {
+  var n = b9flowCards().length;
+  if (!n) return;
+  B9_FLOW.cur = ((i % n) + n) % n;
+  if (byUser) b9flowStop();
+  b9flowLayout();
+}
+
+function b9flowStop() {
+  B9_FLOW.auto = false;
+  if (B9_FLOW.timer) {
+    clearInterval(B9_FLOW.timer);
+    B9_FLOW.timer = 0;
+  }
+}
+
+function b9flow() {
+  var rail = document.getElementById("b8prograil");
+  if (!rail || rail.classList.contains("b9-flow")) return;
+  rail.classList.add("b9-flow");
+  var cards = b9flowCards();
+  var dots = document.createElement("div");
+  dots.className = "b9-dots";
+  dots.id = "b9dots";
+  cards.forEach(function (c, i) {
+    var b = document.createElement("button");
+    b.type = "button";
+    var h = c.querySelector("h3");
+    b.setAttribute(
+      "aria-label",
+      "Show " + (h ? h.textContent : "program " + (i + 1)),
+    );
+    b.addEventListener("click", function () {
+      b9flowGo(i, true);
+    });
+    dots.appendChild(b);
+  });
+  rail.parentNode.insertBefore(dots, rail.nextSibling);
+
+  // arrows above the rail drive the wheel instead of scrolling
+  var arrows = document.querySelector('.b8-arrows[data-rail="b8prograil"]');
+  if (arrows)
+    arrows.addEventListener(
+      "click",
+      function (e) {
+        var b = e.target.closest && e.target.closest("button[data-dir]");
+        if (!b) return;
+        e.stopPropagation();
+        b9flowGo(B9_FLOW.cur + +b.getAttribute("data-dir"), true);
+      },
+      true,
+    );
+  rail.addEventListener("click", function (e) {
+    var c = e.target.closest && e.target.closest(".b8-prog");
+    if (!c) return;
+    var i = cards.indexOf(c);
+    if (i !== B9_FLOW.cur) b9flowGo(i, true);
+  });
+  rail.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight") b9flowGo(B9_FLOW.cur + 1, true);
+    else if (e.key === "ArrowLeft") b9flowGo(B9_FLOW.cur - 1, true);
+  });
+  var sx = null;
+  rail.addEventListener("pointerdown", function (e) {
+    sx = e.clientX;
+  });
+  rail.addEventListener("pointerup", function (e) {
+    if (sx == null) return;
+    var dx = e.clientX - sx;
+    sx = null;
+    if (Math.abs(dx) > 40) b9flowGo(B9_FLOW.cur + (dx < 0 ? 1 : -1), true);
+  });
+  window.addEventListener("resize", b9flowLayout);
+  b9flowLayout();
+  if (!B9_REDUCE)
+    B9_FLOW.timer = setInterval(function () {
+      if (B9_FLOW.auto && b8cur === "programs")
+        b9flowGo(B9_FLOW.cur + 1, false);
+    }, 4200);
+}
+
+/* 5. the season wheel: twelve months in a 3D ring, turned by the clock */
+var B9_MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+// sample seasons (illustrative): months each sport is in season
+var B9_SEASONS = [
+  { k: "tennis", name: "Tennis", c: "#2f6b4c", m: [3, 4, 5, 6, 7, 8, 9] },
+  {
+    k: "pickleball",
+    name: "Pickleball",
+    c: "#2a4a7a",
+    m: [2, 3, 4, 5, 6, 7, 8, 9, 10],
+  },
+  { k: "platform", name: "Platform", c: "#5b3a6e", m: [9, 10, 11, 0, 1, 2] },
+];
+var B9_WHEEL = { cur: new Date().getMonth(), spin: 0, play: true, timer: 0 };
+
+function b9inSeason(month) {
+  return B9_SEASONS.filter(function (s) {
+    return s.m.indexOf(month) > -1;
+  });
+}
+
+function b9wheelBuild() {
+  var ring = document.getElementById("b9ring");
+  if (!ring || ring.children.length) return false;
+  var R = Math.round(150 / (2 * Math.tan(Math.PI / 12))) + 18;
+  B9_MONTHS.forEach(function (name, i) {
+    var p = document.createElement("div");
+    p.className = "b9-month";
+    p.setAttribute("data-m", String(i));
+    p.style.transform = "rotateY(" + i * 30 + "deg) translateZ(" + R + "px)";
+    p.innerHTML =
+      "<b>" +
+      name.slice(0, 3) +
+      "</b>" +
+      B9_SEASONS.map(function (s) {
+        var on = s.m.indexOf(i) > -1;
+        return (
+          '<span class="b9-sp ' +
+          (on ? "on" : "off") +
+          '" style="--c:' +
+          s.c +
+          '"><i></i>' +
+          s.name +
+          "</span>"
+        );
+      }).join("");
+    ring.appendChild(p);
+  });
+  return true;
+}
+
+function b9wheelShow() {
+  var ring = document.getElementById("b9ring");
+  if (!ring) return;
+  ring.style.transform =
+    "translateZ(-" +
+    (Math.round(150 / (2 * Math.tan(Math.PI / 12))) + 18) +
+    "px) rotateY(" +
+    -B9_WHEEL.spin * 30 +
+    "deg)";
+  Array.prototype.forEach.call(ring.children, function (p) {
+    p.classList.toggle("cur", +p.getAttribute("data-m") === B9_WHEEL.cur);
+  });
+  var now = document.getElementById("b9now");
+  if (now) {
+    var on = b9inSeason(B9_WHEEL.cur).map(function (s) {
+      return s.name;
+    });
+    var isToday = B9_WHEEL.cur === new Date().getMonth();
+    now.textContent =
+      B9_MONTHS[B9_WHEEL.cur] +
+      (isToday ? " (this month)" : "") +
+      ": " +
+      (on.length ? on.join(", ") + " in season" : "off-season");
+  }
+  var play = document.querySelector('[data-b9="play"]');
+  if (play) {
+    play.setAttribute("aria-pressed", String(B9_WHEEL.play));
+    play.textContent = B9_WHEEL.play ? "Turning" : "Paused";
+  }
+}
+
+// spin keeps counting up so the ring always turns the short way
+function b9wheelGo(delta) {
+  B9_WHEEL.spin += delta;
+  B9_WHEEL.cur = (((B9_WHEEL.cur + delta) % 12) + 12) % 12;
+  b9wheelShow();
+}
+
+function b9wheel() {
+  if (!b9wheelBuild()) return;
+  B9_WHEEL.spin = B9_WHEEL.cur;
+  b9wheelShow();
+  var box = document.getElementById("b9season");
+  if (box)
+    box.addEventListener("click", function (e) {
+      var b = e.target.closest && e.target.closest("[data-b9]");
+      if (!b) return;
+      var a = b.getAttribute("data-b9");
+      if (a === "next") b9wheelGo(1);
+      else if (a === "prev") b9wheelGo(-1);
+      else if (a === "now") {
+        var d = new Date().getMonth() - B9_WHEEL.cur;
+        if (d > 6) d -= 12;
+        if (d < -6) d += 12;
+        b9wheelGo(d);
+      } else if (a === "play") B9_WHEEL.play = !B9_WHEEL.play;
+      if (a !== "play") B9_WHEEL.play = false;
+      b9wheelShow();
+    });
+  if (B9_REDUCE) B9_WHEEL.play = false;
+  b9wheelShow();
+  B9_WHEEL.timer = setInterval(function () {
+    if (B9_WHEEL.play && b8cur === "home") b9wheelGo(1);
+  }, 3600);
+}
+
+/* 6. the top three as a 3D podium, rebuilt whenever the division changes */
+var B9_POD = [
+  { a: "#e9c35a", b: "#b98a1e", medal: "#f5d27a" },
+  { a: "#c9d2da", b: "#8c99a6", medal: "#dfe5ea" },
+  { a: "#d39a6a", b: "#9c6436", medal: "#e5b48a" },
+];
+function b9podium() {
+  var box = document.getElementById("b9podium");
+  if (!box) return;
+  var top = b8standings(b8div, new Date()).slice(0, 3);
+  var order = [1, 0, 2].filter(function (i) {
+    return top[i];
+  });
+  var maxW = Math.max.apply(
+    null,
+    top
+      .map(function (r) {
+        return r.w;
+      })
+      .concat([1]),
+  );
+  box.innerHTML = order
+    .map(function (i) {
+      var r = top[i];
+      var P = B9_POD[i];
+      var h = Math.round(56 + (r.w / maxW) * 90 - i * 12);
+      return (
+        '<div class="b9-col' +
+        (r.team === B8_HOME ? " home" : "") +
+        '">' +
+        '<span class="b9-medal" style="background:' +
+        P.medal +
+        '">' +
+        (i + 1) +
+        "</span>" +
+        '<span class="b9-name">' +
+        b7esc(r.team) +
+        "</span>" +
+        '<span class="b9-rec">' +
+        r.w +
+        "–" +
+        r.l +
+        " · " +
+        Math.round(r.pct * 100) +
+        "% lines</span>" +
+        '<div class="b9-box b9-low" style="--h:' +
+        h +
+        "px;--a:" +
+        P.a +
+        ";--b:" +
+        P.b +
+        '">' +
+        '<span class="b9-front">' +
+        (i + 1) +
+        '</span><span class="b9-top"></span><span class="b9-side"></span></div></div>'
+      );
+    })
+    .join("");
+  b7raf(function () {
+    b7raf(function () {
+      Array.prototype.forEach.call(
+        box.querySelectorAll(".b9-box"),
+        function (b) {
+          b.classList.remove("b9-low");
+        },
+      );
+    });
+  });
+}
+
+var __leaguesB9 = b8leagues;
+b8leagues = function () {
+  __leaguesB9();
+  b9podium();
+  b9tilt(document.getElementById("b8results"));
+};
+
+var __showB9 = b8show;
+b8show = function (tab) {
+  __showB9(tab);
+  if (tab === "programs") b9flowLayout();
+  if (tab === "leagues") b9podium();
+};
+
+if (b9ballBuild()) b7raf(b9ballFrame);
+b9pano();
+b9tilt(document);
+b9flow();
+b9wheel();
+b9podium();
+
+window.rdDepth = {
+  flow: function () {
+    return { cur: B9_FLOW.cur, auto: B9_FLOW.auto };
+  },
+  flowGo: function (i) {
+    b9flowGo(i, true);
+  },
+  wheel: function () {
+    return { cur: B9_WHEEL.cur, play: B9_WHEEL.play };
+  },
+  seam: b9seamPath,
+};
+
         /* ---------- wiring ---------- */
 
         Array.prototype.forEach.call(
@@ -5091,7 +10594,1361 @@ window.rdBoard = {
         );
 
         render();
+/* ---------- build 10: accuracy, layouts, themes ---------- */
+var B10 = { layout: "grid", day: null };
+var B10_FULL = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+var B10_START = 360; // 6:00
+var B10_SPAN = 960; // to 22:00
+
+function b10el(id) {
+  return document.getElementById(id);
+}
+function b10today() {
+  return (new Date().getDay() + 6) % 7;
+}
+function b10locked() {
+  return view === "member" && !APPROVED;
+}
+// same visibility rule the week grid uses
+function b10visible() {
+  return RESULT.sessions.filter(function (s) {
+    if (filter !== "all" && s.sport !== filter) return false;
+    if (view === "member" && s.held) return false;
+    return true;
+  });
+}
+function b10sorted(list) {
+  return list.slice().sort(function (a, b) {
+    return b7span(a.t)[0] - b7span(b.t)[0];
+  });
+}
+function b10clock(m) {
+  var h = Math.floor(m / 60),
+    mm = m % 60;
+  var ap = h >= 12 ? "pm" : "am";
+  var h12 = h % 12 || 12;
+  return h12 + (mm ? ":" + (mm < 10 ? "0" : "") + mm : "") + ap;
+}
+
+function b10glance(list) {
+  var g = b10el("b10glance");
+  if (!g) return;
+  var max = 1;
+  var per = DAYS.map(function (dn, i) {
+    var c = { tennis: 0, pickleball: 0, platform: 0, held: 0, all: 0 };
+    list.forEach(function (s) {
+      if (s.d !== i) return;
+      c.all++;
+      if (s.held) c.held++;
+      else c[s.sport]++;
+    });
+    ["tennis", "pickleball", "platform", "held"].forEach(function (k) {
+      if (c[k] > max) max = c[k];
+    });
+    return c;
+  });
+  var td = b10today();
+  g.innerHTML = per
+    .map(function (c, i) {
+      var bars = ["tennis", "pickleball", "platform", "held"]
+        .filter(function (k) {
+          return k !== "held" || view === "director";
+        })
+        .map(function (k, j) {
+          return (
+            '<i class="' +
+            k +
+            '" style="height:' +
+            Math.round((c[k] / max) * 100) +
+            "%;animation-delay:" +
+            (i * 40 + j * 30) +
+            'ms" title="' +
+            c[k] +
+            " " +
+            k +
+            '"></i>'
+          );
+        })
+        .join("");
+      return (
+        '<button type="button" class="b10-g' +
+        (i === td ? " today" : "") +
+        (B10.layout === "timeline" && B10.day === i ? " sel" : "") +
+        '" data-d="' +
+        i +
+        '" aria-label="' +
+        B10_FULL[i] +
+        ": " +
+        c.all +
+        ' sessions. Open the court timeline for this day."><b>' +
+        DAYS[i] +
+        "</b><small>" +
+        (c.all
+          ? c.all + (c.all === 1 ? " session" : " sessions")
+          : "Nothing on") +
+        '</small><span class="b10-bars">' +
+        bars +
+        "</span></button>"
+      );
+    })
+    .join("");
+}
+
+function b10agenda(list) {
+  var a = b10el("b10agenda");
+  if (!a) return;
+  var td = b10today();
+  a.innerHTML = DAYS.map(function (dn, i) {
+    var items = b10sorted(
+      list.filter(function (s) {
+        return s.d === i;
+      }),
+    );
+    var body = items.length
+      ? items
+          .map(function (s, j) {
+            var sp = b7span(s.t);
+            return (
+              '<div class="b10-ai ' +
+              (s.held ? "held" : s.sport) +
+              '" style="animation-delay:' +
+              j * 50 +
+              'ms"><div class="tm">' +
+              b10clock(sp[0]) +
+              " – " +
+              b10clock(sp[1]) +
+              '</div><div><div class="nm">' +
+              b7esc(s.n) +
+              '</div><div class="mt">' +
+              b7esc(s.court) +
+              " · " +
+              b7esc(s.who) +
+              " · " +
+              b7esc(s.coach) +
+              "</div></div>" +
+              (s.held
+                ? '<span class="b10-pill held">Held — ' +
+                  b7esc(s.flag) +
+                  "</span>"
+                : '<span class="b10-pill">' +
+                  (s.sport === "platform"
+                    ? "Platform tennis"
+                    : s.sport.charAt(0).toUpperCase() + s.sport.slice(1)) +
+                  "</span>") +
+              "</div>"
+            );
+          })
+          .join("")
+      : '<div class="b10-empty">Nothing scheduled</div>';
+    return (
+      '<div class="b10-aday' +
+      (i === td ? " today" : "") +
+      '"><h4>' +
+      B10_FULL[i] +
+      "<small>" +
+      (i === td ? "Today · " : "") +
+      items.length +
+      (items.length === 1 ? " session" : " sessions") +
+      '</small></h4><div class="b10-alist">' +
+      body +
+      "</div></div>"
+    );
+  }).join("");
+}
+
+function b10timeline(list) {
+  var box = b10el("b10tl");
+  if (!box) return;
+  if (B10.day == null) B10.day = b10today();
+  var d = B10.day;
+  var rows = B7_LAYOUT.filter(function (r) {
+    return filter === "all" || r.k === filter;
+  });
+  var ticks = "";
+  for (var m = B10_START; m <= B10_START + B10_SPAN; m += 120) {
+    ticks +=
+      '<span style="left:' +
+      ((m - B10_START) / B10_SPAN) * 100 +
+      '%">' +
+      b10clock(m) +
+      "</span>";
+  }
+  var nowM = new Date().getHours() * 60 + new Date().getMinutes();
+  var showNow =
+    d === b10today() && nowM >= B10_START && nowM <= B10_START + B10_SPAN;
+  var nowLine = showNow
+    ? '<div class="b10-now" style="left:' +
+      ((nowM - B10_START) / B10_SPAN) * 100 +
+      '%" title="Now"></div>'
+    : "";
+  var dayList = list.filter(function (s) {
+    return s.d === d;
+  });
+  var body = rows
+    .map(function (r, ri) {
+      var bars = dayList
+        .filter(function (s) {
+          return s.court === r.c;
+        })
+        .map(function (s, j) {
+          var sp = b7span(s.t);
+          var a = Math.max(sp[0], B10_START),
+            b = Math.min(sp[1], B10_START + B10_SPAN);
+          return (
+            '<div class="b10-bar ' +
+            (s.held ? "held" : s.sport) +
+            '" style="left:' +
+            ((a - B10_START) / B10_SPAN) * 100 +
+            "%;width:" +
+            ((b - a) / B10_SPAN) * 100 +
+            "%;animation-delay:" +
+            (ri * 45 + j * 60) +
+            'ms" title="' +
+            b7esc(s.n + " · " + s.t + " · " + s.who) +
+            '">' +
+            (s.held ? "Held — " : "") +
+            b7esc(s.n) +
+            "</div>"
+          );
+        })
+        .join("");
+      var closed = CLOSED.indexOf(r.c) > -1;
+      return (
+        '<div class="b10-row"><div class="lbl"><i class="' +
+        r.k +
+        '"></i>' +
+        b7esc(r.c) +
+        '</div><div class="b10-lane' +
+        (closed ? " closed" : "") +
+        '">' +
+        bars +
+        nowLine +
+        "</div></div>"
+      );
+    })
+    .join("");
+  var chips = DAYS.map(function (dn, i) {
+    return (
+      '<button type="button" data-td="' +
+      i +
+      '"' +
+      (i === d ? ' class="on" aria-pressed="true"' : ' aria-pressed="false"') +
+      ">" +
+      dn +
+      "</button>"
+    );
+  }).join("");
+  box.innerHTML =
+    '<div class="b10-tlin"><div class="b10-tlhead"><div><b>' +
+    B10_FULL[d] +
+    " on every court</b> <span>" +
+    dayList.length +
+    (dayList.length === 1 ? " session" : " sessions") +
+    " · 6am to 10pm · sample week</span></div>" +
+    '<div class="b10-days" role="group" aria-label="Day">' +
+    chips +
+    "</div></div>" +
+    '<div class="b10-axis"><div></div><div class="ticks">' +
+    ticks +
+    "</div></div>" +
+    body +
+    "</div>";
+}
+
+function b10render() {
+  var cal = b10el("cal"),
+    ag = b10el("b10agenda"),
+    tl = b10el("b10tl"),
+    gl = b10el("b10glance");
+  if (!cal || !ag || !tl || !gl) return;
+  var sw = document.querySelector('section[data-tab="schedule"] .b8-swipe');
+  var locked = b10locked();
+  var mode = locked ? "grid" : B10.layout;
+  cal.style.display = mode === "grid" ? "" : "none";
+  if (sw) sw.style.display = mode === "grid" ? "" : "none";
+  ag.style.display = mode === "agenda" ? "" : "none";
+  tl.style.display = mode === "timeline" ? "" : "none";
+  gl.style.display = locked ? "none" : "";
+  var lay = b10el("b10lay");
+  if (lay) {
+    Array.prototype.forEach.call(lay.querySelectorAll("button"), function (b) {
+      var on = b.getAttribute("data-l") === B10.layout;
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+      b.disabled = locked && b.getAttribute("data-l") !== "grid";
+    });
+  }
+  if (locked) return;
+  var list = b10visible();
+  b10glance(list);
+  if (mode === "agenda") b10agenda(list);
+  if (mode === "timeline") b10timeline(list);
+}
+
+function b10setLayout(l) {
+  B10.layout = l;
+  b10render();
+}
+
+function b10theme(t) {
+  var root = document.documentElement;
+  if (t === "green") root.removeAttribute("data-theme");
+  else root.setAttribute("data-theme", t);
+  Array.prototype.forEach.call(
+    document.querySelectorAll(".b10-sw"),
+    function (b) {
+      b.setAttribute(
+        "aria-pressed",
+        b.getAttribute("data-theme") === t ? "true" : "false",
+      );
+    },
+  );
+}
+
+function b10wire() {
+  var lay = b10el("b10lay");
+  if (lay)
+    lay.addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-l]");
+      if (b && !b.disabled) b10setLayout(b.getAttribute("data-l"));
+    });
+  var gl = b10el("b10glance");
+  if (gl)
+    gl.addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-d]");
+      if (!b) return;
+      B10.day = +b.getAttribute("data-d");
+      b10setLayout("timeline");
+    });
+  var tl = b10el("b10tl");
+  if (tl)
+    tl.addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-td]");
+      if (!b) return;
+      B10.day = +b.getAttribute("data-td");
+      b10render();
+    });
+  Array.prototype.forEach.call(
+    document.querySelectorAll(".b10-sw"),
+    function (b) {
+      b.addEventListener("click", function () {
+        b10theme(b.getAttribute("data-theme"));
+      });
+    },
+  );
+}
+
+var __renderB10 = render;
+render = function () {
+  __renderB10.apply(this, arguments);
+  b10render();
+};
+b10wire();
+b10render();
+window.rdLayout = {
+  set: b10setLayout,
+  theme: b10theme,
+  state: function () {
+    return { layout: B10.layout, day: B10.day };
+  },
+};
+
+/* ---------- build 11: history, heatmap, lanes, night, motion ---------- */
+var B11_SPORTS = [
+  ["tennis", "Tennis"],
+  ["pickleball", "Pickleball"],
+  ["platform", "Platform tennis"],
+];
+var B11_REDUCED = !!(
+  window.matchMedia &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches
+);
+
+function b11hours(s) {
+  var sp = b7span(s.t);
+  return (sp[1] - sp[0]) / 60;
+}
+
+function b11heat(list) {
+  var box = b10el("b11heat");
+  if (!box) return;
+  var head = "<div></div>";
+  for (var h = 6; h < 22; h++) {
+    head += '<div class="hh">' + b10clock(h * 60).replace(":00", "") + "</div>";
+  }
+  var cells = "";
+  var peak = { n: 0, d: 0, h: 6 };
+  for (var d = 0; d < 7; d++) {
+    cells += '<div class="dl">' + DAYS[d] + "</div>";
+    for (var hh = 6; hh < 22; hh++) {
+      var a = hh * 60,
+        b = a + 60,
+        courts = {};
+      list.forEach(function (s) {
+        if (s.d !== d) return;
+        var sp = b7span(s.t);
+        if (sp[0] < b && sp[1] > a) courts[s.court] = 1;
+      });
+      var n = Object.keys(courts).length;
+      if (n > peak.n) peak = { n: n, d: d, h: hh };
+      var lv =
+        n === 0
+          ? ""
+          : n === 1
+            ? " l1"
+            : n === 2
+              ? " l2"
+              : n <= 4
+                ? " l3"
+                : " l4";
+      cells +=
+        '<button type="button" class="b11-c' +
+        lv +
+        '" data-hd="' +
+        d +
+        '" style="animation-delay:' +
+        (d * 40 + (hh - 6) * 14) +
+        'ms" aria-label="' +
+        B10_FULL[d] +
+        " " +
+        b10clock(a) +
+        ": " +
+        n +
+        (n === 1 ? " court" : " courts") +
+        ' in use">' +
+        (n || "") +
+        "</button>";
+    }
+  }
+  box.innerHTML =
+    "<h4>When the courts are busiest</h4><p>Each square counts the courts in use in that hour. " +
+    (peak.n
+      ? "Busiest slot this week: " +
+        B10_FULL[peak.d] +
+        " at " +
+        b10clock(peak.h * 60) +
+        ", " +
+        peak.n +
+        " courts. "
+      : "") +
+    'Click a square to open that day’s court timeline.</p><div class="b11-hg">' +
+    head +
+    cells +
+    '</div><div class="b11-key">Courts in use <span><i style="background:var(--line-2)"></i> 0</span>' +
+    '<span><i style="background:#dbeee2"></i> 1</span><span><i style="background:#a9d6b9"></i> 2</span>' +
+    '<span><i style="background:#3a7f58"></i> 3–4</span><span><i style="background:#2f6b4c"></i> 5+</span></div>';
+}
+
+function b11lanes(list) {
+  var box = b10el("b11lanes");
+  if (!box) return;
+  var totals = {},
+    max = 0.01;
+  B11_SPORTS.forEach(function (sp) {
+    totals[sp[0]] = 0;
+  });
+  list.forEach(function (s) {
+    totals[s.sport] += b11hours(s);
+  });
+  B11_SPORTS.forEach(function (sp) {
+    if (totals[sp[0]] > max) max = totals[sp[0]];
+  });
+  box.innerHTML = B11_SPORTS.filter(function (sp) {
+    return filter === "all" || filter === sp[0];
+  })
+    .map(function (sp) {
+      var items = list
+        .filter(function (s) {
+          return s.sport === sp[0];
+        })
+        .sort(function (a, b) {
+          return a.d - b.d || b7span(a.t)[0] - b7span(b.t)[0];
+        });
+      var body = items.length
+        ? items
+            .map(function (s, j) {
+              return (
+                '<div class="b11-it' +
+                (s.held ? " held" : "") +
+                '" style="animation-delay:' +
+                j * 45 +
+                'ms"><b>' +
+                b7esc(s.n) +
+                "</b><small>" +
+                DAYS[s.d] +
+                " " +
+                b7esc(s.t) +
+                " · " +
+                b7esc(s.court) +
+                (s.held ? " · held — " + b7esc(s.flag) : "") +
+                "</small></div>"
+              );
+            })
+            .join("")
+        : '<div class="b10-empty">Nothing this week</div>';
+      var hrs = Math.round(totals[sp[0]] * 10) / 10;
+      return (
+        '<div class="b11-lane b11-spot ' +
+        sp[0] +
+        '"><div class="b11-lh"><b>' +
+        sp[1] +
+        "</b><span>" +
+        items.length +
+        (items.length === 1 ? " session" : " sessions") +
+        " · " +
+        hrs +
+        ' court-hours</span></div><div class="b11-meter"><i style="width:' +
+        Math.round((totals[sp[0]] / max) * 100) +
+        '%"></i></div>' +
+        body +
+        "</div>"
+      );
+    })
+    .join("");
+}
+
+var __renderB11 = b10render;
+b10render = function () {
+  __renderB11.apply(this, arguments);
+  var heat = b10el("b11heat"),
+    lanes = b10el("b11lanes");
+  if (!heat || !lanes) return;
+  var locked = b10locked();
+  var mode = locked ? "grid" : B10.layout;
+  heat.style.display = mode === "heatmap" ? "" : "none";
+  lanes.style.display = mode === "lanes" ? "" : "none";
+  Array.prototype.forEach.call(document.querySelectorAll(".b10-g"), function (g) {
+    g.classList.add("b11-spot");
+  });
+  if (locked) return;
+  var list = b10visible();
+  if (mode === "heatmap") b11heat(list);
+  if (mode === "lanes") b11lanes(list);
+};
+
+// tab entrance: re-run the stagger each time a tab opens
+var __showB11 = b8show;
+b8show = function (tab) {
+  var r = __showB11.apply(this, arguments);
+  if (!B11_REDUCED) {
+    Array.prototype.forEach.call(
+      document.querySelectorAll('[data-tab="' + tab + '"] > .wrap'),
+      function (w) {
+        w.classList.remove("b11-in");
+        void w.offsetWidth;
+        w.classList.add("b11-in");
+      },
+    );
+  }
+  return r;
+};
+
+function b11countUp(el) {
+  var raw = el.textContent,
+    m = raw.match(/^(\d+)(.*)$/);
+  if (!m || B11_REDUCED || !window.requestAnimationFrame) return;
+  var end = +m[1],
+    tail = m[2],
+    t0 = null;
+  function step(t) {
+    if (t0 === null) t0 = t;
+    var p = Math.min(1, (t - t0) / 1100);
+    el.textContent = Math.round(end * (1 - Math.pow(1 - p, 3))) + tail;
+    if (p < 1) window.requestAnimationFrame(step);
+  }
+  window.requestAnimationFrame(step);
+}
+
+function b11observe() {
+  if (!("IntersectionObserver" in window)) {
+    Array.prototype.forEach.call(
+      document.querySelectorAll(".b11-ev"),
+      function (e) {
+        e.classList.add("on");
+      },
+    );
+    return;
+  }
+  var io = new IntersectionObserver(
+    function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var el = en.target;
+        if (el.classList.contains("b11-ev")) el.classList.add("on");
+        else b11countUp(el);
+        io.unobserve(el);
+      });
+    },
+    { threshold: 0.3 },
+  );
+  Array.prototype.forEach.call(
+    document.querySelectorAll(".b11-ev, .b7-stat .v, .b11-course b"),
+    function (e) {
+      io.observe(e);
+    },
+  );
+  if (B11_REDUCED) {
+    Array.prototype.forEach.call(
+      document.querySelectorAll(".b11-ev"),
+      function (e) {
+        e.classList.add("on");
+      },
+    );
+  }
+}
+
+function b11wire() {
+  var heat = b10el("b11heat");
+  if (heat)
+    heat.addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-hd]");
+      if (!b) return;
+      B10.day = +b.getAttribute("data-hd");
+      b10setLayout("timeline");
+    });
+  var bar = document.querySelector(".b11-progress");
+  if (bar) {
+    var onScroll = function () {
+      var h = document.documentElement;
+      var max = h.scrollHeight - h.clientHeight;
+      bar.style.transform = "scaleX(" + (max > 0 ? h.scrollTop / max : 0) + ")";
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
+  document.addEventListener("pointermove", function (e) {
+    var t = e.target.closest && e.target.closest(".b11-spot, .b10-g");
+    if (!t) return;
+    var r = t.getBoundingClientRect();
+    t.style.setProperty("--mx", e.clientX - r.left + "px");
+    t.style.setProperty("--my", e.clientY - r.top + "px");
+  });
+  Array.prototype.forEach.call(
+    document.querySelectorAll(".b10-g"),
+    function (g) {
+      g.classList.add("b11-spot");
+    },
+  );
+  Array.prototype.forEach.call(
+    document.querySelectorAll("section h2"),
+    function (h) {
+      if (!B11_REDUCED) h.classList.add("b11-shine");
+    },
+  );
+}
+
+b11wire();
+b11observe();
+b10render();
+window.rdBuild11 = {
+  heat: function () {
+    return b10el("b11heat").querySelectorAll(".b11-c").length;
+  },
+};
+
+/* ---------- build 12: business case, presenter, handout ---------- */
+var B12_CHECKS = [
+  [
+    "conflict",
+    "Court conflict",
+    "Two sessions on one court at one time are both held.",
+  ],
+  [
+    "court closed",
+    "Court closed",
+    "Nothing publishes on a court that is out of use.",
+  ],
+  [
+    "stale source",
+    "Freshness",
+    "Entries not confirmed in the last 7 days are held.",
+  ],
+  [
+    "coverage",
+    "Three sports",
+    "Flags a week where a sport would show nothing.",
+  ],
+  [
+    "approval",
+    "Director approval",
+    "Members see nothing until the week is approved.",
+  ],
+];
+
+function b12checks() {
+  var box = b10el("b12checks");
+  if (!box) return;
+  var held = RESULT.held || [];
+  box.innerHTML = B12_CHECKS.map(function (c, i) {
+    var n, unit, hit;
+    if (c[0] === "approval") {
+      hit = !APPROVED;
+      n = APPROVED ? "Yes" : "No";
+      unit = APPROVED ? "approved" : "not approved";
+    } else {
+      n = held.filter(function (h) {
+        return h.kind === c[0];
+      }).length;
+      hit = n > 0;
+      unit = n === 1 ? "issue held" : "issues held";
+    }
+    return (
+      '<div class="b12-ck' +
+      (hit ? " hit" : "") +
+      '"><div class="n">CHECK ' +
+      (i + 1) +
+      "</div><b>" +
+      c[1] +
+      "</b><p>" +
+      c[2] +
+      '</p><div class="v">' +
+      n +
+      "<small>" +
+      unit +
+      "</small></div></div>"
+    );
+  }).join("");
+  if (B11_REDUCED || !("IntersectionObserver" in window)) {
+    Array.prototype.forEach.call(box.children, function (c) {
+      c.classList.add("on");
+    });
+  } else {
+    setTimeout(function () {
+      Array.prototype.forEach.call(box.children, function (c, i) {
+        setTimeout(function () {
+          c.classList.add("on");
+        }, i * 120);
+      });
+    }, 60);
+  }
+}
+
+/* ---- presenter: a guided walk through the page ---- */
+var B12_STEPS = [
+  {
+    tab: "home",
+    sel: ".hero",
+    t: "The problem",
+    p: "Rumson runs tennis, pickleball and platform tennis, but members have no single place to see the week. This prototype is that place.",
+  },
+  {
+    tab: "schedule",
+    sel: "#b10lay",
+    layout: "grid",
+    t: "One published week",
+    p: "The week a member sees, in five layouts: a grid, an agenda, every court on a timeline, the busiest hours and each sport on its own.",
+  },
+  {
+    tab: "schedule",
+    sel: "#b11heat",
+    layout: "heatmap",
+    t: "When the courts are busiest",
+    p: "Each square counts the courts in use that hour, so the Director can see pressure on the courts before it becomes a complaint.",
+  },
+  {
+    tab: "schedule",
+    sel: "#cal",
+    layout: "grid",
+    view: "director",
+    t: "What the checks hold back",
+    p: "The director view shows the sessions the checks are holding, and why. Members never see them until the problem is fixed.",
+  },
+  {
+    tab: "courts",
+    sel: "#b7stage",
+    t: "The courts through the day",
+    p: "The same week on a 3D map of the courts. Drag the clock or press Play and the light follows the hour.",
+  },
+  {
+    tab: "leagues",
+    sel: "#b9podium",
+    t: "League results",
+    p: "Standings and results in one view. All teams and scores here are invented, so no member data is ever shown.",
+  },
+  {
+    tab: "club",
+    sel: ".b10-ledger",
+    t: "How sure is each number?",
+    p: "Every fact on the page, with its source and a confidence tag. One claim from a directory site was checked and rejected.",
+  },
+  {
+    tab: "director",
+    sel: "#b12case",
+    t: "The ask",
+    p: "A four-week pilot, the measures that would show it worked, the risks already planned for, and four questions for the Director.",
+  },
+];
+var B12 = { i: -1, spot: null };
+
+function b12clearSpot() {
+  if (B12.spot) B12.spot.classList.remove("b12-spot");
+  B12.spot = null;
+}
+
+function b12go(i) {
+  var tour = b10el("b12tour");
+  if (!tour) return;
+  if (i < 0) i = 0;
+  if (i >= B12_STEPS.length) return b12stop();
+  B12.i = i;
+  var s = B12_STEPS[i];
+  var wantView = s.view || "member";
+  var vb = document.querySelector('#viewseg button[data-v="' + wantView + '"]');
+  if (vb && view !== wantView) vb.click();
+  b8show(s.tab);
+  if (s.layout) b10setLayout(s.layout);
+  b12clearSpot();
+  var el = document.querySelector(s.sel);
+  if (el) {
+    el.classList.add("b12-spot");
+    B12.spot = el;
+    if (el.scrollIntoView)
+      el.scrollIntoView({
+        behavior: B11_REDUCED ? "auto" : "smooth",
+        block: "center",
+      });
+  }
+  tour.hidden = false;
+  tour.querySelector(".st").textContent =
+    "Step " + (i + 1) + " of " + B12_STEPS.length;
+  tour.querySelector("h4").textContent = s.t;
+  tour.querySelector("p").textContent = s.p;
+  tour.querySelector(".b12-dots").innerHTML = B12_STEPS.map(function (x, j) {
+    return "<i" + (j <= i ? ' class="on"' : "") + "></i>";
+  }).join("");
+  tour.querySelector("[data-t=prev]").disabled = i === 0;
+  tour.querySelector("[data-t=next]").textContent =
+    i === B12_STEPS.length - 1 ? "Finish" : "Next →";
+}
+
+function b12start() {
+  b12go(0);
+}
+
+function b12stop() {
+  var tour = b10el("b12tour");
+  b12clearSpot();
+  B12.i = -1;
+  if (tour) tour.hidden = true;
+  var vb = document.querySelector('#viewseg button[data-v="member"]');
+  if (vb && view !== "member") vb.click();
+}
+
+function b12reveal() {
+  var els = document.querySelectorAll(
+    "#b12case .b12-ba, #b12case .b12-two, #b12case .b12-risks, #b12case .b12-qs",
+  );
+  Array.prototype.forEach.call(els, function (e) {
+    e.classList.add("b12-up");
+  });
+  if (B11_REDUCED || !("IntersectionObserver" in window)) {
+    Array.prototype.forEach.call(els, function (e) {
+      e.classList.add("on");
+    });
+    return;
+  }
+  var io = new IntersectionObserver(
+    function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          en.target.classList.add("on");
+          io.unobserve(en.target);
+        }
+      });
+    },
+    { threshold: 0.15 },
+  );
+  Array.prototype.forEach.call(els, function (e) {
+    io.observe(e);
+  });
+}
+
+function b12wire() {
+  // the overlay sits after this script, so listen on the document
+  document.addEventListener("click", function (e) {
+      var b = e.target.closest && e.target.closest("#b12tour button[data-t]");
+      if (!b) return;
+      var t = b.getAttribute("data-t");
+      if (t === "next") b12go(B12.i + 1);
+      else if (t === "prev") b12go(B12.i - 1);
+      else b12stop();
+    });
+  ["b12present", "b12present2"].forEach(function (id) {
+    var b = b10el(id);
+    if (b) b.addEventListener("click", b12start);
+  });
+  var pr = b10el("b12print");
+  if (pr)
+    pr.addEventListener("click", function () {
+      if (typeof window.print === "function") window.print();
+    });
+  document.addEventListener("keydown", function (e) {
+    if (B12.i < 0) return;
+    if (e.key === "ArrowRight") b12go(B12.i + 1);
+    else if (e.key === "ArrowLeft") b12go(B12.i - 1);
+    else if (e.key === "Escape") b12stop();
+  });
+}
+
+var __renderB12 = b10render;
+b10render = function () {
+  __renderB12.apply(this, arguments);
+  b12checks();
+};
+b12wire();
+b12reveal();
+b12checks();
+window.rdPresent = {
+  start: b12start,
+  go: b12go,
+  stop: b12stop,
+  step: function () {
+    return B12.i;
+  },
+  steps: B12_STEPS.length,
+};
+
+/* ---------- build 13: live, clock, board, neighbours ---------- */
+var B13 = { autoTimer: null, themeAuto: false };
+var B13_LANE = { tennis: 122, pickleball: 100, platform: 78 };
+
+function b13nowMin() {
+  var d = new Date();
+  return d.getHours() * 60 + d.getMinutes();
+}
+function b13dur(m) {
+  var h = Math.floor(m / 60),
+    r = m % 60;
+  return (h ? h + " h " : "") + (r || !h ? r + " min" : "");
+}
+function b13published() {
+  return RESULT.sessions.filter(function (s) {
+    return !s.held;
+  });
+}
+
+function b13live() {
+  var box = b10el("b13live");
+  if (!box) return;
+  if (!APPROVED) {
+    box.className = "b13-live off";
+    box.innerHTML =
+      '<span class="b13-pulse"></span><div><div class="lb">Live at the club</div><div class="vl">This week is not approved, so nothing is published.</div></div><div></div><div></div>';
+    return;
+  }
+  box.className = "b13-live";
+  var day = b10today(),
+    now = b13nowMin(),
+    list = b13published();
+  var onNow = list.filter(function (s) {
+    var sp = b7span(s.t);
+    return s.d === day && sp[0] <= now && now < sp[1];
+  });
+  var next = null,
+    wait = 0;
+  for (var k = 0; k < 7 && !next; k++) {
+    var d = (day + k) % 7;
+    var cand = list
+      .filter(function (s) {
+        return s.d === d && (k > 0 || b7span(s.t)[0] > now);
+      })
+      .sort(function (a, b) {
+        return b7span(a.t)[0] - b7span(b.t)[0];
+      });
+    if (cand.length) {
+      next = cand[0];
+      wait = k * 1440 + b7span(next.t)[0] - now;
+    }
+  }
+  var courts = {};
+  onNow.forEach(function (s) {
+    courts[s.court] = 1;
+  });
+  var nowTxt = onNow.length
+    ? onNow
+        .map(function (s) {
+          return b7esc(s.n) + " <small>(" + b7esc(s.court) + ")</small>";
+        })
+        .join(", ")
+    : "No session on court right now";
+  var nextTxt = next
+    ? b7esc(next.n) +
+      " <small>" +
+      (next.d === day ? "today" : B10_FULL[next.d]) +
+      " " +
+      b7esc(next.t) +
+      " · in " +
+      b13dur(wait) +
+      "</small>"
+    : "Nothing else this week";
+  box.innerHTML =
+    '<span class="b13-pulse" aria-hidden="true"></span>' +
+    '<div><div class="lb">On court now · ' +
+    B10_FULL[day] +
+    " " +
+    b10clock(now) +
+    '</div><div class="vl">' +
+    nowTxt +
+    "</div></div>" +
+    '<div><div class="lb">Up next</div><div class="vl">' +
+    nextTxt +
+    "</div></div>" +
+    '<div class="b13-gauge"><div class="lb">Courts in use</div><b>' +
+    Object.keys(courts).length +
+    "</b> / " +
+    B7_LAYOUT.length +
+    "</div>";
+}
+
+function b13pt(r, m) {
+  var a = (m / 1440) * 2 * Math.PI - Math.PI / 2;
+  return [
+    Math.round(r * Math.cos(a) * 10) / 10,
+    Math.round(r * Math.sin(a) * 10) / 10,
+  ];
+}
+function b13arc(r, a, b) {
+  var p = b13pt(r, a),
+    q = b13pt(r, b);
+  return (
+    "M" +
+    p[0] +
+    " " +
+    p[1] +
+    " A" +
+    r +
+    " " +
+    r +
+    " 0 " +
+    (b - a > 720 ? 1 : 0) +
+    " 1 " +
+    q[0] +
+    " " +
+    q[1]
+  );
+}
+
+function b13clock(list) {
+  var box = b10el("b13clock");
+  if (!box) return;
+  if (B10.day == null) B10.day = b10today();
+  var d = B10.day;
+  var items = b10sorted(
+    list.filter(function (s) {
+      return s.d === d;
+    }),
+  );
+  var svg =
+    '<svg viewBox="-160 -160 320 320" role="img" aria-label="' +
+    B10_FULL[d] +
+    " as a 24-hour clock with " +
+    items.length +
+    ' sessions">';
+  ["tennis", "pickleball", "platform"].forEach(function (k) {
+    svg += '<circle class="ring" r="' + B13_LANE[k] + '"/>';
+  });
+  for (var h = 0; h < 24; h += 3) {
+    var p = b13pt(146, h * 60);
+    svg +=
+      '<text class="hr" x="' +
+      p[0] +
+      '" y="' +
+      p[1] +
+      '">' +
+      b10clock(h * 60).replace(":00", "") +
+      "</text>";
+  }
+  items.forEach(function (s, i) {
+    var sp = b7span(s.t);
+    svg +=
+      '<path class="arc ' +
+      (s.held ? "held" : s.sport) +
+      '" d="' +
+      b13arc(B13_LANE[s.sport], sp[0], sp[1]) +
+      '" style="animation-delay:' +
+      i * 90 +
+      'ms"><title>' +
+      b7esc(s.n + " · " + s.t + " · " + s.court) +
+      "</title></path>";
+  });
+  if (d === b10today()) {
+    var q = b13pt(140, b13nowMin());
+    svg +=
+      '<line class="hand" x1="0" y1="0" x2="' + q[0] + '" y2="' + q[1] + '"/>';
+  }
+  svg +=
+    '<text class="mid" y="-2">' +
+    B10_FULL[d] +
+    '</text><text class="mid2" y="14">' +
+    items.length +
+    (items.length === 1 ? " session" : " sessions") +
+    "</text></svg>";
+  var chips = DAYS.map(function (dn, i) {
+    return (
+      '<button type="button" data-cd="' +
+      i +
+      '"' +
+      (i === d ? ' class="on" aria-pressed="true"' : ' aria-pressed="false"') +
+      ">" +
+      dn +
+      "</button>"
+    );
+  }).join("");
+  var rows = items.length
+    ? items
+        .map(function (s) {
+          return (
+            '<div class="' +
+            (s.held ? "held" : s.sport) +
+            '"><b>' +
+            b7esc(s.t) +
+            "</b> " +
+            b7esc(s.n) +
+            " <small>· " +
+            b7esc(s.court) +
+            (s.held ? " · held — " + b7esc(s.flag) : "") +
+            "</small></div>"
+          );
+        })
+        .join("")
+    : '<div class="b10-empty">Nothing scheduled</div>';
+  box.innerHTML =
+    svg +
+    '<div><div class="b10-days" role="group" aria-label="Day" style="margin-bottom:10px">' +
+    chips +
+    '</div><p class="b10-empty" style="padding:0 0 8px">Outer ring tennis, middle pickleball, inner platform tennis. The red hand is now.</p><div class="b13-clist">' +
+    rows +
+    "</div></div>";
+}
+
+function b13part(m) {
+  return m < 720 ? 0 : m < 1020 ? 1 : 2;
+}
+function b13board(list) {
+  var box = b10el("b13board");
+  if (!box) return;
+  var names = ["Morning", "Afternoon", "Evening"],
+    cols = [[], [], []];
+  list
+    .slice()
+    .sort(function (a, b) {
+      return a.d - b.d || b7span(a.t)[0] - b7span(b.t)[0];
+    })
+    .forEach(function (s) {
+      cols[b13part(b7span(s.t)[0])].push(s);
+    });
+  box.innerHTML = cols
+    .map(function (c, i) {
+      return (
+        '<div class="b13-col"><h4>' +
+        names[i] +
+        "<span>" +
+        c.length +
+        "</span></h4>" +
+        (c.length
+          ? c
+              .map(function (s, j) {
+                return (
+                  '<div class="b13-tk ' +
+                  (s.held ? "held" : s.sport) +
+                  '" style="animation-delay:' +
+                  j * 35 +
+                  'ms"><b>' +
+                  b7esc(s.n) +
+                  "</b><small>" +
+                  DAYS[s.d] +
+                  " " +
+                  b7esc(s.t) +
+                  " · " +
+                  b7esc(s.court) +
+                  (s.held ? " · held" : "") +
+                  "</small></div>"
+                );
+              })
+              .join("")
+          : '<div class="b10-empty">Nothing</div>') +
+        "</div>"
+      );
+    })
+    .join("");
+}
+
+var B13_CLUBS = [
+  {
+    n: "Rumson Country Club",
+    us: true,
+    v: { tennis: [3, "2–3"], pickleball: [4, "4"], platform: [2, "2*"] },
+    s: "Tennis disputed (2 or 3); pickleball from the scope document; *platform assumed.",
+  },
+  {
+    n: "Navesink Country Club",
+    v: { tennis: [7, "7"], pickleball: [3, "3"], platform: [0, null] },
+    s: "Club & Resort Business, 2021 racquet listing.",
+  },
+  {
+    n: "Seabright Lawn Tennis & Cricket",
+    v: { tennis: [0, null], pickleball: [0, null], platform: [4, "4"] },
+    s: "Seabright's public platform tennis page.",
+  },
+];
+function b13neighbours() {
+  var box = b10el("b13nbg");
+  if (!box) return;
+  var max = 7;
+  box.innerHTML = B13_CLUBS.map(function (c) {
+    return (
+      '<div class="b13-club' +
+      (c.us ? " us" : "") +
+      '"><h4>' +
+      b7esc(c.n) +
+      "</h4>" +
+      [
+        ["tennis", "Tennis"],
+        ["pickleball", "Pickleball"],
+        ["platform", "Platform"],
+      ]
+        .map(function (k) {
+          var x = c.v[k[0]];
+          return (
+            '<div class="b13-br"><span>' +
+            k[1] +
+            '</span><span class="tr"><i class="' +
+            k[0] +
+            '" style="width:' +
+            (x[1] ? Math.round((x[0] / max) * 100) : 0) +
+            '%"></i></span><span class="n' +
+            (x[1] ? "" : " na") +
+            '">' +
+            (x[1] || "not published") +
+            "</span></div>"
+          );
+        })
+        .join("") +
+      '<div class="src">' +
+      b7esc(c.s) +
+      "</div></div>"
+    );
+  }).join("");
+}
+
+/* automation: day/night theme and an auto-playing presentation */
+function b13resolveTheme() {
+  var h = new Date().getHours();
+  return h >= 18 || h < 6 ? "night" : "green";
+}
+function b13applyAuto() {
+  if (!B13.themeAuto) return;
+  b10theme(b13resolveTheme());
+  var a = document.querySelector('.b10-sw[data-theme="auto"]');
+  if (a) a.setAttribute("aria-pressed", "true");
+}
+function b13autoTick() {
+  if (B12.i < 0) return b13autoStop();
+  b12go(B12.i + 1);
+  if (B12.i < 0) b13autoStop();
+}
+function b13autoStop() {
+  if (B13.autoTimer) clearInterval(B13.autoTimer);
+  B13.autoTimer = null;
+  var b = document.querySelector("#b12tour [data-b13=auto]");
+  if (b) {
+    b.classList.remove("on");
+    b.textContent = "Auto ▶";
+  }
+}
+function b13autoToggle() {
+  if (B13.autoTimer) return b13autoStop();
+  if (B12.i < 0) b12go(0);
+  B13.autoTimer = setInterval(b13autoTick, 9000);
+  var b = document.querySelector("#b12tour [data-b13=auto]");
+  if (b) {
+    b.classList.add("on");
+    b.textContent = "Pause ❚❚";
+  }
+}
+
+B12_STEPS.splice(7, 0, {
+  tab: "club",
+  sel: "#b13nb",
+  t: "How Rumson compares",
+  p: "Published court counts at two neighbouring clubs, next to Rumson's. It shows where the calendar matters most: three sports on fewer courts.",
+});
+B12_STEPS.splice(1, 0, {
+  tab: "home",
+  sel: "#b13live",
+  t: "Live, without anyone updating it",
+  p: "The page works out what is on court now and what is next from the approved week, and refreshes itself every 30 seconds.",
+});
+window.rdPresent.steps = B12_STEPS.length;
+
+var __renderB13 = b10render;
+b10render = function () {
+  __renderB13.apply(this, arguments);
+  b13live();
+  var clock = b10el("b13clock"),
+    board = b10el("b13board");
+  if (!clock || !board) return;
+  var locked = b10locked();
+  var mode = locked ? "grid" : B10.layout;
+  clock.style.display = mode === "clock" ? "" : "none";
+  board.style.display = mode === "board" ? "" : "none";
+  if (locked) return;
+  var list = b10visible();
+  if (mode === "clock") b13clock(list);
+  if (mode === "board") b13board(list);
+};
+
+function b13wire() {
+  var clock = b10el("b13clock");
+  if (clock)
+    clock.addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-cd]");
+      if (!b) return;
+      B10.day = +b.getAttribute("data-cd");
+      b10render();
+    });
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest("#b12tour [data-b13=auto]");
+    if (b) b13autoToggle();
+    var t = e.target.closest && e.target.closest("#b12tour button[data-t]");
+    if (t && t.getAttribute("data-t") === "exit") b13autoStop();
+    var sw = e.target.closest && e.target.closest(".b10-sw");
+    if (sw) {
+      B13.themeAuto = sw.getAttribute("data-theme") === "auto";
+      b13applyAuto();
+    }
+  });
+  setInterval(function () {
+    b13live();
+    b13applyAuto();
+  }, 30000);
+}
+
+b13wire();
+b13neighbours();
+b10render();
+window.rdBuild13 = {
+  autoTick: b13autoTick,
+  autoToggle: b13autoToggle,
+  autoOn: function () {
+    return !!B13.autoTimer;
+  },
+  resolveTheme: b13resolveTheme,
+};
+
       })();
     </script>
-  </body>
+  <div class="b12-tour" id="b12tour" role="dialog" aria-label="Guided presentation" aria-live="polite" hidden>
+  <div class="st"></div><h4></h4><p></p>
+  <div class="b12-tbar"><div class="b12-dots"></div><button type="button" data-t="exit">Exit</button><button type="button" data-b13="auto" class="b13-auto">Auto &#9654;</button><button type="button" data-t="prev">&larr; Back</button><button type="button" data-t="next" class="go">Next &rarr;</button></div>
+</div>
+</body>
 </html>
