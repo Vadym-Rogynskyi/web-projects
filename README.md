@@ -4,6 +4,7 @@ Interactive websites by Vadym Rogynskyi.
 
 | Site | What it is |
 |---|---|
+| [The World Table](world-table/) | An interactive cookbook with 203 recipes, a 3D globe, meal planning and grocery lists. |
 | [Road to the 10K](road-to-the-10k/) | A 7-week 10K training plan with a race countdown, pace calculator, weekly checklists and race-day pacing. |
 | [Pace Gap Planner](pace-gap-planner/) | An interactive model showing how much pace to cut each week to hit a goal time. |
 | [Ten Kilometres Down](ten-kilometres-down/) | A scroll-driven 3D dive through the five ocean zones to the bottom of the Mariana Trench. |
